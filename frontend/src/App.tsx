@@ -10,8 +10,8 @@ function App() {
     <>
       <BrowserRouter>
         <NavBar />
-        <WritingPage />
-        {/* <SignInPage /> */}
+        {/* <WritingPage /> */}
+        <SignInPage />
       </BrowserRouter>
 
       <Footer />

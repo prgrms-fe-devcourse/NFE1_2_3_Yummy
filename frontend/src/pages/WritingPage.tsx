@@ -5,6 +5,8 @@ import { Button, Select, Input, message } from 'antd' // Ant Design의 컴포넌
 import DraftEditor from '../components/DraftEditor'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { EditorState } from 'draft-js'
+import draftToHtml from 'draftjs-to-html'
+import axios from 'axios'
 
 const { Option } = Select // Ant Design Select
 

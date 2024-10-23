@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
@@ -10,12 +10,13 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [errors, setErrors] = useState({
-    id: '', // email을 id로 변경
+    id: '',
     password: '',
     confirmPassword: '',
   })
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-  // const navigate = useNavigate()
+  const [isSubmitted, setIsSubmitted] = useState(false) // 버튼 클릭 여부 상태 추가
+  const navigate = useNavigate()
 
   // 유효성 검사 함수
   const validateForm = () => {
@@ -46,48 +47,43 @@ const SignUpPage = () => {
     return !Object.values(newErrors).some((error) => error !== '')
   }
 
-  // 입력값이 변경될 때마다 유효성 검사 실행
+  // 버튼 활성화 상태 관리
   useEffect(() => {
-    const isValid = validateForm()
-    setIsButtonDisabled(!isValid)
+    const isFormFilled = id !== '' && password !== '' && confirmPassword !== ''
+    setIsButtonDisabled(!isFormFilled)
   }, [id, password, confirmPassword])
 
-  // 회원가입 버튼 클릭 이벤트
+  // 버튼 클릭 이벤트
   const handleSignUp = async () => {
+    setIsSubmitted(true) // 버튼이 클릭되었음을 저장
     if (validateForm()) {
       try {
-        const response = await axios.get('./userMockUp.json')
-        const users = response.data.users
+        // 회원가입 POST 요청 보내기
+        const response = await axios.post('https://your-server.com/signup', {
+          id,
+          password,
+        })
 
-        // 동일한 id가 있는지 확인
-        const existingUser = users.find((user) => user.id === id)
-        if (existingUser) {
-          message.error('이미 존재하는 사용자입니다.')
-        } else {
-          // 새로운 사용자 추가
-          const newUser = {
-            id,
-            password,
-            token: 'newToken123', // 실제로는 서버에서 생성된 토큰이 필요
-          }
+        const { user, token } = response.data
 
-          // 로그인된 상태로 JWT 토큰을 로컬 스토리지에 저장
-          localStorage.setItem('token', newUser.token)
+        // 로그인된 상태로 JWT 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('token', token)
 
-          // 회원가입 성공 메시지
-          message.success('회원가입 성공!')
+        // 회원가입 성공 메시지
+        message.success('회원가입 성공!')
 
-          // 메인 페이지로 네비게이션
-          // navigate('/')
-        }
+        // 메인 페이지로 네비게이션
+        navigate('/')
       } catch (error) {
-        console.error('회원가입 중 오류 발생:', error)
+        // 에러를 catch로 처리하여 오류를 방지
         message.error('회원가입 중 문제가 발생했습니다.')
+        console.error(error)
       }
     } else {
       message.error('입력한 정보를 확인해주세요.')
     }
   }
+
   return (
     <Container>
       <Title>회원가입</Title>
@@ -99,7 +95,8 @@ const SignUpPage = () => {
         onChange={(e) => setId(e.target.value)}
         prefix={<UserOutlined />}
       />
-      {errors.id && <ErrorText>{errors.id}</ErrorText>}
+      {isSubmitted && errors.id && <ErrorText>{errors.id}</ErrorText>}
+
       {/* 비밀번호 폼 */}
       <StyledInput
         size='large'
@@ -109,7 +106,10 @@ const SignUpPage = () => {
         onChange={(e) => setPassword(e.target.value)}
         prefix={<LockOutlined />}
       />
-      {errors.password && <ErrorText>{errors.password}</ErrorText>}
+      {isSubmitted && errors.password && (
+        <ErrorText>{errors.password}</ErrorText>
+      )}
+
       {/* 비밀번호 확인 폼 */}
       <StyledInput
         size='large'
@@ -119,9 +119,11 @@ const SignUpPage = () => {
         onChange={(e) => setConfirmPassword(e.target.value)}
         prefix={<LockOutlined />}
       />
-      {errors.confirmPassword && (
+      {isSubmitted && errors.confirmPassword && (
         <ErrorText>{errors.confirmPassword}</ErrorText>
       )}
+
+      {/* 버튼 */}
       <StyledButton
         type='primary'
         size='large'

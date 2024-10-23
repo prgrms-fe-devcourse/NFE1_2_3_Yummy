@@ -1,9 +1,19 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Input, Button } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
+  const [id, setId] = useState('')
+  const [password, setPassword] = useState('')
+  const [errors, setErros] = useState({
+    id: '',
+    password: '',
+  })
+  const [isSubmitted, setIsSubmitted] = useState(false) // 버튼 클릭 여부 상태 추가
+  const navigate = useNavigate()
+
   return (
     <Container>
       <Title>로그인</Title>
