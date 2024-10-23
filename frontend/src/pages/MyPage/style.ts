@@ -4,6 +4,8 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 70%;
+  padding-block: 3rem;
 `
 
 export const MyPostTitle = styled.div`
@@ -11,6 +13,7 @@ export const MyPostTitle = styled.div`
   font-size: 2rem;
   text-align: center;
   width: 10rem;
+  margin-block: 6rem;
 
   & h3 {
     margin: 0;

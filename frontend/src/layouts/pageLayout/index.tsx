@@ -1,11 +1,14 @@
 import NavigationBar from '../../components/NavBar'
 import Footer from '../../components/Footer'
 import { Outlet } from 'react-router-dom'
+import { MainContainer } from './style'
 const pageLayout = () => {
   return (
     <>
       <NavigationBar />
-      <Outlet />
+      <MainContainer>
+        <Outlet />
+      </MainContainer>
       <Footer />
     </>
   )
