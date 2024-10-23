@@ -6,7 +6,10 @@ import {
   Put,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
+
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -31,6 +34,7 @@ export class PostController {
   }
 
   @Put(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true })) // 유효성 검사 파이프 추가
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(id, updatePostDto);
   }
