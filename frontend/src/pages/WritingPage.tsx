@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Editor } from 'react-draft-wysiwyg'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import styled from 'styled-components'
-import { EditorState } from 'draft-js'
 import { Button, Select, Input, message } from 'antd' // Ant Design의 컴포넌트 사용
+import DraftEditor from '../components/DraftEditor'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 const { Option } = Select // Ant Design Select
 
@@ -13,7 +12,7 @@ const WritingPage: React.FC = () => {
 
   const [category, setCategory] = useState<string>('')
   const [title, setTitle] = useState<string>('')
-  const [editorState, setEditorState] = useState(EditorState.createEmpty())
+  // const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [successMessage, setSuccessMessage] = useState<string>('')
 
@@ -23,9 +22,9 @@ const WritingPage: React.FC = () => {
   }
 
   // 에디터 상태 변경
-  const onEditorStateChange = (editorState: EditorState) => {
-    setEditorState(editorState)
-  }
+  // const onEditorStateChange = (editorState: EditorState) => {
+  //   setEditorState(editorState)
+  // }
 
   // 이미지 업로드 핸들러
   const uploadImageCallBack = (file: File) => {
@@ -86,21 +85,7 @@ const WritingPage: React.FC = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <EditorContainer>
-        <Editor
-          editorState={editorState}
-          onEditorStateChange={onEditorStateChange}
-          toolbar={{
-            image: {
-              uploadCallback: uploadImageCallBack, // 이미지 업로드 설정
-              alt: { present: true, mandatory: false }, // 대체 텍스트 설정
-            },
-          }}
-          wrapperClassName='wrapper-class'
-          editorClassName='editor-class'
-          toolbarClassName='toolbar-class'
-        />
-      </EditorContainer>
+      <DraftEditor />
 
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
