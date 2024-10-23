@@ -75,9 +75,7 @@ const SignUpPage = () => {
         // 메인 페이지로 네비게이션
         navigate('/')
       } catch (error) {
-        // 에러를 catch로 처리하여 오류를 방지
         message.error('회원가입 중 문제가 발생했습니다.')
-        console.error(error)
       }
     } else {
       message.error('입력한 정보를 확인해주세요.')

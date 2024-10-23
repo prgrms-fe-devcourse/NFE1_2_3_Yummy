@@ -12,10 +12,10 @@ function App() {
         <NavBar />
         {/* <WritingPage /> */}
         <SignInPage />
+        <LogInPage />
       </BrowserRouter>
 
       <Footer />
-      {/* <LogInPage /> */}
     </>
   )
 }
