@@ -1,5 +1,7 @@
 import UserProfileCard from '@/components/UserProfileCard'
 import { Container, MyPostTitle } from './style'
+import { mockPosts } from '@/utils/mockPosts'
+import PostCard from '@/components/PostCard'
 
 const MyPage = () => {
   return (
@@ -15,9 +17,20 @@ const MyPage = () => {
         <h3>My Post</h3>
         <hr />
       </MyPostTitle>
+
+      {mockPosts.map(({ author, category, date, imgUrl, text, title }) => (
+        <PostCard
+          key={author}
+          author={author}
+          category={category}
+          date={date}
+          imgUrl={imgUrl}
+          text={text}
+          title={title}
+        />
+      ))}
     </Container>
   )
 }
 
 export default MyPage
-MyPage
