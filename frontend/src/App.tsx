@@ -1,5 +1,7 @@
+import UserProfileCard from '@/components/UserProfileCard'
+
 function App() {
-  return <></>
+  return <UserProfileCard></UserProfileCard>
 }
 
 export default App
