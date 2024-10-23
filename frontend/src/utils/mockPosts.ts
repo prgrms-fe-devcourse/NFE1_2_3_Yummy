@@ -1,4 +1,3 @@
-// src/utils/mockPosts.ts
 export const mockPosts = [
     {
         category: '중식',
