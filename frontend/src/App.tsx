@@ -1,7 +1,7 @@
-import UserProfileCard from '@/components/UserProfileCard'
+import MyPage from './pages/MyPage'
 
 function App() {
-  return <UserProfileCard></UserProfileCard>
+  return <MyPage></MyPage>
 }
 
 export default App
