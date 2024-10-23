@@ -1,3 +1,4 @@
+import { SettingOutlined } from '@ant-design/icons'
 import {
   ButtonGroup,
   CancelButton,
@@ -15,7 +16,7 @@ import {
   UserProfileModalContainer,
 } from './style'
 
-const PopupDialog = ({}) => {
+const PopupDialog = () => {
   return (
     <UserProfileModalContainer>
       <PopupCard>
@@ -25,7 +26,9 @@ const PopupDialog = ({}) => {
               src='https://static.inews24.com/v1/0ea0b53518da00.jpg'
               alt='Profile'
             />
-            <SettingsIcon></SettingsIcon>
+            <SettingsIcon type='file'>
+              <SettingOutlined style={{ color: '#7d7d7d' }} />
+            </SettingsIcon>
           </ImageContainer>
 
           <InputSection>

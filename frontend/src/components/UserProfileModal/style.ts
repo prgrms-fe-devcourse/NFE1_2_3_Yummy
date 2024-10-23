@@ -40,7 +40,7 @@ export const ProfileImage = styled.img`
   object-fit: cover;
 `
 
-export const SettingsIcon = styled.div`
+export const SettingsIcon = styled.input`
   position: absolute;
   bottom: 0;
   right: 0;
@@ -51,6 +51,8 @@ export const SettingsIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  cursor: pointer;
 `
 
 export const InputSection = styled.div`

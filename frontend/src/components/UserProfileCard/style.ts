@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const UserCard = styled.div`
   display: flex;
-  width: 80%;
+  width: 60%;
   padding: 1.5rem;
   justify-content: space-evenly;
   background-color: white;
@@ -17,7 +17,7 @@ export const ProfileImage = styled.img`
 `
 
 export const ProfileIntroduce = styled.div`
-  width: 60%;
+  width: 50%;
 `
 
 export const Name = styled.h3`
