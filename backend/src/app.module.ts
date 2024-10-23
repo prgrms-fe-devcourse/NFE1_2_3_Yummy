@@ -1,9 +1,8 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { PostModule } from './post/post.module';
-import { PostController } from './post/post.controller';
-import { PostService } from './post/post.service';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 @Module({
   imports: [
