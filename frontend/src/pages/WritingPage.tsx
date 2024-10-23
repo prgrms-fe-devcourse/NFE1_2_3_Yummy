@@ -18,13 +18,24 @@ const WritingPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string>('')
 
   // 카테고리 토글
-  const handleCategoryChange = (value: string) => {
-    setCategory(value)
+  const handleCategoryChange = (value: unknown) => {
+    setCategory(value as string) // value를 string으로 변환
   }
 
   // 에디터 상태 변경
   const onEditorStateChange = (editorState: EditorState) => {
     setEditorState(editorState)
+  }
+
+  // 이미지 업로드 핸들러
+  const uploadImageCallBack = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        resolve({ data: { link: reader.result as string } })
+      }
+      reader.readAsDataURL(file)
+    })
   }
 
   // 게시글 등록 버튼 클릭 시 유효성 검사
@@ -40,6 +51,23 @@ const WritingPage: React.FC = () => {
     }
   }
 
+  // 카테고리 배열
+  const categories = [
+    '전체',
+    '한식',
+    '중식',
+    '일식',
+    '양식',
+    '동남아 요리',
+    '남미 요리',
+    '중동 요리',
+    '퓨전 요리',
+    '채식 요리',
+    '해산물 요리',
+    '바베큐 요리',
+    '디저트 요리',
+  ]
+
   return (
     <Container>
       <CategorySelect
@@ -47,8 +75,9 @@ const WritingPage: React.FC = () => {
         onChange={handleCategoryChange}
         value={category || undefined}
       >
-        <Option value='category1'>카테고리 1</Option>
-        <Option value='category2'>카테고리 2</Option>
+        {categories.map((category, index) => (
+          <Option key={index}>{category}</Option>
+        ))}
       </CategorySelect>
 
       <TitleInput
@@ -61,6 +90,12 @@ const WritingPage: React.FC = () => {
         <Editor
           editorState={editorState}
           onEditorStateChange={onEditorStateChange}
+          toolbar={{
+            image: {
+              uploadCallback: uploadImageCallBack, // 이미지 업로드 설정
+              alt: { present: true, mandatory: false }, // 대체 텍스트 설정
+            },
+          }}
           wrapperClassName='wrapper-class'
           editorClassName='editor-class'
           toolbarClassName='toolbar-class'

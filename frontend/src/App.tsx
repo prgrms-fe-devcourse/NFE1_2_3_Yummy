@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter>
         <NavBar />
         <WritingPage />
-        <SignInPage />
+        {/* <SignInPage /> */}
       </BrowserRouter>
 
       <Footer />
