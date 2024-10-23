@@ -50,8 +50,8 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({ label, onClick }) => {
 };
 
 const categories = [
-    '한식', '중식', '일식', '양식', '동남아요리', '남미요리', 
-    '중동요리', '퓨전요리', '채식요리', '해산물요리', 
+    '한식', '중식', '일식', '양식', '동남아 요리', '남미 요리', 
+    '중동 요리', '퓨전 요리', '채식 요리', '해산물 요리', 
     '바베큐 요리', '디저트'
 ];
 
@@ -63,9 +63,9 @@ const CategoryButtons: React.FC = () => {
     };
 
     // 선택된 카테고리에 따라 포스트 필터링
-    const filteredPosts = selectedCategory
-        ? mockPosts.filter((post) => post.category === selectedCategory)
-        : mockPosts;
+    const filteredPosts = selectedCategory 
+        ? mockPosts.filter((post) => post.category === selectedCategory) 
+        : [...mockPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // 최신순 정렬
 
     return (
         <CenteredContainer>
