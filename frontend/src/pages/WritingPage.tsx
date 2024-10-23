@@ -17,7 +17,7 @@ const WritingPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [successMessage, setSuccessMessage] = useState<string>('')
 
-  // 카테고리 선택 토글
+  // 카테고리 토글
   const handleCategoryChange = (value: string) => {
     setCategory(value)
   }

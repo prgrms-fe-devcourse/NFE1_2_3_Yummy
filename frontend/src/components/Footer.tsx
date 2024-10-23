@@ -26,10 +26,10 @@ const Container = styled.div`
 
 const Logo = styled.img`
   width: 180px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 `
 
-const StyledText = styled.p`
+const StyledText = styled.div`
   font-size: 12px;
   color: white;
 `

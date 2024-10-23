@@ -1,17 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Input, Modal, Avatar } from 'antd'
+import { Input, Menu, Avatar } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 
 const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [iscategoryVisible, setIsCategoryVisible] = useState(false)
   const navigate = useNavigate()
+  // let isMounted = true //마운트 여부 추적하는 함수
 
-  //로그인 버튼 -> 네비게이터
-  const handleLoginClick = () => {
-    navigate('/login')
-  }
+  // clean up
+  // useEffect(() => {
+  //   return () => {
+  //     isMounted = false
+  //   }
+  // }, [])
 
   // 로그인 여부 확인
   const isLoggedIn = () => {
@@ -20,27 +24,48 @@ const NavigationBar: React.FC = () => {
   // 로그인 상태 체크
   const loggedIn = isLoggedIn()
 
-  // 모달 열기/닫기 (토글)
+  // 프로필 모달 토글
   const toggleModal = () => {
-    setIsModalVisible((prev) => !prev) // 이전 상태 반대로 변경
+    setIsModalVisible((prev) => !prev)
   }
 
-  // 모달 닫기
-  const hideModal = () => {
-    setIsModalVisible(false)
+  // 카테고리 모달 토글
+  const handleCategoryMouseEnter = () => {
+    setIsCategoryVisible(true) // 마우스가 들어가면 모달을 보이도록 설정
+  }
+
+  const handleCategoryMouseLeave = () => {
+    setIsCategoryVisible(false) // 마우스가 나가면 모달을 숨김
   }
 
   // 로그아웃 함수
   const handleLogout = () => {
-    localStorage.removeItem('token') // JWT 토큰 삭제
+    localStorage.removeItem('JWTtoken')
     setIsModalVisible(false)
-    navigate('/') // 로그아웃 후 메인 페이지로 이동
+    navigate('/')
   }
 
   // 내 정보 페이지 이동
   const handleProfile = () => {
     navigate('/profile') // 프로필 페이지로 이동
   }
+
+  // 카테고리 배열
+  const categories = [
+    '전체',
+    '한식',
+    '중식',
+    '일식',
+    '양식',
+    '동남아 요리',
+    '남미 요리',
+    '중동 요리',
+    '퓨전 요리',
+    '채식 요리',
+    '해산물 요리',
+    '바베큐 요리',
+    '디저트 요리',
+  ]
 
   return (
     <NavContainer>
@@ -51,13 +76,25 @@ const NavigationBar: React.FC = () => {
         />
         <NavLinks>
           <StyledLink to='/'>Home</StyledLink>
-          <StyledLink to='/category'>Category</StyledLink>
+          <Category
+            onMouseEnter={handleCategoryMouseEnter}
+            onMouseLeave={handleCategoryMouseLeave}
+          >
+            Category
+          </Category>
+          {iscategoryVisible && (
+            <CategoryModal>
+              {categories.map((category, index) => (
+                <CategoryItem key={index}>{category}</CategoryItem>
+              ))}
+            </CategoryModal>
+          )}
         </NavLinks>
       </LogoSection>
       <SearchLoginSection>
-        <SearchInput
-          placeholder='검색어를 입력해 주세요.'
-          prefix={<SearchOutlined />}
+        <SearchOutlined
+          style={{ fontSize: '30px' }}
+          onClick={() => navigate('/search')}
         />
         <LogInBtnContainer>
           {loggedIn ? (
@@ -66,7 +103,7 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src='https://your-avatar-image-url' // 사용자 아바타 이미지로 변경 가능
-                onClick={toggleModal} // 아바타 클릭 시 모달 열기/닫기 토글
+                onClick={toggleModal}
               />
 
               {/* 모달창 */}
@@ -81,26 +118,7 @@ const NavigationBar: React.FC = () => {
               )}
             </AvatarContainer>
           ) : (
-            // <LoginButton onClick={() => navigate('/login')}>Login</LoginButton>
-            <AvatarContainer>
-              <StyledAvatar
-                size={64}
-                icon={<UserOutlined />}
-                src='https://your-avatar-image-url' // 사용자 아바타 이미지로 변경 가능
-                onClick={toggleModal} // 아바타 클릭 시 모달 열기/닫기 토글
-              />
-
-              {/* 모달창 */}
-              {isModalVisible && (
-                <CustomModal>
-                  <ModalContent>
-                    <ModalButton onClick={handleProfile}>내 정보</ModalButton>
-                    <ModalDivider />
-                    <ModalButton onClick={handleLogout}>로그아웃</ModalButton>
-                  </ModalContent>
-                </CustomModal>
-              )}
-            </AvatarContainer>
+            <LoginButton onClick={() => navigate('/login')}>Login</LoginButton>
           )}
         </LogInBtnContainer>
       </SearchLoginSection>
@@ -130,6 +148,7 @@ const Logo = styled.img`
 
 const NavLinks = styled.div`
   display: flex;
+  text-align: center;
   gap: 28px;
 `
 
@@ -145,21 +164,24 @@ const StyledLink = styled(Link)`
   }
 `
 
+const Category = styled.div`
+  font-family: 'Libre Baskerville';
+  font-size: 20px;
+  color: black;
+  margin-right: 20px;
+  text-decoration: none;
+
+  &:hover {
+    color: #555;
+  }
+`
+
 const SearchLoginSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 `
 
-const SearchInput = styled(Input)`
-  width: 350px;
-  height: 46px;
-  margin-right: 10px;
-  border-radius: 10px;
-  .ant-input-prefix {
-    margin-right: 10px; // prefix와 placeholder 간의 간격을 벌림
-  }
-`
 const LogInBtnContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -190,7 +212,7 @@ const StyledAvatar = styled(Avatar)`
   border: 2px solid #ddd;
 `
 
-// 커스텀 모달 스타일링 (아바타 바로 밑에 위치)
+// 커스텀 모달
 const CustomModal = styled.div`
   position: absolute;
   top: 75px;
@@ -201,6 +223,24 @@ const CustomModal = styled.div`
   padding: 10px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
+`
+const CategoryModal = styled.div`
+  position: absolute;
+  top: 75px;
+  left: 300px;
+  width: 170px;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  font-size: 20px;
+  font-family: 'Libre Baskerville';
 `
 
 const ModalContent = styled.div`
@@ -229,6 +269,14 @@ const ModalDivider = styled.div`
   height: 1px;
   background-color: white;
   margin: 5px 0;
+`
+
+// 카테고리 아이템
+const CategoryItem = styled.div`
+  cursor: pointer;
+  &:hover {
+    color: #ccc; // 호버 시 약간 밝은 회색으로 변경
+  }
 `
 
 export default NavigationBar
