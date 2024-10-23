@@ -49,7 +49,12 @@ export const Dot = styled.p`
   margin-inline: 0.5rem;
 `
 
-export const PostContent = styled.div`
+export const PostContent = styled.pre`
   width: 70%;
+  font-size: 1rem;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  word-wrap: break-word;
+  line-height: 1.5;
   margin-block: 1rem 4rem;
 `
