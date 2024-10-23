@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Button, Select, Input, message } from 'antd' // Ant Design의 컴포넌트 사용
 import DraftEditor from '../components/DraftEditor'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { EditorState } from 'draft-js'
 
 const { Option } = Select // Ant Design Select
 
@@ -12,9 +13,7 @@ const WritingPage: React.FC = () => {
 
   const [category, setCategory] = useState<string>('')
   const [title, setTitle] = useState<string>('')
-  // const [editorState, setEditorState] = useState(EditorState.createEmpty())
-  const [errorMessage, setErrorMessage] = useState<string>('')
-  const [successMessage, setSuccessMessage] = useState<string>('')
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
   // 카테고리 토글
   const handleCategoryChange = (value: unknown) => {
@@ -27,26 +26,25 @@ const WritingPage: React.FC = () => {
   // }
 
   // 이미지 업로드 핸들러
-  const uploadImageCallBack = (file: File) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        resolve({ data: { link: reader.result as string } })
-      }
-      reader.readAsDataURL(file)
-    })
-  }
+  // const uploadImageCallBack = (file: File) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader()
+  //     reader.onloadend = () => {
+  //       resolve({ data: { link: reader.result as string } })
+  //     }
+  //     reader.readAsDataURL(file)
+  //   })
+  // }
 
   // 게시글 등록 버튼 클릭 시 유효성 검사
   const handleSubmit = () => {
-    if (!category || !title || !editorState.getCurrentContent().hasText()) {
+    const content = editorState.getCurrentContent()
+    const plainText = content.getPlainText().trim() // 공백 제거한 텍스트
+
+    if (!category || !title || !plainText) {
       message.error('모든 필드를 입력해주세요.')
-      setErrorMessage('모든 필드를 입력해주세요.')
-      setSuccessMessage('')
     } else {
       message.success('게시글이 성공적으로 등록되었습니다.')
-      setSuccessMessage('게시글이 성공적으로 등록되었습니다.')
-      setErrorMessage('')
     }
   }
 
@@ -85,10 +83,11 @@ const WritingPage: React.FC = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <DraftEditor />
-
-      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
+      {/* 에디터 컴포넌트 */}
+      <DraftEditor
+        editorState={editorState}
+        onEditorStateChange={setEditorState}
+      />
 
       <ButtonContainer>
         <StyledButton
@@ -115,6 +114,9 @@ const Container = styled.div`
   /* align-items: center; 모든 요소를 중앙 정렬 */
   width: 100%;
   padding: 20px;
+  margin-top: 40px;
+  box-sizing: border-box; /* padding과 border를 포함하여 크기 계산 */
+  max-width: 100%; /* 화면 너비를 넘지 않도록 제한 */
 `
 
 const CategorySelect = styled(Select)`
@@ -144,22 +146,11 @@ const TitleInput = styled(Input)`
   text-align: left; /* 제목 인풋창 왼쪽 정렬 */
 `
 
-const EditorContainer = styled.div`
-  width: 80%; /* 에디터 컨테이너의 너비를 80%로 설정 */
-  min-height: 300px;
-  border: 1px solid #e5e5e5;
-  margin-bottom: 20px;
-
-  .editor-class {
-    min-height: 200px;
-    padding: 10px;
-  }
-`
-
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  margin-top: 60px;
 `
 
 const StyledButton = styled(Button)`

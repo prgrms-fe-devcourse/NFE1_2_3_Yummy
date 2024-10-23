@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import styled from 'styled-components'
 
-const DraftEditor: React.FC = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty())
+interface DraftEditorProps {
+  editorState: EditorState
+  onEditorStateChange: (editorState: EditorState) => void
+}
 
-  // 에디터 상태 변경 핸들러
-  const onEditorStateChange = (newState: EditorState) => {
-    setEditorState(newState)
-  }
-
+const DraftEditor: React.FC<DraftEditorProps> = ({
+  editorState,
+  onEditorStateChange,
+}) => {
   // 이미지 업로드 콜백
   const uploadImageCallBack = (file: File): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -43,13 +44,13 @@ const DraftEditor: React.FC = () => {
               'textAlign',
               'link',
               'history',
-              'image', // 이미지 옵션 포함
+              'image',
             ],
             image: {
-              uploadCallback: uploadImageCallBack, // 이미지 업로드 콜백 함수
-              previewImage: true, // 이미지 미리보기 활성화
-              alt: { present: true, mandatory: false }, // 이미지 대체 텍스트 설정
-              inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg', // 허용할 이미지 타입
+              uploadCallback: uploadImageCallBack,
+              previewImage: true,
+              alt: { present: true, mandatory: false },
+              inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
               defaultSize: {
                 height: 'auto',
                 width: 'auto',
