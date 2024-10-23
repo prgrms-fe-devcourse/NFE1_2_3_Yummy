@@ -20,22 +20,6 @@ const WritingPage: React.FC = () => {
     setCategory(value as string) // value를 string으로 변환
   }
 
-  // 에디터 상태 변경
-  // const onEditorStateChange = (editorState: EditorState) => {
-  //   setEditorState(editorState)
-  // }
-
-  // 이미지 업로드 핸들러
-  // const uploadImageCallBack = (file: File) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader()
-  //     reader.onloadend = () => {
-  //       resolve({ data: { link: reader.result as string } })
-  //     }
-  //     reader.readAsDataURL(file)
-  //   })
-  // }
-
   // 게시글 등록 버튼 클릭 시 유효성 검사
   const handleSubmit = () => {
     const content = editorState.getCurrentContent()
@@ -86,7 +70,7 @@ const WritingPage: React.FC = () => {
       {/* 에디터 컴포넌트 */}
       <DraftEditor
         editorState={editorState}
-        onEditorStateChange={setEditorState}
+        setEditorState={setEditorState}
       />
 
       <ButtonContainer>

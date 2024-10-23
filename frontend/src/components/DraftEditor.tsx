@@ -6,12 +6,12 @@ import styled from 'styled-components'
 
 interface DraftEditorProps {
   editorState: EditorState
-  onEditorStateChange: (editorState: EditorState) => void
+  setEditorState: (editorState: EditorState) => void
 }
 
 const DraftEditor: React.FC<DraftEditorProps> = ({
   editorState,
-  onEditorStateChange,
+  setEditorState,
 }) => {
   // 이미지 업로드 콜백
   const uploadImageCallBack = (file: File): Promise<any> => {
@@ -34,7 +34,7 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
       <EditorWrapper>
         <Editor
           editorState={editorState}
-          onEditorStateChange={onEditorStateChange}
+          onEditorStateChange={setEditorState}
           toolbar={{
             options: [
               'inline',
