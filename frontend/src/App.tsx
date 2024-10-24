@@ -1,22 +1,34 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import SignInPage from './pages/SignInPage'
 import LogInPage from './pages/LogInPage'
 import WritingPage from './pages/WritingPage'
-import NavBar from './components/NavBar'
-import Footer from './components/Footer'
-import { BrowserRouter } from 'react-router-dom'
+import PageLayout from './layouts/pageLayout'
+import MyPage from './pages/MyPage'
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <NavBar />
-        <WritingPage />
-        {/* <SignInPage /> */}
-      </BrowserRouter>
-
-      <Footer />
-      {/* <LogInPage /> */}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<PageLayout />}>
+          <Route
+            path='/write'
+            element={<WritingPage />}
+          />
+          <Route
+            path='/signin'
+            element={<SignInPage />}
+          />
+          <Route
+            path='/login'
+            element={<LogInPage />}
+          />
+          <Route
+            path='/mypage'
+            element={<MyPage />}
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
