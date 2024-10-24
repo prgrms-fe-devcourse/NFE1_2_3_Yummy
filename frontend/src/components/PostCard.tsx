@@ -11,8 +11,8 @@ interface CardProps {
 
 const Card = styled.div`
   display: flex;
-  /* padding: 16px; */
-  /* margin: 0 50px; */
+  padding: 16px;
+  margin: 0 50px;
   margin-bottom: 16px;
   background-color: #fff;
 `
