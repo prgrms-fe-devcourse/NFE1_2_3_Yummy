@@ -10,6 +10,7 @@ async function bootstrap() {
     .setDescription('3차 프로젝트 7팀 API 입니다.')
     .setVersion('1.0')
     .addTag('post')
+    .addTag('comments')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
