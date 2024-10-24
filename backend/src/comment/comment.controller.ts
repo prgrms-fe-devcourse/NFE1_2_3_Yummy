@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@Controller('comment')
+@Controller('post/:postId/comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  // 댓글 생성
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  async createComment(
+    @Param('postId') postId: string,
+    @Body('content') content: string,
+    @Body('author') author: string,
+  ) {
+    return this.commentService.create(postId, content, author);
   }
 
+  // 특정 게시글의 댓글 조회
   @Get()
-  findAll() {
-    return this.commentService.findAll();
+  async getComments(@Param('postId') postId: string) {
+    return this.commentService.findByPostId(postId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+  // 댓글 수정
+  @Put(':commentId')
+  async updateComment(
+    @Param('commentId') commentId: string,
+    @Body('content') content: string,
+  ) {
+    return this.commentService.update(commentId, content);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  // 댓글 삭제
+  @Delete(':commentId')
+  async deleteComment(@Param('commentId') commentId: string) {
+    return this.commentService.delete(commentId);
   }
 }
