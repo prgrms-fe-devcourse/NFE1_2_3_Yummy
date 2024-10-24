@@ -4,7 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { CommentModule } from './comment/comment.module';
-import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -12,7 +11,6 @@ import { UsersModule } from './users/users.module';
     MongooseModule.forRoot('mongodb://localhost:27017/3prjYummy'),
     PostModule,
     CommentModule,
-    UsersModule,
   ],
 })
 export class AppModule {}
