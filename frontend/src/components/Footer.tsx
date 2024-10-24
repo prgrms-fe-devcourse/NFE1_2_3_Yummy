@@ -19,9 +19,10 @@ const Container = styled.div`
   flex-direction: column; /* 수직 정렬 */
   justify-content: center; /* 수직 방향으로 중앙 정렬 */
   align-items: center; /* 가로 방향으로 중앙 정렬 */
-  width: auto;
+  width: 100%;
   height: 191px;
   background-color: black;
+  margin: 0;
 `
 
 const Logo = styled.img`
