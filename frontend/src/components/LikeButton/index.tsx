@@ -4,11 +4,11 @@ const LikeButton = () => {
   return (
     <LikeButtonContainer>
       <ButtonLike>
-        <HeartFilled style={{ fontSize: '2.8rem', color: '#1c1c1c' }} />
+        <HeartFilled style={{ fontSize: '2rem', color: '#1c1c1c' }} />
       </ButtonLike>
       <p>0</p>
       <ButtonLike>
-        <MergeFilled style={{ fontSize: '2.8rem', color: '#1c1c1c' }} />
+        <MergeFilled style={{ fontSize: '2rem', color: '#1c1c1c' }} />
       </ButtonLike>
     </LikeButtonContainer>
   )

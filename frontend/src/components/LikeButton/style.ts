@@ -5,8 +5,9 @@ export const LikeButtonContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: #1c1c1c;
-  padding: 0.8rem 1.3rem;
+  padding: 0.8rem 1rem;
   border-radius: 5rem;
+  margin-block: 3.5rem 5rem;
 
   & p {
     color: white;
@@ -16,10 +17,9 @@ export const LikeButtonContainer = styled.div`
   }
 `
 export const ButtonLike = styled.button`
-  width: 3.8rem;
-  height: 3.8rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   border: none;
   background-color: white;
-  font-size: 1.2rem;
 `

@@ -10,10 +10,11 @@ export const CommentInputContainer = styled.div`
 export const CommentTextArea = styled.textarea`
   width: 100% !important;
   height: 10rem;
+  padding: 1rem;
+  margin-block: 1rem;
   resize: none;
   border: 1px solid #eee;
   border-radius: 1rem;
-  padding: 1rem;
   font-size: 1rem;
   box-sizing: border-box;
 `
@@ -31,15 +32,14 @@ export const CommentButton = styled.button<CommentButtonProps>`
   display: ${({ $isDisplay }) => ($isDisplay ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
-  width: 10rem;
+  width: ${(props) => (props.$isCancel ? '5rem' : '8.5rem')};
   height: 3rem;
   border: none;
-  padding-block: 1.7rem;
+  padding-block: 1.6rem;
   border-radius: 1rem;
   background-color: ${({ $isCancel }) =>
     $isCancel ? 'transparent' : '#1c1c1c'};
   color: ${({ $isCancel }) => ($isCancel ? '#1c1c1c' : 'white')};
   font-weight: ${({ $isCancel }) => ($isCancel ? '600' : '400')};
   font-size: 1rem;
-  margin-top: 2rem;
 `

@@ -7,13 +7,12 @@ export const Container = styled.div`
   width: 70%;
   padding-block: 3rem;
 `
-
 export const MyPostTitle = styled.div`
   font-family: 'Libre Baskerville', sans-serif;
   font-size: 2rem;
   text-align: center;
   width: 10rem;
-  margin-block: 6rem;
+  margin-block: 4rem 6rem;
 
   & h3 {
     margin: 0;
@@ -21,8 +20,9 @@ export const MyPostTitle = styled.div`
   }
 
   & hr {
+    margin-top: 0.5rem;
+    height: 0.25rem;
     border: none;
-    height: 3px;
     background: black;
   }
 `

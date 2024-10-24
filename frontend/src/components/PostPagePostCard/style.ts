@@ -11,6 +11,8 @@ export const PostInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 2rem;
+  gap: 0.5rem;
 
   & p {
     color: #7d7d7d;
@@ -36,8 +38,8 @@ export const AuthorDetail = styled.p`
   }
 
   & img {
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid #eee;
@@ -50,11 +52,11 @@ export const Dot = styled.p`
 `
 
 export const PostContent = styled.pre`
-  width: 70%;
+  font-family: 'Noto Sans KR', sans-serif !important;
   font-size: 1rem;
   white-space: pre-wrap;
   word-break: keep-all;
   word-wrap: break-word;
   line-height: 1.5;
-  margin-block: 1rem 4rem;
+  margin-block: 3.5rem;
 `

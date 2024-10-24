@@ -14,9 +14,11 @@ const CommentInput = () => {
           $isDisplay={true}
           $isCancel={true}
         >
-          취소
+          <p>취소</p>
         </CommentButton>
-        <CommentButton $isDisplay={true}>댓글 작성</CommentButton>
+        <CommentButton $isDisplay={true}>
+          <p>댓글 작성</p>
+        </CommentButton>
       </CommentButtonContainer>
     </CommentInputContainer>
   )
