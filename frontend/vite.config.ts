@@ -20,4 +20,7 @@ export default defineConfig({
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
+  define: {
+    global: 'window', // global을 window로 정의
+  },
 })

@@ -12,7 +12,7 @@ const Header = styled.h1`
 
 const MainPage = () => {
     // 인기순으로 정렬
-    const sortedPosts = mockPosts.sort((a, b) => (b.heartCount + b.viewCount) - (a.heartCount + a.viewCount));
+    const sortedPosts = mockPosts.sort((a, b) => b.heartCount - a.heartCount);
     const topPost = sortedPosts[0];
 
     return (

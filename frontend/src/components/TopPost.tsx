@@ -10,7 +10,6 @@ interface TopPostProps {
         text: string;
         imgUrl: string;
         heartCount: number;
-        viewCount: number;
     };
 }
 
