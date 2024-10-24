@@ -6,6 +6,7 @@ import {
   ProfileImage,
   ProfileIntroduce,
   EditButton,
+  ProfileNameContainer,
 } from './style'
 
 interface UserProfileCardProps {
@@ -28,12 +29,14 @@ const UserProfileCard = ({
         alt={name}
       />
       <ProfileIntroduce>
-        <Name>{name}</Name>
+        <ProfileNameContainer>
+          <Name>{name}</Name>
+          <EditButton $isDisplay={isDisplay}>
+            <SettingOutlined style={{ color: '#7d7d7d', fontSize: '1.2rem' }} />
+          </EditButton>
+        </ProfileNameContainer>
         <Description>{description}</Description>
       </ProfileIntroduce>
-      <EditButton $isDisplay={isDisplay}>
-        <SettingOutlined style={{ color: '#7d7d7d', fontSize: '1.2rem' }} />
-      </EditButton>
     </UserCard>
   )
 }

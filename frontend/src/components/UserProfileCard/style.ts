@@ -1,17 +1,24 @@
 import styled from 'styled-components'
 
-export const UserCard = styled.div`
+interface UserCardProps {
+  $inPostPage?: boolean
+}
+
+export const UserCard = styled.div<UserCardProps>`
   display: flex;
   width: 70%;
-  padding: 1.5rem;
-  justify-content: space-evenly;
+  justify-content: center;
+  padding-block: 1.5rem;
+  align-items: center;
+  gap: 2rem;
   background-color: white;
   font-family: 'Noto Sans KR', sans-serif;
 `
 
-export const ProfileImage = styled.img`
-  width: 7rem;
-  height: 7rem;
+export const ProfileImage = styled.img<UserCardProps>`
+  width: 6.5rem;
+  height: 6.5rem;
+  margin-top: 1rem;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #eee;
@@ -30,10 +37,17 @@ export const Name = styled.h3`
 `
 
 export const Description = styled.p`
-  margin-top: 0.5rem;
   font-size: 1rem;
   color: #6b7280;
   line-height: 1.5;
+`
+
+export const ProfileNameContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 `
 
 interface EditButtonProps {
