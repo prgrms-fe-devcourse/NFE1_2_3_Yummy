@@ -1,4 +1,6 @@
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { SearchPageNavContainer, SearchPageNavItem } from './style'
+import { formatCategoryForURL } from '@/utils/formatURl'
 
 const SearchPageNav = () => {
   const categories = [
@@ -17,10 +19,24 @@ const SearchPageNav = () => {
     '디저트 요리',
   ]
 
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const urlCategory = searchParams.get('search')
+
+  const handleClickCategory = (category: string) => {
+    navigate(`/search/category?search=${formatCategoryForURL(category)}`)
+  }
+
   return (
     <SearchPageNavContainer>
       {categories.map((category) => (
-        <SearchPageNavItem key={category}>{category}</SearchPageNavItem>
+        <SearchPageNavItem
+          key={category}
+          $isActive={category === urlCategory}
+          onClick={() => handleClickCategory(category)}
+        >
+          {category}
+        </SearchPageNavItem>
       ))}
     </SearchPageNavContainer>
   )

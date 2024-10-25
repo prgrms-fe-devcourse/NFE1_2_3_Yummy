@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import SignInPage from './pages/SignInPage'
 import LogInPage from './pages/LogInPage'
 import WritingPage from './pages/WritingPage'
@@ -33,6 +33,15 @@ function App() {
           />
           <Route
             path='/search'
+            element={
+              <Navigate
+                to='/search/category?=all'
+                replace
+              />
+            }
+          />
+          <Route
+            path='/search/category'
             element={<SearchPage />}
           />
         </Route>
