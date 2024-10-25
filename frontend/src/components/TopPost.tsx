@@ -8,7 +8,7 @@ interface TopPostProps {
         author: string;
         date: string;
         text: string;
-        imgUrl: string;
+        image_url: string;
         heartCount: number;
     };
 }
@@ -55,10 +55,10 @@ const PostText = styled.p`
 `;
 
 const TopPost: React.FC<TopPostProps> = ({ post }) => {
-    const { imgUrl, category, title, author, date, text } = post;
+    const { image_url, category, title, author, date, text } = post;
 
     return (
-        <TopPostContainer $imgUrl={imgUrl}> 
+        <TopPostContainer $imgUrl={image_url}> 
             <ContentContainer>
                 <PostCategory>{category}</PostCategory>
                 <PostTitle>{title}</PostTitle>
