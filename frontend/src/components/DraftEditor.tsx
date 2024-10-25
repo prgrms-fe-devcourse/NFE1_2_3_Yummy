@@ -19,14 +19,14 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
   const uploadImageToCloudinary = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('upload_preset', 'ml_default') // Cloudinary의 업로드 프리셋
+    formData.append('upload_preset', 'ml_default')
 
     try {
       const response = await axios.post(
         'https://api.cloudinary.com/v1_1/dee7rlglp/image/upload',
         formData,
       )
-      return { data: { link: response.data.secure_url } } // Cloudinary에서 받은 이미지 URL 반환
+      return { data: { link: response.data.secure_url } }
     } catch (error) {
       message.error('이미지 업로드에 실패했습니다.')
       return null
@@ -37,7 +37,7 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
   const imageUploadCallback = async (file: File) => {
     const uploadedImage = await uploadImageToCloudinary(file)
     if (uploadedImage && uploadedImage.data) {
-      return { data: { link: uploadedImage.data.link } } // 에디터에 삽입될 이미지 URL 반환
+      return { data: { link: uploadedImage.data.link } }
     }
     return null
   }
