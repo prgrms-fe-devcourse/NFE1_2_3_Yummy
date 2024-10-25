@@ -8,19 +8,8 @@ import PostPage from './pages/PostPage'
 import SearchPage from './pages/SearchPage'
 function App() {
   return (
-<<<<<<< HEAD
-    <>
-      <BrowserRouter>
-        <NavBar />
-        {/* <WritingPage /> */}
-        <SignInPage />
-        <LogInPage />
-      </BrowserRouter>
-
-      <Footer />
-    </>
-=======
     <BrowserRouter>
+      <WritingPage /> {/*삭제하기 */}
       <Routes>
         <Route element={<PageLayout />}>
           <Route
@@ -50,7 +39,6 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
->>>>>>> eead9093c6d7426ccedb3d3b68c1d438a0037a0c
   )
 }
 

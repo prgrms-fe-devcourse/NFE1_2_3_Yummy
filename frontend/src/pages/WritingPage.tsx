@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Button, Select, Input, message } from 'antd' // Ant Design의 컴포넌트 사용
 import DraftEditor from '../components/DraftEditor'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { EditorState } from 'draft-js'
+import { EditorState, ContentState, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import axios from 'axios'
 
@@ -13,8 +13,8 @@ const { Option } = Select // Ant Design Select
 const WritingPage: React.FC = () => {
   const navigate = useNavigate()
 
-  const [category, setCategory] = useState<string>('')
   const [title, setTitle] = useState<string>('')
+  const [category, setCategory] = useState<string>('')
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
   // 카테고리 토글
@@ -22,15 +22,42 @@ const WritingPage: React.FC = () => {
     setCategory(value as string) // value를 string으로 변환
   }
 
-  // 게시글 등록 버튼 클릭 시 유효성 검사
-  const handleSubmit = () => {
-    const content = editorState.getCurrentContent()
-    const plainText = content.getPlainText().trim() // 공백 제거한 텍스트
+  // 버튼 클릭 -> 유효성 검사 및 POST 요청
+  const handleSubmit = async () => {
+    const contentState = editorState.getCurrentContent() // ContentState 객체 가져오기
+    const rawContentState = convertToRaw(contentState) // ContentState를 RawDraftContentState로 변환
+    const htmlContent = draftToHtml(rawContentState) // 변환된 RawDraftContentState를 HTML로 변환
 
-    if (!category || !title || !plainText) {
+    // 정규식으로 src 속성 추출
+    const imgTagRegex = /<img[^>]+src="([^">]+)"/g
+    const imgMatch = imgTagRegex.exec(htmlContent) // 첫 번째 이미지 src 추출
+    let imageUrl = null
+    if (imgMatch) {
+      imageUrl = imgMatch[1] // img 태그의 첫 번째 src 값
+    }
+
+    // img 태그 삭제
+    const cleanedContent = htmlContent.replace(/<img[^>]*>/g, '')
+
+    // 필드 검증
+    if (!category || !title || !htmlContent.trim()) {
       message.error('모든 필드를 입력해주세요.')
     } else {
-      message.success('게시글이 성공적으로 등록되었습니다.')
+      try {
+        const response = await axios.post('/api/post', {
+          title: title,
+          content: cleanedContent,
+          category: category,
+          image_url: imageUrl || 'http://example.com/image.jpg',
+        })
+
+        if (response.status === 201) {
+          message.success('게시글이 성공적으로 등록되었습니다.')
+          navigate('/') // 요청 성공 후 홈으로 이동
+        }
+      } catch (error) {
+        message.error('게시글 등록에 실패했습니다.')
+      }
     }
   }
 
@@ -145,16 +172,6 @@ const StyledButton = styled(Button)`
   background-color: black;
   font-size: 18px;
   border-radius: 10px;
-`
-
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 14px;
-`
-
-const SuccessMessage = styled.p`
-  color: green;
-  font-size: 14px;
 `
 
 export default WritingPage

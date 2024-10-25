@@ -3,6 +3,8 @@ import { EditorState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import styled from 'styled-components'
+import axios from 'axios'
+import { message } from 'antd'
 
 interface DraftEditorProps {
   editorState: EditorState
@@ -13,20 +15,31 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
   editorState,
   setEditorState,
 }) => {
+  // 이미지 Cloudinary에 업로드
+  const uploadImageToCloudinary = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', 'ml_default') // Cloudinary의 업로드 프리셋
+
+    try {
+      const response = await axios.post(
+        'https://api.cloudinary.com/v1_1/dee7rlglp/image/upload',
+        formData,
+      )
+      return { data: { link: response.data.secure_url } } // Cloudinary에서 받은 이미지 URL 반환
+    } catch (error) {
+      message.error('이미지 업로드에 실패했습니다.')
+      return null
+    }
+  }
+
   // 이미지 업로드 콜백
-  const uploadImageCallBack = (file: File): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        resolve({
-          data: { link: reader.result as string },
-        })
-      }
-      reader.onerror = (error) => {
-        reject(error)
-      }
-      reader.readAsDataURL(file) // 파일을 Base64로 변환
-    })
+  const imageUploadCallback = async (file: File) => {
+    const uploadedImage = await uploadImageToCloudinary(file)
+    if (uploadedImage && uploadedImage.data) {
+      return { data: { link: uploadedImage.data.link } } // 에디터에 삽입될 이미지 URL 반환
+    }
+    return null
   }
 
   return (
@@ -47,7 +60,7 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
               'image',
             ],
             image: {
-              uploadCallback: uploadImageCallBack,
+              uploadCallback: imageUploadCallback,
               previewImage: true,
               alt: { present: true, mandatory: false },
               inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
