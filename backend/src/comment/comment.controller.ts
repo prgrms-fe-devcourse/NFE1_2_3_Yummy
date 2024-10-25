@@ -6,11 +6,13 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto'; // UpdateCommentDto 임포트
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('comments') // 태그 설정
 @Controller('post/:postId/comment')
@@ -19,6 +21,7 @@ export class CommentController {
 
   // 댓글 생성
   @Post()
+  @UseGuards(JwtAuthGuard) // 생성 시 JWT 검증 가드 적용
   @ApiOperation({ summary: '댓글 생성' })
   @ApiResponse({
     status: 201,
@@ -46,6 +49,7 @@ export class CommentController {
 
   // 댓글 수정
   @Put(':commentId')
+  @UseGuards(JwtAuthGuard) // 생성 시 JWT 검증 가드 적용
   @ApiOperation({ summary: '댓글 수정' })
   @ApiParam({ name: 'commentId', description: '수정할 댓글 ID' })
   @ApiResponse({
@@ -63,6 +67,7 @@ export class CommentController {
 
   // 댓글 삭제
   @Delete(':commentId')
+  @UseGuards(JwtAuthGuard) // 생성 시 JWT 검증 가드 적용
   @ApiOperation({ summary: '댓글 삭제' })
   @ApiParam({ name: 'commentId', description: '삭제할 댓글 ID' })
   @ApiResponse({

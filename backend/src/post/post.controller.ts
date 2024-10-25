@@ -8,8 +8,10 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -21,6 +23,7 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '게시글 생성' })
   create(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
@@ -39,6 +42,7 @@ export class PostController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '게시글 업데이트' })
   @UsePipes(new ValidationPipe({ whitelist: true })) // 유효성 검사 파이프 추가
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
@@ -46,6 +50,7 @@ export class PostController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '특정 게시글 삭제' })
   remove(@Param('id') id: string) {
     return this.postService.remove(id);

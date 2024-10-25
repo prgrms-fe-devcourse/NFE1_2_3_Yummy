@@ -4,9 +4,11 @@ import { UsersModule } from '../users/users.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    PassportModule,
     UsersModule,
     JwtModule.register({
       secret: 'SECRET_KEY', // 비밀 키를 안전하게 보관하세요
