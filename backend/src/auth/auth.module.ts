@@ -8,11 +8,11 @@ import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }), // 기본 전략 설정,
     UsersModule,
     JwtModule.register({
       secret: 'SECRET_KEY', // 비밀 키를 안전하게 보관하세요
-      signOptions: { expiresIn: '60s' }, // 토큰 만료 시간
+      signOptions: { expiresIn: '1h' }, // 토큰 만료 시간
     }),
   ],
   providers: [AuthService, JwtStrategy],

@@ -15,9 +15,10 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('post')
+@ApiBearerAuth() // JWT 토큰을 사용하는 API
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}

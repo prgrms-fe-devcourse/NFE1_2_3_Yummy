@@ -9,12 +9,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiOperation,
+  ApiParam,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto'; // UpdateCommentDto 임포트
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('comments') // 태그 설정
+@ApiBearerAuth() // JWT 토큰을 사용하는 API
 @Controller('post/:postId/comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}

@@ -136,6 +136,8 @@ var CommentController = /** @class */ (function () {
     CommentController = __decorate([
         swagger_1.ApiTags('comments') // 태그 설정
         ,
+        swagger_1.ApiBearerAuth() // JWT 토큰을 사용하는 API
+        ,
         common_1.Controller('post/:postId/comment')
     ], CommentController);
     return CommentController;
