@@ -9,7 +9,6 @@ import SearchPage from './pages/SearchPage'
 function App() {
   return (
     <BrowserRouter>
-      <WritingPage /> {/*삭제하기 */}
       <Routes>
         <Route element={<PageLayout />}>
           <Route
