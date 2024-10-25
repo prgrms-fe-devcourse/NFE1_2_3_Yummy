@@ -40,7 +40,7 @@ export const ProfileImage = styled.img`
   object-fit: cover;
 `
 
-export const SettingsIcon = styled.input`
+export const ImageInput = styled.label`
   position: absolute;
   bottom: 0;
   right: 0;

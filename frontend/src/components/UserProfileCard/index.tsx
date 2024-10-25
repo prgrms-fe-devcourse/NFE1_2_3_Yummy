@@ -8,6 +8,7 @@ import {
   EditButton,
   ProfileNameContainer,
 } from './style'
+import { useNavigateTo } from '@/assets/useNavigateTo'
 
 interface UserProfileCardProps {
   imageUrl: string
@@ -22,6 +23,11 @@ const UserProfileCard = ({
   description,
   isDisplay,
 }: UserProfileCardProps) => {
+  const handleNavigateTo = useNavigateTo()
+  const handleEditProfile = () => {
+    handleNavigateTo('/profile/edit')
+  }
+
   return (
     <UserCard>
       <ProfileImage
@@ -31,7 +37,10 @@ const UserProfileCard = ({
       <ProfileIntroduce>
         <ProfileNameContainer>
           <Name>{name}</Name>
-          <EditButton $isDisplay={isDisplay}>
+          <EditButton
+            $isDisplay={isDisplay}
+            onClick={handleEditProfile}
+          >
             <SettingOutlined style={{ color: '#7d7d7d', fontSize: '1.2rem' }} />
           </EditButton>
         </ProfileNameContainer>

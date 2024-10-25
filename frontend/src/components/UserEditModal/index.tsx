@@ -4,6 +4,7 @@ import {
   CancelButton,
   ConfirmButton,
   ImageContainer,
+  ImageInput,
   InputGroup,
   InputSection,
   Label,
@@ -11,24 +12,59 @@ import {
   PopupCard,
   ProfileImage,
   ProfileSection,
-  SettingsIcon,
   TextArea,
   UserProfileModalContainer,
 } from './style'
 
-const PopupDialog = () => {
+import { useNavigateTo } from '@/assets/useNavigateTo'
+import { ChangeEvent, useState } from 'react'
+
+const UserEditModal = () => {
+  const [userImage, setUserImage] = useState(
+    'https://static.inews24.com/v1/0ea0b53518da00.jpg',
+  )
+
+  const handleNavigateTo = useNavigateTo()
+  const handleClickCancel = () => {
+    handleNavigateTo('/profile')
+  }
+
+  const handleClickConfirm = () => {
+    handleNavigateTo('/profile')
+  }
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // 선택한 파일 출력을 위한 로직
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const result = e.target?.result as string
+        setUserImage(result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
     <UserProfileModalContainer>
       <PopupCard>
         <ProfileSection>
           <ImageContainer>
             <ProfileImage
-              src='https://static.inews24.com/v1/0ea0b53518da00.jpg'
+              src={userImage}
               alt='Profile'
             />
-            <SettingsIcon type='file'>
+            <ImageInput htmlFor='image-input'>
               <SettingOutlined style={{ color: '#7d7d7d' }} />
-            </SettingsIcon>
+            </ImageInput>
+            <input
+              id='image-input'
+              type='file'
+              accept='.jpg, .png, .gif'
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+            />
           </ImageContainer>
 
           <InputSection>
@@ -50,14 +86,13 @@ const PopupDialog = () => {
             </InputGroup>
           </InputSection>
         </ProfileSection>
-
         <ButtonGroup>
-          <CancelButton>취소</CancelButton>
-          <ConfirmButton>확인</ConfirmButton>
+          <CancelButton onClick={handleClickCancel}>취소</CancelButton>
+          <ConfirmButton onClick={handleClickConfirm}>확인</ConfirmButton>
         </ButtonGroup>
       </PopupCard>
     </UserProfileModalContainer>
   )
 }
 
-export default PopupDialog
+export default UserEditModal
