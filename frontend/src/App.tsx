@@ -5,6 +5,7 @@ import WritingPage from './pages/WritingPage'
 import PageLayout from './layouts/pageLayout'
 import MyPage from './pages/MyPage'
 import PostPage from './pages/PostPage'
+import MainPage from './pages/MainPage'
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +30,10 @@ function App() {
           <Route
             path='/post'
             element={<PostPage />}
+          />
+          <Route
+            path='/'
+            element={<MainPage />}
           />
         </Route>
       </Routes>
