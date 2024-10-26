@@ -8,7 +8,7 @@ import {
   EditButton,
   ProfileNameContainer,
 } from './style'
-import { useNavigateTo } from '@/assets/useNavigateTo'
+import { useNavigateTo } from '@/hooks/useNavigateTo'
 
 interface UserProfileCardProps {
   imageUrl: string

@@ -4,7 +4,7 @@ import {
   CancelButton,
   ConfirmButton,
   ImageContainer,
-  ImageInput,
+  ImageInputLabel,
   InputGroup,
   InputSection,
   Label,
@@ -16,7 +16,7 @@ import {
   UserProfileModalContainer,
 } from './style'
 
-import { useNavigateTo } from '@/assets/useNavigateTo'
+import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { ChangeEvent, useState } from 'react'
 
 const UserEditModal = () => {
@@ -29,13 +29,10 @@ const UserEditModal = () => {
     handleNavigateTo('/profile')
   }
 
-  const handleClickConfirm = () => {
-    handleNavigateTo('/profile')
-  }
-
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     // 선택한 파일 출력을 위한 로직
     const file = e.target.files?.[0]
+
     if (file) {
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -46,21 +43,31 @@ const UserEditModal = () => {
     }
   }
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.target as HTMLFormElement)
+    const requestBody = Object.fromEntries(formData)
+
+    return { ...requestBody, image: userImage }
+  }
+
   return (
     <UserProfileModalContainer>
       <PopupCard>
-        <ProfileSection>
+        <ProfileSection onSubmit={handleSubmit}>
           <ImageContainer>
             <ProfileImage
               src={userImage}
-              alt='Profile'
+              alt='User Profile'
             />
-            <ImageInput htmlFor='image-input'>
+            <ImageInputLabel htmlFor='image-input'>
               <SettingOutlined style={{ color: '#7d7d7d' }} />
-            </ImageInput>
+            </ImageInputLabel>
             <input
               id='image-input'
               type='file'
+              name='image'
               accept='.jpg, .png, .gif'
               style={{ display: 'none' }}
               onChange={handleImageChange}
@@ -69,27 +76,31 @@ const UserEditModal = () => {
 
           <InputSection>
             <InputGroup>
-              <Label>닉네임</Label>
+              <Label htmlFor='nickname-input'>닉네임</Label>
               <NicknameInput
+                id='nickname-input'
                 type='text'
                 placeholder='닉네임을 입력하세요'
                 defaultValue='에드워드 리'
+                name='nickname'
               />
             </InputGroup>
 
             <InputGroup>
-              <Label>소개글</Label>
+              <Label htmlFor='introduction-input'>소개글</Label>
               <TextArea
+                id='introduction-input'
                 placeholder='소개글을 입력하세요'
                 defaultValue="심사위원에게 가는 길은 길었어요. 가끔은 '잠깐만, 돌아가서 뭔가 고치고 싶다'라는 생각이 들기도 해요. 하지만 한 번 걷기 시작하면 끝까지 가봐야 하는 겁니다. 해봅시다."
+                name='introduction'
               />
             </InputGroup>
           </InputSection>
+          <ButtonGroup>
+            <CancelButton onClick={handleClickCancel}>취소</CancelButton>
+            <ConfirmButton type='submit'>확인</ConfirmButton>
+          </ButtonGroup>
         </ProfileSection>
-        <ButtonGroup>
-          <CancelButton onClick={handleClickCancel}>취소</CancelButton>
-          <ConfirmButton onClick={handleClickConfirm}>확인</ConfirmButton>
-        </ButtonGroup>
       </PopupCard>
     </UserProfileModalContainer>
   )

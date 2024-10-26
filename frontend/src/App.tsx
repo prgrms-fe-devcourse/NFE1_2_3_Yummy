@@ -41,7 +41,7 @@ function App() {
             path='/search'
             element={
               <Navigate
-                to='/search/category?=all'
+                to='/search/category?search=전체'
                 replace
               />
             }

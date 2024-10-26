@@ -17,7 +17,7 @@ export const PopupCard = styled.div`
   padding: 2rem 1.5rem;
 `
 
-export const ProfileSection = styled.div`
+export const ProfileSection = styled.form`
   display: flex;
   width: 100%;
   align-items: center;
@@ -40,7 +40,7 @@ export const ProfileImage = styled.img`
   object-fit: cover;
 `
 
-export const ImageInput = styled.label`
+export const ImageInputLabel = styled.label`
   position: absolute;
   bottom: 0;
   right: 0;
@@ -92,6 +92,7 @@ export const TextArea = styled.textarea`
 `
 
 export const ButtonGroup = styled.div`
+  width: 100%;
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;

@@ -1,7 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import { SearchPageNavContainer, SearchPageNavItem } from './style'
-import { formatCategoryForURL } from '@/utils/formatURL'
-import { useNavigateTo } from '@/assets/useNavigateTo'
+import { useNavigateTo } from '@/hooks/useNavigateTo'
 
 const SearchPageNav = () => {
   const categories = [
@@ -25,9 +24,7 @@ const SearchPageNav = () => {
   const urlCategory = searchParams.get('search')
 
   const handleClickCategory = (category: string) => {
-    handleNavigateTo(
-      `/search/category?search=${formatCategoryForURL(category)}`,
-    )
+    handleNavigateTo(`/search/category?search=${category}`)
   }
 
   return (
