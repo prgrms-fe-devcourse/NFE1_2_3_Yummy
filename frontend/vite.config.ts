@@ -23,4 +23,15 @@ export default defineConfig({
   define: {
     global: 'window', // global을 window로 정의
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
+        ws: true,
+      },
+    },
+  },
 })
