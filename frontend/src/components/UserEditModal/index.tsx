@@ -49,7 +49,7 @@ const UserEditModal = () => {
     const formData = new FormData(e.target as HTMLFormElement)
     const requestBody = Object.fromEntries(formData)
 
-    return { ...requestBody, image: userImage }
+    console.log({ ...requestBody, image: userImage })
   }
 
   return (
