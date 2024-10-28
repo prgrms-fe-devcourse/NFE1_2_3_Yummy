@@ -83,18 +83,49 @@ var CommentController = /** @class */ (function () {
         });
     };
     // 댓글 수정
-    CommentController.prototype.updateComment = function (postId, commentId, updateCommentDto) {
+    CommentController.prototype.updateComment = function (postId, commentId, updateCommentDto, // DTO 사용
+    req) {
         return __awaiter(this, void 0, void 0, function () {
+            var userId, comment;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.commentService.update(commentId, updateCommentDto.content)];
+                switch (_a.label) {
+                    case 0:
+                        userId = req.user._id;
+                        return [4 /*yield*/, this.commentService.findById(commentId)];
+                    case 1:
+                        comment = _a.sent();
+                        if (!comment) {
+                            throw new common_1.NotFoundException('댓글을 찾을 수 없습니다.');
+                        }
+                        // 작성자 ID 비교
+                        if (!comment.userId.equals(userId)) {
+                            throw new common_1.ForbiddenException('자신의 댓글만 수정할 수 있습니다.'); // 권한이 없는 경우
+                        }
+                        return [2 /*return*/, this.commentService.update(commentId, updateCommentDto.content)];
+                }
             });
         });
     };
     // 댓글 삭제
-    CommentController.prototype.deleteComment = function (postId, commentId) {
+    CommentController.prototype.deleteComment = function (postId, commentId, req) {
         return __awaiter(this, void 0, void 0, function () {
+            var userId, comment;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.commentService["delete"](commentId)];
+                switch (_a.label) {
+                    case 0:
+                        userId = req.user._id;
+                        return [4 /*yield*/, this.commentService.findById(commentId)];
+                    case 1:
+                        comment = _a.sent();
+                        if (!comment) {
+                            throw new common_1.NotFoundException('댓글을 찾을 수 없습니다.');
+                        }
+                        // 작성자 ID 비교
+                        if (!comment.userId.equals(userId)) {
+                            throw new common_1.ForbiddenException('자신의 댓글만 삭제할 수 있습니다.'); // 권한이 없는 경우
+                        }
+                        return [2 /*return*/, this.commentService["delete"](commentId)];
+                }
             });
         });
     };
@@ -131,7 +162,8 @@ var CommentController = /** @class */ (function () {
         swagger_1.ApiResponse({ status: 404, description: '댓글을 찾을 수 없습니다.' }),
         __param(0, common_1.Param('postId')),
         __param(1, common_1.Param('commentId')),
-        __param(2, common_1.Body())
+        __param(2, common_1.Body()),
+        __param(3, common_1.Req())
     ], CommentController.prototype, "updateComment");
     __decorate([
         common_1.Delete(':commentId'),
@@ -145,7 +177,8 @@ var CommentController = /** @class */ (function () {
         }),
         swagger_1.ApiResponse({ status: 404, description: '댓글을 찾을 수 없습니다.' }),
         __param(0, common_1.Param('postId')),
-        __param(1, common_1.Param('commentId'))
+        __param(1, common_1.Param('commentId')),
+        __param(2, common_1.Req())
     ], CommentController.prototype, "deleteComment");
     CommentController = __decorate([
         swagger_1.ApiTags('comments') // 태그 설정

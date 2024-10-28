@@ -54,4 +54,8 @@ export class CommentService {
       throw new NotFoundException('댓글을 찾을 수 없습니다.');
     }
   }
+
+  async findById(commentId: string): Promise<Comment | null> {
+    return this.commentModel.findById(commentId).exec();
+  }
 }

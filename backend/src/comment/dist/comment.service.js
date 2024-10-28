@@ -110,6 +110,13 @@ var CommentService = /** @class */ (function () {
             });
         });
     };
+    CommentService.prototype.findById = function (commentId) {
+        return __awaiter(this, void 0, Promise, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.commentModel.findById(commentId).exec()];
+            });
+        });
+    };
     CommentService = __decorate([
         common_1.Injectable(),
         __param(0, mongoose_1.InjectModel(comment_schema_1.Comment.name))

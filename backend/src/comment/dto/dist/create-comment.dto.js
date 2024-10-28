@@ -18,8 +18,6 @@ var CreateCommentDto = /** @class */ (function () {
         class_validator_1.IsNotEmpty({ message: '댓글 내용을 입력해야 합니다.' })
     ], CreateCommentDto.prototype, "content");
     __decorate([
-        swagger_1.ApiProperty({ description: '작성자 이름 (회원가입 기능 구현 후 수정예정)' }) // Swagger 설명
-        ,
         class_validator_1.IsNotEmpty({ message: '작성자 이름을 입력해야 합니다.' })
     ], CreateCommentDto.prototype, "author");
     return CreateCommentDto;

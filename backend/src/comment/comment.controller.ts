@@ -8,6 +8,8 @@ import {
   Body,
   UseGuards,
   Req,
+  NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import {
@@ -80,7 +82,20 @@ export class CommentController {
     @Param('postId') postId: string,
     @Param('commentId') commentId: string,
     @Body() updateCommentDto: UpdateCommentDto, // DTO 사용
+    @Req() req: any,
   ) {
+    const userId = req.user._id;
+
+    // 댓글 조회
+    const comment = await this.commentService.findById(commentId);
+    if (!comment) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+
+    // 작성자 ID 비교
+    if (!comment.userId.equals(userId)) {
+      throw new ForbiddenException('자신의 댓글만 수정할 수 있습니다.'); // 권한이 없는 경우
+    }
     return this.commentService.update(commentId, updateCommentDto.content);
   }
 
@@ -97,7 +112,21 @@ export class CommentController {
   async deleteComment(
     @Param('postId') postId: string,
     @Param('commentId') commentId: string,
+    @Req() req: any,
   ) {
+    const userId = req.user._id;
+
+    // 댓글 조회
+    const comment = await this.commentService.findById(commentId);
+    if (!comment) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+
+    // 작성자 ID 비교
+    if (!comment.userId.equals(userId)) {
+      throw new ForbiddenException('자신의 댓글만 삭제할 수 있습니다.'); // 권한이 없는 경우
+    }
+
     return this.commentService.delete(commentId);
   }
 }

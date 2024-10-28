@@ -6,6 +6,5 @@ export class UpdateCommentDto extends PartialType(CreateCommentDto) {
   @ApiProperty({ description: '댓글 내용' })
   content?: string;
 
-  @ApiProperty({ description: '작성자 이름' })
   author?: string;
 }

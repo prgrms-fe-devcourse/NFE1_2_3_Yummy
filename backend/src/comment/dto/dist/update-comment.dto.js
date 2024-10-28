@@ -31,9 +31,6 @@ var UpdateCommentDto = /** @class */ (function (_super) {
     __decorate([
         swagger_1.ApiProperty({ description: '댓글 내용' })
     ], UpdateCommentDto.prototype, "content");
-    __decorate([
-        swagger_1.ApiProperty({ description: '작성자 이름' })
-    ], UpdateCommentDto.prototype, "author");
     return UpdateCommentDto;
 }(mapped_types_1.PartialType(create_comment_dto_1.CreateCommentDto)));
 exports.UpdateCommentDto = UpdateCommentDto;
