@@ -25,12 +25,11 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      // '/api'로 시작하는 요청을 백엔드 서버로 프록시 (임시)
       '/api': {
         target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        secure: false,
-        ws: true,
+        changeOrigin: true, // CORS 문제를 우회
+        rewrite: (path) => path.replace(/^\/api/, ''), // 경로 재작성
       },
     },
   },

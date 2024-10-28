@@ -13,22 +13,6 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
   editorState,
   setEditorState,
 }) => {
-  // 이미지 업로드 콜백
-  const uploadImageCallBack = (file: File): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        resolve({
-          data: { link: reader.result as string },
-        })
-      }
-      reader.onerror = (error) => {
-        reject(error)
-      }
-      reader.readAsDataURL(file) // 파일을 Base64로 변환
-    })
-  }
-
   return (
     <EditorContainer>
       <EditorWrapper>
@@ -44,18 +28,7 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
               'textAlign',
               'link',
               'history',
-              'image',
-            ],
-            image: {
-              uploadCallback: uploadImageCallBack,
-              previewImage: true,
-              alt: { present: true, mandatory: false },
-              inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
-              defaultSize: {
-                height: 'auto',
-                width: 'auto',
-              },
-            },
+            ], // 이미지 옵션 제거
           }}
           wrapperClassName='wrapper-class'
           editorClassName='editor-class'
@@ -70,13 +43,12 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
 const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 80%;
+  /* align-items: flex-end;  */
   margin: 0 auto;
 `
 
 const EditorWrapper = styled.div`
-  width: 100%;
+  width: auto;
   min-height: 300px;
   margin-bottom: 20px;
   border: 1px solid #ddd;

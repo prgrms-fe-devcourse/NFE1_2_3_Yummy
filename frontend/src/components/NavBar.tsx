@@ -47,7 +47,12 @@ const NavigationBar: React.FC = () => {
 
   // 내 정보 페이지 이동
   const handleProfile = () => {
-    navigate('/profile') // 프로필 페이지로 이동
+    navigate('/profile')
+  }
+
+  // 게시물 작성 네비게이션
+  const handleWriting = () => {
+    navigate('/write')
   }
 
   // 카테고리 배열
@@ -97,7 +102,9 @@ const NavigationBar: React.FC = () => {
           onClick={() => navigate('/search')}
         />
         <LogInBtnContainer>
-          {loggedIn ? (
+          {' '}
+          {/*loggedIn ! 추후에 수정 */}
+          {!loggedIn ? (
             <AvatarContainer>
               <StyledAvatar
                 size={64}
@@ -111,6 +118,10 @@ const NavigationBar: React.FC = () => {
                 <CustomModal>
                   <ModalContent>
                     <ModalButton onClick={handleProfile}>내 정보</ModalButton>
+                    <ModalDivider />
+                    <ModalButton onClick={handleWriting}>
+                      게시물 작성
+                    </ModalButton>
                     <ModalDivider />
                     <ModalButton onClick={handleLogout}>로그아웃</ModalButton>
                   </ModalContent>
