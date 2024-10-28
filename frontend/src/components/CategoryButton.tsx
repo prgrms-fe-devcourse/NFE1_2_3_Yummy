@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { mockPosts } from '@/utils/mockPosts'
+import { useQuery } from '@tanstack/react-query'
 import PostCard from '@/components/PostCard'
+import axios from 'axios'
 
 interface CategoryButtonProps {
   label: string
@@ -67,16 +68,28 @@ const categories = [
 const CategoryButtons: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
+  const { data: posts = [], isLoading, error } = useQuery({
+    queryKey: ['posts'],
+    queryFn: async () => {
+      const response = await axios.get('/api/post')
+      console.log('ADD ', response.data)
+      return response.data
+    },
+  })
+
   const handleClick = (category: string) => {
     setSelectedCategory(category)
   }
 
   // 선택된 카테고리에 따라 포스트 필터링
   const filteredPosts = selectedCategory
-    ? mockPosts.filter((post) => post.category === selectedCategory)
-    : [...mockPosts].sort(
+    ? posts.filter((post: any) => post.category === selectedCategory)
+    : [...posts].sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       ) // 최신순 정렬
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Something went wrong!</div>
 
   return (
     <CenteredContainer>
@@ -90,9 +103,9 @@ const CategoryButtons: React.FC = () => {
         ))}
       </ButtonGrid>
       <PostsContainer>
-        {filteredPosts.map((post, index) => (
+        {filteredPosts.map((post:any) => (
           <PostCard
-            key={index}
+            key={post.id}
             category={post.category}
             title={post.title}
             author={post.author}
