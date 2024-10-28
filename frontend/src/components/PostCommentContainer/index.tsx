@@ -2,15 +2,16 @@ import { CommentContainer } from '@/pages/PostPage/style'
 import CommentCard from '../CommentCard'
 import CommentInput from '../CommentInput'
 import { Comment } from '@/typings/db'
-import { getComment } from '@/apis/api'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
+import postApi from '@/apis/postServite'
 
 const PostCommentContainer = () => {
   const { id: postId } = useParams()
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['comment', postId],
-    queryFn: async () => await getComment(postId as string),
+    queryFn: async () => await postApi.getComment(postId as string),
+    enabled: !!postId,
   })
 
   let content

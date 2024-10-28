@@ -8,7 +8,7 @@ import SearchPageNav from '@/components/SearchPageNav'
 import PostCard from '@/components/PostCard'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { getPost } from '@/apis/api'
+import postApi from '@/apis/postServite'
 import { Post } from '@/typings/db'
 import { useState } from 'react'
 
@@ -20,7 +20,7 @@ const SearchPage = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['posts'],
-    queryFn: () => getPost(),
+    queryFn: async () => postApi.getPost(),
   })
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,7 @@ const SearchPage = () => {
     const filteredPosts: Post[] =
       category === '전체'
         ? data
-        : data.filter((post) => post.category === category)
+        : data.filter((post: Post) => post.category === category)
 
     const searchPredicate = ({ title, content }: Post) =>
       title.includes(search) || content.includes(search)

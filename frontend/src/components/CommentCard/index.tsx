@@ -6,16 +6,17 @@ import {
   CommentCardInfo,
 } from './style'
 import { Comment } from '@/typings/db'
-import { deleteComment, queryClient } from '@/apis/api'
+import { queryClient } from '@/apis/api'
 import { useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
+import postApi from '@/apis/postServite'
 
 const CommentCard = ({ content, author, createdAt, _id }: Comment) => {
   const { id: postId } = useParams()
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async (comment_id: string) => {
-      await deleteComment(postId as string, comment_id)
+      await postApi.deleteComment(postId as string, comment_id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comment', postId] })

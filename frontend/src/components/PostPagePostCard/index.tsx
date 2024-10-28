@@ -9,14 +9,14 @@ import {
 } from './style'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { getPostById } from '@/apis/api'
+import postApi from '@/apis/postServite'
 
 const PostPagePostCard = () => {
   const { id } = useParams()
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['post', id],
-    queryFn: () => getPostById(id as string),
+    queryFn: () => postApi.getPostById(id as string),
     enabled: !!id,
   })
 

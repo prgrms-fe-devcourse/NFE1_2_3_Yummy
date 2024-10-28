@@ -7,8 +7,9 @@ import {
 } from './style'
 import { useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import { createComment, queryClient } from '@/apis/api'
+import { queryClient } from '@/apis/api'
 import { CommentForm } from '@/utils/Model/commentModel'
+import postApi from '@/apis/postServite'
 
 const CommentInput = () => {
   const { id: postId } = useParams()
@@ -17,7 +18,7 @@ const CommentInput = () => {
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async (commentData: CommentForm) => {
-      await createComment(commentData)
+      await postApi.createComment(postId as string, commentData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comment', postId] })
