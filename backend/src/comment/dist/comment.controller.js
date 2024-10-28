@@ -49,15 +49,19 @@ exports.CommentController = void 0;
 var common_1 = require("@nestjs/common");
 var swagger_1 = require("@nestjs/swagger");
 var jwt_auth_guard_1 = require("src/auth/jwt-auth.guard");
+var mongoose_1 = require("mongoose");
 var CommentController = /** @class */ (function () {
     function CommentController(commentService) {
         this.commentService = commentService;
     }
     // 댓글 생성
-    CommentController.prototype.createComment = function (postId, createCommentDto) {
+    CommentController.prototype.createComment = function (postId, createCommentDto, // DTO 사용
+    req) {
         return __awaiter(this, void 0, void 0, function () {
+            var userId;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.commentService.create(postId, createCommentDto.content, createCommentDto.author)];
+                userId = req.user._id;
+                return [2 /*return*/, this.commentService.create(new mongoose_1.Types.ObjectId(postId), createCommentDto.content, userId)];
             });
         });
     };
@@ -96,7 +100,8 @@ var CommentController = /** @class */ (function () {
         }),
         swagger_1.ApiResponse({ status: 400, description: '잘못된 요청' }),
         __param(0, common_1.Param('postId')),
-        __param(1, common_1.Body())
+        __param(1, common_1.Body()),
+        __param(2, common_1.Req())
     ], CommentController.prototype, "createComment");
     __decorate([
         common_1.Get(),

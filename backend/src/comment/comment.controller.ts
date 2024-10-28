@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import {
@@ -19,6 +20,7 @@ import {
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto'; // UpdateCommentDto 임포트
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Types } from 'mongoose';
 
 @ApiTags('comments') // 태그 설정
 @ApiBearerAuth() // JWT 토큰을 사용하는 API
@@ -38,11 +40,13 @@ export class CommentController {
   async createComment(
     @Param('postId') postId: string,
     @Body() createCommentDto: CreateCommentDto, // DTO 사용
+    @Req() req: any,
   ) {
+    const userId = req.user._id;
     return this.commentService.create(
-      postId,
+      new Types.ObjectId(postId),
       createCommentDto.content,
-      createCommentDto.author,
+      userId,
     );
   }
 
