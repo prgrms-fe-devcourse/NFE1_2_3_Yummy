@@ -54,6 +54,8 @@ const PostText = styled.p`
   margin-top: 8px;
 `
 
+// author 속성은 추후 확인해야됨
+
 function PostCard({
   title,
   author,
@@ -64,6 +66,7 @@ function PostCard({
   _id,
 }: Post) {
   const handleNavigateTo = useNavigateTo()
+
   const handleOpenPost = () => {
     handleNavigateTo(`/post/${_id}`)
   }

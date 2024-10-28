@@ -31,6 +31,7 @@ const PostPagePostCard = () => {
   }
 
   if (data) {
+    console.log(data)
     content = (
       <PostPagePostCardContainer>
         <PostInfo>
@@ -49,7 +50,7 @@ const PostPagePostCard = () => {
           </PostDetail>
         </PostInfo>
 
-        <PostContent>{data?.content}</PostContent>
+        <PostContent dangerouslySetInnerHTML={{ __html: data?.content }} />
       </PostPagePostCardContainer>
     )
   }

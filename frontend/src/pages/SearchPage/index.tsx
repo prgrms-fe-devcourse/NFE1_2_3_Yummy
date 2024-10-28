@@ -5,14 +5,16 @@ import {
   SearchPageResultContainer,
 } from './style'
 import SearchPageNav from '@/components/SearchPageNav'
-import { mockPosts } from '@/utils/mockPosts'
 import PostCard from '@/components/PostCard'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getPost } from '@/apis/api'
 import { Post } from '@/typings/db'
+import { useState } from 'react'
 
 const SearchPage = () => {
+  const [search, setSearch] = useState('')
+
   const [searchParams] = useSearchParams()
   const category = searchParams.get('search') || '전체'
 
@@ -20,6 +22,10 @@ const SearchPage = () => {
     queryKey: ['posts'],
     queryFn: () => getPost(),
   })
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+  }
 
   let content
 
@@ -37,7 +43,12 @@ const SearchPage = () => {
         ? data
         : data.filter((post) => post.category === category)
 
-    content = filteredPosts.map((post, index) => (
+    const searchPredicate = ({ title, content }: Post) =>
+      title.includes(search) || content.includes(search)
+
+    const filteredPostsBySearch = filteredPosts.filter(searchPredicate)
+
+    content = filteredPostsBySearch.map((post, index) => (
       <PostCard
         key={index}
         {...post}
@@ -47,7 +58,7 @@ const SearchPage = () => {
 
   return (
     <SearchPageContainer>
-      <SearchPageInput />
+      <SearchPageInput onHandleSearch={handleSearch} />
       <SearchPageResultContainer>
         <SearchPageNav />
         <SearchPageResult>{content}</SearchPageResult>

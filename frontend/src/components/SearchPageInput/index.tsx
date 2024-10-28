@@ -1,7 +1,11 @@
 import { SearchOutlined } from '@ant-design/icons'
 import { SearchPageInputContainer } from './style'
 
-const SearchPageInput = () => {
+interface SearchPageInputProps {
+  onHandleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+const SearchPageInput = ({ onHandleSearch }: SearchPageInputProps) => {
   return (
     <SearchPageInputContainer>
       <button>
@@ -14,6 +18,7 @@ const SearchPageInput = () => {
       <input
         type='text'
         placeholder='검색어를 입력하세요.'
+        onChange={onHandleSearch}
       />
     </SearchPageInputContainer>
   )
