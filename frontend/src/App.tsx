@@ -6,6 +6,8 @@ import PageLayout from './layouts/pageLayout'
 import MyPage from './pages/MyPage'
 import PostPage from './pages/PostPage'
 import MainPage from './pages/MainPage'
+import SearchPage from './pages/SearchPage'
+
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +34,10 @@ function App() {
             element={<PostPage />}
           />
           <Route
+            path='/search'
+            element={<SearchPage />}
+          />
+           <Route
             path='/'
             element={<MainPage />}
           />
