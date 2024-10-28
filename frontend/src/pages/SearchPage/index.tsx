@@ -7,23 +7,27 @@ import {
 import SearchPageNav from '@/components/SearchPageNav'
 import { mockPosts } from '@/utils/mockPosts'
 import PostCard from '@/components/PostCard'
+import { useSearchParams } from 'react-router-dom'
 
 const SearchPage = () => {
+  const [searchParams] = useSearchParams()
+  const category = searchParams.get('search') || '전체'
+
+  const filteredPosts =
+    category === '전체'
+      ? mockPosts
+      : mockPosts.filter((post) => post.category === category)
+
   return (
     <SearchPageContainer>
       <SearchPageInput />
       <SearchPageResultContainer>
         <SearchPageNav />
         <SearchPageResult>
-          {mockPosts.map(({ author, category, date, imgUrl, text, title }) => (
+          {filteredPosts.map((post, index) => (
             <PostCard
-              key={author}
-              author={author}
-              category={category}
-              date={date}
-              imgUrl={imgUrl}
-              text={text}
-              title={title}
+              key={index}
+              {...post}
             />
           ))}
         </SearchPageResult>

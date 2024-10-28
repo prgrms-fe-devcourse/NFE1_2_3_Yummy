@@ -6,7 +6,7 @@ import {
   CommentCardInfo,
   CommentReplyContainer,
 } from './style'
-import { PlusSquareOutlined } from '@ant-design/icons'
+// import { PlusSquareOutlined } from '@ant-design/icons'
 import { Comment } from '@/typings/db'
 
 const CommentCard = ({ content, author, createdAt }: Comment) => {
@@ -25,10 +25,11 @@ const CommentCard = ({ content, author, createdAt }: Comment) => {
       <CommentCardContent>{content}</CommentCardContent>
       <CommentCardButtonContainer>
         <CommentReplyContainer>
-          <button>
+          {/* 추후 대댓글 기능 추가 시 사용 */}
+          {/* <button>
             <PlusSquareOutlined />
           </button>
-          <p>답글 달기</p>
+          <p>답글 달기</p> */}
         </CommentReplyContainer>
         <button>
           <p>삭제</p>
