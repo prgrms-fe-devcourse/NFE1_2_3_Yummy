@@ -32,7 +32,7 @@ const NavigationBar: React.FC = () => {
 
   // 로그아웃 함수
   const handleLogout = () => {
-    localStorage.removeItem('JWTtoken')
+    localStorage.removeItem('token')
     setIsModalVisible(false)
     message.success('로그아웃이 완료되었습니다.')
     navigate('/')
