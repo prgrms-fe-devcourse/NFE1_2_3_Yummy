@@ -12,6 +12,7 @@ const PostCommentContainer = () => {
     queryKey: ['comment', postId],
     queryFn: async () => await getComment(postId as string),
   })
+
   let content
 
   if (isLoading) {
@@ -23,7 +24,12 @@ const PostCommentContainer = () => {
   }
 
   if (data) {
-    content = data.map((comment: Comment) => <CommentCard {...comment} />)
+    content = data.map((comment: Comment) => (
+      <CommentCard
+        key={comment._id}
+        {...comment}
+      />
+    ))
   }
 
   return (

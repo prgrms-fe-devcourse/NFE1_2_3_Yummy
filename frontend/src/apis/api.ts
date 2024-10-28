@@ -1,4 +1,5 @@
 import { Post, Comment } from '@/typings/db'
+import { CommentForm } from '@/utils/Model/commentModel'
 import { QueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
@@ -49,3 +50,29 @@ getPost().then((res) => {
 getComment('671efafe103938e442107859').then((res) => {
   console.log(res)
 })
+
+export const createComment = async (commentData: CommentForm) => {
+  const response = await axios.post<CommentForm>(
+    `${END_POINT}/post/${commentData.postId}/comment`,
+    commentData,
+  )
+  return response.data
+}
+
+export const updateComment = async (
+  commentData: CommentForm,
+  comment_id: string,
+) => {
+  const response = await axios.put<CommentForm>(
+    `${END_POINT}/post/${commentData.postId}/comment/${comment_id}`,
+    commentData,
+  )
+  return response.data
+}
+
+export const deleteComment = async (postId: string, comment_id: string) => {
+  const response = await axios.delete(
+    `${END_POINT}/post/${postId}/comment/${comment_id}`,
+  )
+  return response.data
+}

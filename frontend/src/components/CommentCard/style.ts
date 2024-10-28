@@ -29,25 +29,26 @@ export const CommentCardInfo = styled.div`
     font-weight: 600;
   }
 `
-export const CommentCardContent = styled.p`
+export const CommentCardContent = styled.pre`
+  font-family: 'Noto Sans KR', sans-serif;
   width: 100%;
   line-height: 1.5;
   padding-block: 1.5rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 1rem;
 `
 
 export const CommentCardButtonContainer = styled.div`
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  gap: 1rem;
 
   & button {
     border: none;
     background-color: transparent;
-  }
-
-  & button:first-child {
-    font-size: 1.5rem;
   }
 `
 

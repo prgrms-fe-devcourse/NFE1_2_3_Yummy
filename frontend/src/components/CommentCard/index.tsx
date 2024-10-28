@@ -4,12 +4,30 @@ import {
   CommentCardContainer,
   CommentCardContent,
   CommentCardInfo,
-  CommentReplyContainer,
 } from './style'
-// import { PlusSquareOutlined } from '@ant-design/icons'
 import { Comment } from '@/typings/db'
+import { deleteComment, queryClient } from '@/apis/api'
+import { useParams } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
 
-const CommentCard = ({ content, author, createdAt }: Comment) => {
+const CommentCard = ({ content, author, createdAt, _id }: Comment) => {
+  const { id: postId } = useParams()
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: async (comment_id: string) => {
+      await deleteComment(postId as string, comment_id)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comment', postId] })
+    },
+  })
+
+  const handleDelete = () => {
+    mutate(_id)
+  }
+
+  const buttonDisabledPredicate = isPending || isError
+
   return (
     <CommentCardContainer>
       <CommentCardInfo>
@@ -24,14 +42,13 @@ const CommentCard = ({ content, author, createdAt }: Comment) => {
       </CommentCardInfo>
       <CommentCardContent>{content}</CommentCardContent>
       <CommentCardButtonContainer>
-        <CommentReplyContainer>
-          {/* 추후 대댓글 기능 추가 시 사용 */}
-          {/* <button>
-            <PlusSquareOutlined />
-          </button>
-          <p>답글 달기</p> */}
-        </CommentReplyContainer>
-        <button>
+        <button disabled={buttonDisabledPredicate}>
+          <p>수정</p>
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={buttonDisabledPredicate}
+        >
           <p>삭제</p>
         </button>
       </CommentCardButtonContainer>
