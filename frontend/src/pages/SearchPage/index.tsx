@@ -8,7 +8,7 @@ import SearchPageNav from '@/components/SearchPageNav'
 import PostCard from '@/components/PostCard'
 import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import postApi from '@/apis/postServite'
+import postApi from '@/apis/postService'
 import { Post } from '@/typings/db'
 import { useState } from 'react'
 

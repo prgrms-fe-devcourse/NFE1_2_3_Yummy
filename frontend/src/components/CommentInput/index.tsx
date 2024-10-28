@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { queryClient } from '@/apis/api'
 import { CommentForm } from '@/utils/Model/commentModel'
-import postApi from '@/apis/postServite'
+import postApi from '@/apis/postService'
 
 const CommentInput = () => {
   const { id: postId } = useParams()

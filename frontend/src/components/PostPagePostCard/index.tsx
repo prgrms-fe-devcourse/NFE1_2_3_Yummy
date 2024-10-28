@@ -9,7 +9,7 @@ import {
 } from './style'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import postApi from '@/apis/postServite'
+import postApi from '@/apis/postService'
 
 const PostPagePostCard = () => {
   const { id } = useParams()

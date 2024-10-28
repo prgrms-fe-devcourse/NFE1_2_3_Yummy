@@ -4,7 +4,7 @@ import CommentInput from '../CommentInput'
 import { Comment } from '@/typings/db'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import postApi from '@/apis/postServite'
+import postApi from '@/apis/postService'
 
 const PostCommentContainer = () => {
   const { id: postId } = useParams()

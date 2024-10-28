@@ -9,7 +9,7 @@ import { Comment } from '@/typings/db'
 import { queryClient } from '@/apis/api'
 import { useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
-import postApi from '@/apis/postServite'
+import postApi from '@/apis/postService'
 
 const CommentCard = ({ content, author, createdAt, _id }: Comment) => {
   const { id: postId } = useParams()
