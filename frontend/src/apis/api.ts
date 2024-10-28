@@ -43,14 +43,6 @@ export const getComment = async (postId: string) => {
   return response.data
 }
 
-getPost().then((res) => {
-  console.log(res)
-})
-
-getComment('671efafe103938e442107859').then((res) => {
-  console.log(res)
-})
-
 export const createComment = async (commentData: CommentForm) => {
   const response = await axios.post<CommentForm>(
     `${END_POINT}/post/${commentData.postId}/comment`,

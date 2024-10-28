@@ -5,7 +5,7 @@ export interface Post {
   image_url: string
   createdAt: string
   updatedAt: string
-  id: string
+  _id: string
 }
 
 export interface Comment {
