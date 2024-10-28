@@ -7,8 +7,9 @@ import {
   CommentReplyContainer,
 } from './style'
 import { PlusSquareOutlined } from '@ant-design/icons'
+import { Comment } from '@/typings/db'
 
-const CommentCard = () => {
+const CommentCard = ({ content, author, createdAt }: Comment) => {
   return (
     <CommentCardContainer>
       <CommentCardInfo>
@@ -17,11 +18,11 @@ const CommentCard = () => {
           alt='user Img'
         />
         <div>
-          <p>애드워드 리</p>
-          <p>{formatDate(new Date())}</p>
+          <p>{author}</p>
+          <p>{formatDate(createdAt)}</p>
         </div>
       </CommentCardInfo>
-      <CommentCardContent>잘 보고 갑니다</CommentCardContent>
+      <CommentCardContent>{content}</CommentCardContent>
       <CommentCardButtonContainer>
         <CommentReplyContainer>
           <button>

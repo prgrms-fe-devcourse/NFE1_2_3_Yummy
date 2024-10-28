@@ -7,3 +7,12 @@ export interface Post {
   updatedAt: string
   id: string
 }
+
+export interface Comment {
+  _id: string
+  postId: string
+  content: string
+  author: string
+  createdAt: string
+  updatedAt: string
+}

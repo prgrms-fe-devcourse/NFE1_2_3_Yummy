@@ -1,4 +1,4 @@
-import { Post } from '@/typings/db'
+import { Post, Comment } from '@/typings/db'
 import { QueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
@@ -35,6 +35,17 @@ export const getPost = async () => {
   return response.data
 }
 
+export const getComment = async (postId: string) => {
+  const response = await axios.get<Comment[]>(
+    `${END_POINT}/post/${postId}/comment`,
+  )
+  return response.data
+}
+
 getPost().then((res) => {
+  console.log(res)
+})
+
+getComment('671efafe103938e442107859').then((res) => {
   console.log(res)
 })
