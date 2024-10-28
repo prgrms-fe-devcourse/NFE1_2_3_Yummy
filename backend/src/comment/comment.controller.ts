@@ -6,19 +6,38 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
+  Req,
+  NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiOperation,
+  ApiParam,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto'; // UpdateCommentDto 임포트
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Types } from 'mongoose';
+import { UsersService } from '../users/users.service';
 
 @ApiTags('comments') // 태그 설정
+@ApiBearerAuth() // JWT 토큰을 사용하는 API
 @Controller('post/:postId/comment')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(
+    private readonly commentService: CommentService,
+    private readonly usersService: UsersService,
+  ) {}
+  // UsersService 주입
 
   // 댓글 생성
   @Post()
+  @UseGuards(JwtAuthGuard) // 생성 시 JWT 검증 가드 적용
   @ApiOperation({ summary: '댓글 생성' })
   @ApiResponse({
     status: 201,
@@ -28,10 +47,15 @@ export class CommentController {
   async createComment(
     @Param('postId') postId: string,
     @Body() createCommentDto: CreateCommentDto, // DTO 사용
+    @Req() req: any,
   ) {
+    const userId = req.user._id;
+    const user = await this.usersService.findById(userId);
+    createCommentDto.author = user.nickname;
     return this.commentService.create(
-      postId,
+      new Types.ObjectId(postId),
       createCommentDto.content,
+      userId,
       createCommentDto.author,
     );
   }
@@ -46,6 +70,7 @@ export class CommentController {
 
   // 댓글 수정
   @Put(':commentId')
+  @UseGuards(JwtAuthGuard) // 생성 시 JWT 검증 가드 적용
   @ApiOperation({ summary: '댓글 수정' })
   @ApiParam({ name: 'commentId', description: '수정할 댓글 ID' })
   @ApiResponse({
@@ -57,12 +82,26 @@ export class CommentController {
     @Param('postId') postId: string,
     @Param('commentId') commentId: string,
     @Body() updateCommentDto: UpdateCommentDto, // DTO 사용
+    @Req() req: any,
   ) {
+    const userId = req.user._id;
+
+    // 댓글 조회
+    const comment = await this.commentService.findById(commentId);
+    if (!comment) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+
+    // 작성자 ID 비교
+    if (!comment.userId.equals(userId)) {
+      throw new ForbiddenException('자신의 댓글만 수정할 수 있습니다.'); // 권한이 없는 경우
+    }
     return this.commentService.update(commentId, updateCommentDto.content);
   }
 
   // 댓글 삭제
   @Delete(':commentId')
+  @UseGuards(JwtAuthGuard) // 생성 시 JWT 검증 가드 적용
   @ApiOperation({ summary: '댓글 삭제' })
   @ApiParam({ name: 'commentId', description: '삭제할 댓글 ID' })
   @ApiResponse({
@@ -73,7 +112,21 @@ export class CommentController {
   async deleteComment(
     @Param('postId') postId: string,
     @Param('commentId') commentId: string,
+    @Req() req: any,
   ) {
+    const userId = req.user._id;
+
+    // 댓글 조회
+    const comment = await this.commentService.findById(commentId);
+    if (!comment) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+
+    // 작성자 ID 비교
+    if (!comment.userId.equals(userId)) {
+      throw new ForbiddenException('자신의 댓글만 삭제할 수 있습니다.'); // 권한이 없는 경우
+    }
+
     return this.commentService.delete(commentId);
   }
 }
