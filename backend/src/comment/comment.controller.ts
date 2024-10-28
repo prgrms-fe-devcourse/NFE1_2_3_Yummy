@@ -45,7 +45,7 @@ export class CommentController {
   })
   @ApiResponse({ status: 400, description: '잘못된 요청' })
   async createComment(
-    @Param('postId') postId: string,
+    @Param('postId') postId: Types.ObjectId,
     @Body() createCommentDto: CreateCommentDto, // DTO 사용
     @Req() req: any,
   ) {
