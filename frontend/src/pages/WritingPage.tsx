@@ -9,8 +9,6 @@ import { EditorState, ContentState, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import axios from 'axios'
 
-const { Option } = Select // Ant Design Select
-
 const WritingPage: React.FC = () => {
   const navigate = useNavigate()
 
@@ -54,7 +52,6 @@ const WritingPage: React.FC = () => {
 
   // 카테고리 배열
   const categories = [
-    '전체',
     '한식',
     '중식',
     '일식',
@@ -69,6 +66,9 @@ const WritingPage: React.FC = () => {
     '디저트 요리',
   ]
 
+  // Ant Design Select
+  const { Option } = Select
+
   // 이미지 업로드 성공 핸들러
   const handleImageUploadSuccess = (url: string) => {
     setImageUrl(url)
@@ -82,7 +82,12 @@ const WritingPage: React.FC = () => {
         value={category || undefined}
       >
         {categories.map((category, index) => (
-          <Option key={index}>{category}</Option>
+          <Option
+            key={index}
+            value={category}
+          >
+            {category}
+          </Option>
         ))}
       </CategorySelect>
 
