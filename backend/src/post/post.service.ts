@@ -14,7 +14,10 @@ import { UserDocument } from '../users/schemas/user.schema'; // UserDocument 임
 export class PostService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
-  async create(createPostDto: CreatePostDto, userId: string): Promise<Post> {
+  async create(
+    createPostDto: CreatePostDto,
+    userId: Types.ObjectId,
+  ): Promise<Post> {
     const createdPost = new this.postModel({
       ...createPostDto,
       userId, // 게시글 작성자 ID 설정
@@ -40,7 +43,11 @@ export class PostService {
     userId: string,
   ): Promise<Post> {
     const post = await this.findOne(id); // 게시글 찾기
-    if (post.userId.toString() !== userId) {
+
+    console.log(post.userId, typeof post.userId);
+    console.log(userId, typeof userId);
+
+    if (post.userId.toString() !== userId.toString()) {
       // 권한 체크
       throw new ForbiddenException('본인의 게시글만 수정할 수 있습니다.');
     }
@@ -51,7 +58,7 @@ export class PostService {
 
   async remove(id: string, userId: string): Promise<any> {
     const post = await this.findOne(id); // 게시글 찾기
-    if (post.userId.toString() !== userId) {
+    if (post.userId.toString() !== userId.toString()) {
       // 권한 체크
       throw new ForbiddenException('본인의 게시글만 삭제할 수 있습니다.');
     }

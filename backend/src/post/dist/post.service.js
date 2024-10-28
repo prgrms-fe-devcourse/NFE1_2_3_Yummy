@@ -111,7 +111,9 @@ var PostService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.findOne(id)];
                     case 1:
                         post = _a.sent();
-                        if (post.userId.toString() !== userId) {
+                        console.log(post.userId, typeof post.userId);
+                        console.log(userId, typeof userId);
+                        if (post.userId.toString() !== userId.toString()) {
                             // 권한 체크
                             throw new common_1.ForbiddenException('본인의 게시글만 수정할 수 있습니다.');
                         }
@@ -131,7 +133,7 @@ var PostService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.findOne(id)];
                     case 1:
                         post = _a.sent();
-                        if (post.userId.toString() !== userId) {
+                        if (post.userId.toString() !== userId.toString()) {
                             // 권한 체크
                             throw new common_1.ForbiddenException('본인의 게시글만 삭제할 수 있습니다.');
                         }
