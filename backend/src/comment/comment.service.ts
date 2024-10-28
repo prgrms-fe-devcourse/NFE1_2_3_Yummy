@@ -16,11 +16,13 @@ export class CommentService {
     postId: Types.ObjectId,
     content: string,
     userId: Types.ObjectId,
+    author: string,
   ): Promise<Comment> {
     const newComment = new this.commentModel({
       postId,
       content,
       userId,
+      author,
     });
     return newComment.save();
   }

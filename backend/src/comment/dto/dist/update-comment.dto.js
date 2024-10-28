@@ -19,31 +19,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 exports.__esModule = true;
-exports.CommentSchema = exports.Comment = void 0;
-var mongoose_1 = require("@nestjs/mongoose");
-var mongoose_2 = require("mongoose");
-var mongoose_3 = require("mongoose");
-var Comment = /** @class */ (function (_super) {
-    __extends(Comment, _super);
-    function Comment() {
+exports.UpdateCommentDto = void 0;
+var mapped_types_1 = require("@nestjs/mapped-types");
+var create_comment_dto_1 = require("./create-comment.dto");
+var swagger_1 = require("@nestjs/swagger");
+var UpdateCommentDto = /** @class */ (function (_super) {
+    __extends(UpdateCommentDto, _super);
+    function UpdateCommentDto() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     __decorate([
-        mongoose_1.Prop({ type: mongoose_3.Types.ObjectId, ref: 'Post', required: true })
-    ], Comment.prototype, "postId");
+        swagger_1.ApiProperty({ description: '댓글 내용' })
+    ], UpdateCommentDto.prototype, "content");
     __decorate([
-        mongoose_1.Prop({ type: mongoose_3.Types.ObjectId, ref: 'User', required: true })
-    ], Comment.prototype, "userId");
-    __decorate([
-        mongoose_1.Prop({ required: true })
-    ], Comment.prototype, "content");
-    __decorate([
-        mongoose_1.Prop({ required: true }) // author 추가
-    ], Comment.prototype, "author");
-    Comment = __decorate([
-        mongoose_1.Schema({ timestamps: true })
-    ], Comment);
-    return Comment;
-}(mongoose_2.Document));
-exports.Comment = Comment;
-exports.CommentSchema = mongoose_1.SchemaFactory.createForClass(Comment);
+        swagger_1.ApiProperty({ description: '작성자 이름' })
+    ], UpdateCommentDto.prototype, "author");
+    return UpdateCommentDto;
+}(mapped_types_1.PartialType(create_comment_dto_1.CreateCommentDto)));
+exports.UpdateCommentDto = UpdateCommentDto;

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -56,95 +45,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.PostService = void 0;
+exports.UsersService = void 0;
 var common_1 = require("@nestjs/common");
 var mongoose_1 = require("@nestjs/mongoose");
-var post_schema_1 = require("./entities/post.schema");
-var PostService = /** @class */ (function () {
-    function PostService(postModel) {
-        this.postModel = postModel;
+var user_schema_1 = require("./schemas/user.schema");
+var bcrypt = require("bcrypt");
+var mongoose_2 = require("mongoose");
+var UsersService = /** @class */ (function () {
+    function UsersService(userModel) {
+        this.userModel = userModel;
     }
-    PostService.prototype.create = function (createPostDto, userId) {
+    UsersService.prototype.create = function (email, password, nickname) {
         return __awaiter(this, void 0, Promise, function () {
-            var createdPost;
+            var hashedPassword, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        createdPost = new this.postModel(__assign(__assign({}, createPostDto), { userId: userId }));
-                        return [4 /*yield*/, createdPost.save()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    PostService.prototype.findAll = function () {
-        return __awaiter(this, void 0, Promise, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.postModel.find().exec()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    PostService.prototype.findOne = function (id) {
-        return __awaiter(this, void 0, Promise, function () {
-            var post;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.postModel.findById(id).exec()];
+                    case 0: return [4 /*yield*/, bcrypt.hash(password, 10)];
                     case 1:
-                        post = _a.sent();
-                        if (!post) {
-                            throw new common_1.NotFoundException('게시글을 찾을 수 없습니다.');
-                        }
-                        return [2 /*return*/, post];
+                        hashedPassword = _a.sent();
+                        newUser = new this.userModel({
+                            email: email,
+                            password: hashedPassword,
+                            nickname: nickname
+                        });
+                        return [2 /*return*/, newUser.save()];
                 }
             });
         });
     };
-    PostService.prototype.update = function (id, updatePostDto, userId) {
+    UsersService.prototype.findByEmail = function (email) {
         return __awaiter(this, void 0, Promise, function () {
-            var post;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.findOne(id)];
-                    case 1:
-                        post = _a.sent();
-                        if (post.userId.toString() !== userId.toString()) {
-                            // 권한 체크
-                            throw new common_1.ForbiddenException('본인의 게시글만 수정할 수 있습니다.');
-                        }
-                        return [4 /*yield*/, this.postModel
-                                .findByIdAndUpdate(id, updatePostDto, { "new": true })
-                                .exec()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/, this.userModel.findOne({ email: email }).exec()]; // exec()를 사용하여 쿼리 실행
             });
         });
     };
-    PostService.prototype.remove = function (id, userId) {
+    UsersService.prototype.findById = function (userId) {
         return __awaiter(this, void 0, Promise, function () {
-            var post;
+            var id;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.findOne(id)];
-                    case 1:
-                        post = _a.sent();
-                        if (post.userId.toString() !== userId.toString()) {
-                            // 권한 체크
-                            throw new common_1.ForbiddenException('본인의 게시글만 삭제할 수 있습니다.');
-                        }
-                        return [4 /*yield*/, this.postModel.findByIdAndDelete(id).exec()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                }
+                id = new mongoose_2.Types.ObjectId(userId);
+                return [2 /*return*/, this.userModel.findById(id).exec()]; // exec()를 사용하여 쿼리 실행
             });
         });
     };
-    PostService = __decorate([
+    UsersService = __decorate([
         common_1.Injectable(),
-        __param(0, mongoose_1.InjectModel(post_schema_1.Post.name))
-    ], PostService);
-    return PostService;
+        __param(0, mongoose_1.InjectModel(user_schema_1.User.name))
+    ], UsersService);
+    return UsersService;
 }());
-exports.PostService = PostService;
+exports.UsersService = UsersService;

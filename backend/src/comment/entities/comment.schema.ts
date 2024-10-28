@@ -13,6 +13,9 @@ export class Comment extends Document {
 
   @Prop({ required: true })
   content: string;
+
+  @Prop({ required: true }) // author 추가
+  author: string;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

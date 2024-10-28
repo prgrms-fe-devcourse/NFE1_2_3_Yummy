@@ -21,12 +21,17 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto'; // UpdateCommentDto 임포트
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Types } from 'mongoose';
+import { UsersService } from '../users/users.service';
 
 @ApiTags('comments') // 태그 설정
 @ApiBearerAuth() // JWT 토큰을 사용하는 API
 @Controller('post/:postId/comment')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(
+    private readonly commentService: CommentService,
+    private readonly usersService: UsersService,
+  ) {}
+  // UsersService 주입
 
   // 댓글 생성
   @Post()
@@ -43,10 +48,13 @@ export class CommentController {
     @Req() req: any,
   ) {
     const userId = req.user._id;
+    const user = await this.usersService.findById(userId);
+    createCommentDto.author = user.nickname;
     return this.commentService.create(
       new Types.ObjectId(postId),
       createCommentDto.content,
       userId,
+      createCommentDto.author,
     );
   }
 

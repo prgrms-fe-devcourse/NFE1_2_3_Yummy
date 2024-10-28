@@ -44,9 +44,6 @@ export class PostService {
   ): Promise<Post> {
     const post = await this.findOne(id); // 게시글 찾기
 
-    console.log(post.userId, typeof post.userId);
-    console.log(userId, typeof userId);
-
     if (post.userId.toString() !== userId.toString()) {
       // 권한 체크
       throw new ForbiddenException('본인의 게시글만 수정할 수 있습니다.');

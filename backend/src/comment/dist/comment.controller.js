@@ -51,17 +51,26 @@ var swagger_1 = require("@nestjs/swagger");
 var jwt_auth_guard_1 = require("src/auth/jwt-auth.guard");
 var mongoose_1 = require("mongoose");
 var CommentController = /** @class */ (function () {
-    function CommentController(commentService) {
+    function CommentController(commentService, usersService) {
         this.commentService = commentService;
+        this.usersService = usersService;
     }
+    // UsersService 주입
     // 댓글 생성
     CommentController.prototype.createComment = function (postId, createCommentDto, // DTO 사용
     req) {
         return __awaiter(this, void 0, void 0, function () {
-            var userId;
+            var userId, user;
             return __generator(this, function (_a) {
-                userId = req.user._id;
-                return [2 /*return*/, this.commentService.create(new mongoose_1.Types.ObjectId(postId), createCommentDto.content, userId)];
+                switch (_a.label) {
+                    case 0:
+                        userId = req.user._id;
+                        return [4 /*yield*/, this.usersService.findById(userId)];
+                    case 1:
+                        user = _a.sent();
+                        createCommentDto.author = user.nickname;
+                        return [2 /*return*/, this.commentService.create(new mongoose_1.Types.ObjectId(postId), createCommentDto.content, userId, createCommentDto.author)];
+                }
             });
         });
     };

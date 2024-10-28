@@ -54,14 +54,15 @@ var CommentService = /** @class */ (function () {
         this.commentModel = commentModel;
     }
     // 댓글 생성
-    CommentService.prototype.create = function (postId, content, userId) {
+    CommentService.prototype.create = function (postId, content, userId, author) {
         return __awaiter(this, void 0, Promise, function () {
             var newComment;
             return __generator(this, function (_a) {
                 newComment = new this.commentModel({
                     postId: postId,
                     content: content,
-                    userId: userId
+                    userId: userId,
+                    author: author
                 });
                 return [2 /*return*/, newComment.save()];
             });
