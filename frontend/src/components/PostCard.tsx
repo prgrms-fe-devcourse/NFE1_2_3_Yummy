@@ -6,7 +6,7 @@ interface CardProps {
   author: string
   date: string
   text: string
-  imgUrl: string
+  image_url: string
 
 }
 
@@ -64,7 +64,7 @@ function PostCard({ title, author, date, text, category, image_url }: CardProps)
   return (
     <Card>
       <PostImage
-        src={imgUrl}
+        src={image_url}
         alt='Post Thumbnail'
       />
       <PostContent>

@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 interface TopPostProps {
     post: {
@@ -10,7 +10,7 @@ interface TopPostProps {
         text: string;
         image_url: string;
         heartCount: number;
-    };
+    }
 }
 
 const TopPostContainer = styled.div<{ $imgUrl: string }>`
@@ -55,7 +55,7 @@ const PostText = styled.p`
 `;
 
 const TopPost: React.FC<TopPostProps> = ({ post }) => {
-    const { image_url, category, title, author, date, text } = post;
+    const { image_url, category, title, author, date, text } = post
 
     return (
         <TopPostContainer $imgUrl={image_url}> 
@@ -69,4 +69,4 @@ const TopPost: React.FC<TopPostProps> = ({ post }) => {
     );
 };
 
-export default TopPost;
+export default TopPost
