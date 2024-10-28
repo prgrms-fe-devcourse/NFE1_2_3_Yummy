@@ -28,7 +28,7 @@ function App() {
             element={<MyPage />}
           />
           <Route
-            path='/post'
+            path='/post/:id'
             element={<PostPage />}
           />
           <Route
