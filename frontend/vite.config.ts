@@ -23,4 +23,14 @@ export default defineConfig({
   define: {
     global: 'window', // global을 window로 정의
   },
+  server: {
+    proxy: {
+      // '/api'로 시작하는 요청을 백엔드 서버로 프록시
+      '/api': {
+        target: 'http://localhost:3000', // 백엔드 서버 주소
+        changeOrigin: true, // CORS 문제를 우회하기 위해 필요
+        rewrite: (path) => path.replace(/^\/api/, ''), // 경로 재작성 (필요에 따라 수정)
+      },
+    },
+  },
 })

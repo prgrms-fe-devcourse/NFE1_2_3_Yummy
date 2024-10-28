@@ -35,7 +35,7 @@ const MainPage = () => {
             <Header>Trending Now</Header>
             {sortedPosts.map((post) => (
                 <PostCard
-                //key 값추가 
+                    key={post.id}
                     category={post.category} 
                     title={post.title} 
                     author={post.author} 
