@@ -6,11 +6,13 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 const SignUpPage = () => {
-  const [id, setId] = useState('')
+  const [email, setEmail] = useState('')
+  const [nickname, setNickname] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [errors, setErrors] = useState({
-    id: '',
+    email: '',
+    nickname: '',
     password: '',
     confirmPassword: '',
   })
@@ -20,12 +22,23 @@ const SignUpPage = () => {
 
   // 유효성 검사 함수
   const validateForm = () => {
-    const newErrors = { id: '', password: '', confirmPassword: '' }
-    const idRegex = /^\S+$/ // 공백이 없는 문자열
+    const newErrors = {
+      email: '',
+      nickname: '',
+      password: '',
+      confirmPassword: '',
+    }
 
-    // 아이디 유효성 검사
-    if (!id || !idRegex.test(id)) {
-      newErrors.id = '유효한 아이디를 입력해주세요.'
+    // 이메일 유효성 검사
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email || !emailRegex.test(email)) {
+      newErrors.email = '유효한 이메일을 입력해주세요.'
+    }
+
+    // 닉네임 유효성 검사
+    const nicknameRegex = /^\S+$/ // 공백이 없는 문자열
+    if (!nickname || !nicknameRegex.test(nickname)) {
+      newErrors.nickname = '유효한 닉네임을 입력해주세요.'
     }
 
     // 비밀번호 유효성 검사
@@ -49,9 +62,13 @@ const SignUpPage = () => {
 
   // 버튼 활성화 상태 관리
   useEffect(() => {
-    const isFormFilled = id !== '' && password !== '' && confirmPassword !== ''
+    const isFormFilled =
+      email !== '' &&
+      nickname !== '' &&
+      password !== '' &&
+      confirmPassword !== ''
     setIsButtonDisabled(!isFormFilled)
-  }, [id, password, confirmPassword])
+  }, [email, nickname, password, confirmPassword])
 
   // 버튼 클릭 이벤트
   const handleSignUp = async () => {
@@ -59,21 +76,16 @@ const SignUpPage = () => {
     if (validateForm()) {
       try {
         // 회원가입 POST 요청 보내기
-        const response = await axios.post('https://your-server.com/signup', {
-          id,
+        const response = await axios.post('api/auth/register', {
+          email,
+          nickname,
           password,
         })
 
-        const { user, token } = response.data
-
-        // 로그인된 상태로 JWT 토큰을 로컬 스토리지에 저장
-        localStorage.setItem('token', token)
-
-        // 회원가입 성공 메시지
-        message.success('회원가입 성공!')
-
-        // 메인 페이지로 네비게이션
-        navigate('/')
+        if (response.status === 201) {
+          message.success('회원가입이 완료되었습니다.')
+          navigate('/') // 홈으로 이동
+        }
       } catch (error) {
         message.error('회원가입 중 문제가 발생했습니다.')
       }
@@ -85,17 +97,30 @@ const SignUpPage = () => {
   return (
     <Container>
       <Title>회원가입</Title>
-      {/* ID 폼 */}
+
+      {/* Email 폼 */}
       <StyledInput
         size='large'
-        placeholder='ID'
-        value={id}
-        onChange={(e) => setId(e.target.value)}
+        placeholder='Email'
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         prefix={<UserOutlined />}
       />
-      {isSubmitted && errors.id && <ErrorText>{errors.id}</ErrorText>}
+      {isSubmitted && errors.email && <ErrorText>{errors.email}</ErrorText>}
 
-      {/* 비밀번호 폼 */}
+      {/* Nickname 폼 */}
+      <StyledInput
+        size='large'
+        placeholder='Nickname'
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value)}
+        prefix={<UserOutlined />}
+      />
+      {isSubmitted && errors.nickname && (
+        <ErrorText>{errors.nickname}</ErrorText>
+      )}
+
+      {/* Password 폼 */}
       <StyledInput
         size='large'
         type='password'
@@ -108,7 +133,7 @@ const SignUpPage = () => {
         <ErrorText>{errors.password}</ErrorText>
       )}
 
-      {/* 비밀번호 확인 폼 */}
+      {/* Confirm Password 폼 */}
       <StyledInput
         size='large'
         type='password'
@@ -141,7 +166,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f0f0f0;
 `
 
 const Title = styled.h1`
@@ -154,6 +178,7 @@ const StyledInput = styled(Input)`
   height: 63px;
   margin-bottom: 20px;
   border-radius: 10px;
+  background-color: #f8f8f8;
   .ant-input-prefix {
     margin-right: 15px; // prefix와 placeholder 간의 간격을 벌림
   }

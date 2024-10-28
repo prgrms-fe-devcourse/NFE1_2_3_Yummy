@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Input, Menu, Avatar } from 'antd'
+import { Avatar, message } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -8,14 +8,6 @@ const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [iscategoryVisible, setIsCategoryVisible] = useState(false)
   const navigate = useNavigate()
-  // let isMounted = true //마운트 여부 추적하는 함수
-
-  // clean up
-  // useEffect(() => {
-  //   return () => {
-  //     isMounted = false
-  //   }
-  // }, [])
 
   // 로그인 여부 확인
   const isLoggedIn = () => {
@@ -42,6 +34,7 @@ const NavigationBar: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('JWTtoken')
     setIsModalVisible(false)
+    message.success('로그아웃이 완료되었습니다.')
     navigate('/')
   }
 
@@ -102,9 +95,7 @@ const NavigationBar: React.FC = () => {
           onClick={() => navigate('/search')}
         />
         <LogInBtnContainer>
-          {' '}
-          {/*loggedIn ! 추후에 수정 */}
-          {!loggedIn ? (
+          {loggedIn ? (
             <AvatarContainer>
               <StyledAvatar
                 size={64}
