@@ -7,7 +7,6 @@ interface CardProps {
   date: string
   text: string
   image_url: string
-
 }
 
 const Card = styled.div`
@@ -60,7 +59,14 @@ const PostText = styled.p`
   margin-top: 8px;
 `
 
-function PostCard({ title, author, date, text, category, image_url }: CardProps) {
+function PostCard({
+  title,
+  author,
+  date,
+  text,
+  category,
+  image_url,
+}: CardProps) {
   return (
     <Card>
       <PostImage

@@ -37,7 +37,7 @@ function App() {
             path='/search'
             element={<SearchPage />}
           />
-           <Route
+          <Route
             path='/'
             element={<MainPage />}
           />
@@ -47,4 +47,4 @@ function App() {
   )
 }
 
-export default App;
+export default App
