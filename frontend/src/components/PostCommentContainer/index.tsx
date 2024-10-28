@@ -10,7 +10,11 @@ const PostCommentContainer = () => {
   const { id: postId } = useParams()
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['comment', postId],
-    queryFn: async () => await postApi.getComment(postId as string),
+    queryFn: async () => {
+      if (postId) {
+        return postApi.getComment(postId)
+      }
+    },
     enabled: !!postId,
   })
 

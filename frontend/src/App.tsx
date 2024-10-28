@@ -38,6 +38,10 @@ function App() {
             element={<PostPage />}
           />
           <Route
+            path='/post/:id/edit'
+            element={<WritingPage />}
+          />
+          <Route
             path='/search'
             element={
               <Navigate

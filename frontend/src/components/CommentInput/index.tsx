@@ -18,7 +18,9 @@ const CommentInput = () => {
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async (commentData: CommentForm) => {
-      await postApi.createComment(postId as string, commentData)
+      if (postId) {
+        await postApi.createComment(postId, commentData)
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comment', postId] })
@@ -30,13 +32,15 @@ const CommentInput = () => {
   }
 
   const handleSubmit = () => {
-    const commentData = new CommentForm(
-      comment,
-      Math.random().toString(36).substring(2, 15),
-      postId as string,
-    )
-    mutate(commentData)
-    setComment('')
+    if (postId) {
+      const commentData = new CommentForm(
+        comment,
+        Math.random().toString(36).substring(2, 15),
+        postId,
+      )
+      mutate(commentData)
+      setComment('')
+    }
   }
 
   const buttonDisabledPredicate = isPending || comment.trim() === ''

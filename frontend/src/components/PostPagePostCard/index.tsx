@@ -12,12 +12,16 @@ import { useQuery } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
 
 const PostPagePostCard = () => {
-  const { id } = useParams()
+  const { id: postId } = useParams()
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['post', id],
-    queryFn: () => postApi.getPostById(id as string),
-    enabled: !!id,
+    queryKey: ['post', postId],
+    queryFn: () => {
+      if (postId) {
+        return postApi.getPostById(postId)
+      }
+    },
+    enabled: !!postId,
   })
 
   let content

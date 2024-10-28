@@ -8,6 +8,11 @@ const postApi = {
     return response
   },
 
+  deletePost: async (id: string) => {
+    const response = await api.delete(`post/${id}`)
+    return response
+  },
+
   getPostById: async (id: string) => {
     const response = await api.get<Post>(`post/${id}`).json()
     return response

@@ -16,7 +16,9 @@ const CommentCard = ({ content, author, createdAt, _id }: Comment) => {
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async (comment_id: string) => {
-      await postApi.deleteComment(postId as string, comment_id)
+      if (postId) {
+        await postApi.deleteComment(postId, comment_id)
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comment', postId] })

@@ -36,8 +36,10 @@ const UserEditModal = () => {
     if (file) {
       const reader = new FileReader()
       reader.onload = (e) => {
-        const result = e.target?.result as string
-        setUserImage(result)
+        if (typeof e.target?.result === 'string') {
+          const result = e.target?.result
+          setUserImage(result)
+        }
       }
       reader.readAsDataURL(file)
     }
