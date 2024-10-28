@@ -2,33 +2,53 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Button, Select, Input, message } from 'antd' // Ant Design의 컴포넌트 사용
-import DraftEditor from '../components/DraftEditor'
+import DraftEditor from '../components/WritingPageComponents/DraftEditor'
+import ImageUploader from '../components/WritingPageComponents/ImageUploader'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { EditorState } from 'draft-js'
+import { EditorState, ContentState, convertToRaw } from 'draft-js'
+import draftToHtml from 'draftjs-to-html'
+import axios from 'axios'
 
 const { Option } = Select // Ant Design Select
 
 const WritingPage: React.FC = () => {
   const navigate = useNavigate()
 
-  const [category, setCategory] = useState<string>('')
   const [title, setTitle] = useState<string>('')
+  const [category, setCategory] = useState<string>('')
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   // 카테고리 토글
   const handleCategoryChange = (value: unknown) => {
     setCategory(value as string) // value를 string으로 변환
   }
 
-  // 게시글 등록 버튼 클릭 시 유효성 검사
-  const handleSubmit = () => {
-    const content = editorState.getCurrentContent()
-    const plainText = content.getPlainText().trim() // 공백 제거한 텍스트
+  // 버튼 클릭 -> 유효성 검사 및 POST 요청
+  const handleSubmit = async () => {
+    const contentState = editorState.getCurrentContent() // ContentState 객체 가져오기
+    const rawContentState = convertToRaw(contentState) // ContentState를 RawDraftContentState로 변환
+    const htmlContent = draftToHtml(rawContentState) // 변환된 RawDraftContentState를 HTML로 변환
 
-    if (!category || !title || !plainText) {
+    // 필드 검증
+    if (!category || !title || !htmlContent.trim()) {
       message.error('모든 필드를 입력해주세요.')
     } else {
-      message.success('게시글이 성공적으로 등록되었습니다.')
+      try {
+        const response = await axios.post('/api/post', {
+          title: title,
+          content: htmlContent,
+          category: category,
+          image_url: imageUrl || 'http://example.com/image.jpg',
+        })
+
+        if (response.status === 201) {
+          message.success('게시글이 성공적으로 등록되었습니다.')
+          navigate('/') // 요청 성공 후 홈으로 이동
+        }
+      } catch (error) {
+        message.error('게시글 등록에 실패했습니다.')
+      }
     }
   }
 
@@ -49,6 +69,11 @@ const WritingPage: React.FC = () => {
     '디저트 요리',
   ]
 
+  // 이미지 업로드 성공 핸들러
+  const handleImageUploadSuccess = (url: string) => {
+    setImageUrl(url)
+  }
+
   return (
     <Container>
       <CategorySelect
@@ -67,12 +92,29 @@ const WritingPage: React.FC = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      {/* 에디터 컴포넌트 */}
-      <DraftEditor
-        editorState={editorState}
-        setEditorState={setEditorState}
-      />
+      {/* 이미지 미리보기 */}
+      {imageUrl && (
+        <UploadedImage
+          src={imageUrl}
+          alt='Uploaded'
+        />
+      )}
 
+      {/* 이미지 업로더 컴포넌트, 에디터 컴포넌트 컨테이너 */}
+      <PageContainer>
+        <UploadContainer>
+          <ImageUploader onUploadSuccess={handleImageUploadSuccess} />
+        </UploadContainer>
+
+        <EditorContainer>
+          <DraftEditor
+            editorState={editorState}
+            setEditorState={setEditorState}
+          />
+        </EditorContainer>
+      </PageContainer>
+
+      {/* 버튼 컨테이너 */}
       <ButtonContainer>
         <StyledButton
           type='primary'
@@ -138,21 +180,47 @@ const ButtonContainer = styled.div`
 `
 
 const StyledButton = styled(Button)`
+  background-color: black;
   width: 150px;
   height: 50px;
-  background-color: black;
   font-size: 18px;
   border-radius: 10px;
 `
 
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 14px;
+const UploadedImage = styled.img`
+  max-width: 300px;
+  height: auto;
+  margin-top: 20px;
+  padding: 11px;
 `
 
-const SuccessMessage = styled.p`
-  color: green;
-  font-size: 14px;
+// 이미지 업로더 컴포넌트와 에디터 컴포넌트를 감싸는 부모 컨테이너
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+`
+
+// 에디터 컴포넌트 컨테이너
+const EditorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 20px;
+  align-items: flex-end;
+  max-width: 838px;
+`
+
+// 이미지 업로더 컴포넌트 컨테이너
+const UploadContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 20px;
+  max-width: 838px;
 `
 
 export default WritingPage
