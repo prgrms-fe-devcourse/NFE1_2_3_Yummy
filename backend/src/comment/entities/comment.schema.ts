@@ -6,12 +6,15 @@ import { Types } from 'mongoose';
 @Schema({ timestamps: true })
 export class Comment extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Post', required: true })
-  postId: Post;
+  postId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
 
   @Prop({ required: true })
   content: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true }) // author 추가
   author: string;
 }
 
