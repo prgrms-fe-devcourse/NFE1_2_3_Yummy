@@ -29,7 +29,9 @@ export class CommentService {
 
   // 특정 게시글의 댓글 조회
   async findByPostId(postId: string): Promise<Comment[]> {
-    return this.commentModel.find({ postId }).exec();
+    return this.commentModel
+      .find({ postId: new Types.ObjectId(postId) })
+      .exec();
   }
 
   // 댓글 수정
