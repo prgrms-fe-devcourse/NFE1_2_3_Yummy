@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { Button, Select, Input, message } from 'antd' // Ant Design의 컴포넌트 사용
+import { Button, Select, Input, message } from 'antd'
 import DraftEditor from '../components/WritingPageComponents/DraftEditor'
 import ImageUploader from '../components/WritingPageComponents/ImageUploader'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -42,7 +42,7 @@ const WritingPage: React.FC = () => {
 
         if (response.status === 201) {
           message.success('게시글이 성공적으로 등록되었습니다.')
-          navigate('/') // 요청 성공 후 홈으로 이동
+          navigate('/') // 홈으로 네비게이터
         }
       } catch (error) {
         message.error('게시글 등록에 실패했습니다.')
@@ -142,19 +142,18 @@ const WritingPage: React.FC = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; 모든 요소를 중앙 정렬 */
   width: 100%;
   padding: 20px;
   margin-top: 40px;
-  box-sizing: border-box; /* padding과 border를 포함하여 크기 계산 */
-  max-width: 100%; /* 화면 너비를 넘지 않도록 제한 */
+  box-sizing: border-box;
+  max-width: 100%;
 `
 
 const CategorySelect = styled(Select)`
-  border: none !important; /* border 제거 */
+  border: none !important;
   .ant-select-selector {
-    border: none !important; /* Select 내부 박스의 border 제거 */
-    box-shadow: none !important; /* 선택 시 생기는 그림자 제거 */
+    border: none !important;
+    box-shadow: none !important;
     font-size: 28px !important;
   }
 
@@ -164,17 +163,17 @@ const CategorySelect = styled(Select)`
 `
 
 const TitleInput = styled(Input)`
-  border: none !important; /* border 제거 */
-  box-shadow: none !important; /* 포커스 시 그림자 제거 */
+  border: none !important;
+  box-shadow: none !important;
   &:focus,
   &:hover {
-    border: none !important; /* 포커스 및 호버 시에도 border 제거 */
-    box-shadow: none !important; /* 포커스 시 그림자 제거 */
+    border: none !important;
+    box-shadow: none !important;
   }
   font-size: 42px;
   width: 100%;
   margin-bottom: 20px;
-  text-align: left; /* 제목 인풋창 왼쪽 정렬 */
+  text-align: left;
 `
 
 const ButtonContainer = styled.div`
