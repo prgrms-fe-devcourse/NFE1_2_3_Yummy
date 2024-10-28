@@ -1,4 +1,6 @@
+import { useSearchParams } from 'react-router-dom'
 import { SearchPageNavContainer, SearchPageNavItem } from './style'
+import { useNavigateTo } from '@/hooks/useNavigateTo'
 
 const SearchPageNav = () => {
   const categories = [
@@ -17,10 +19,24 @@ const SearchPageNav = () => {
     '디저트 요리',
   ]
 
+  const handleNavigateTo = useNavigateTo()
+  const [searchParams] = useSearchParams()
+  const urlCategory = searchParams.get('search')
+
+  const handleClickCategory = (category: string) => {
+    handleNavigateTo(`/search/category?search=${category}`)
+  }
+
   return (
     <SearchPageNavContainer>
       {categories.map((category) => (
-        <SearchPageNavItem key={category}>{category}</SearchPageNavItem>
+        <SearchPageNavItem
+          key={category}
+          $isActive={category === urlCategory}
+          onClick={() => handleClickCategory(category)}
+        >
+          {category}
+        </SearchPageNavItem>
       ))}
     </SearchPageNavContainer>
   )
