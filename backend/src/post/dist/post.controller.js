@@ -17,8 +17,9 @@ var PostController = /** @class */ (function () {
     function PostController(postService) {
         this.postService = postService;
     }
-    PostController.prototype.create = function (createPostDto) {
-        return this.postService.create(createPostDto);
+    PostController.prototype.create = function (createPostDto, req) {
+        var userId = req.user._id; // JWT 토큰에서 사용자 ID 추출
+        return this.postService.create(createPostDto, userId);
     };
     PostController.prototype.findAll = function () {
         return this.postService.findAll();
@@ -26,17 +27,19 @@ var PostController = /** @class */ (function () {
     PostController.prototype.findOne = function (id) {
         return this.postService.findOne(id);
     };
-    PostController.prototype.update = function (id, updatePostDto) {
-        return this.postService.update(id, updatePostDto);
+    PostController.prototype.update = function (id, updatePostDto, req) {
+        var userId = req.user._id; // JWT 토큰에서 사용자 ID 추출
+        return this.postService.update(id, updatePostDto, userId);
     };
-    PostController.prototype.remove = function (id) {
-        return this.postService.remove(id);
+    PostController.prototype.remove = function (id, req) {
+        var userId = req.user._id; // JWT 토큰에서 사용자 ID 추출
+        return this.postService.remove(id, userId);
     };
     __decorate([
         common_1.Post(),
         common_1.UseGuards(jwt_auth_guard_1.JwtAuthGuard),
         swagger_1.ApiOperation({ summary: '게시글 생성' }),
-        __param(0, common_1.Body())
+        __param(0, common_1.Body()), __param(1, common_1.Req())
     ], PostController.prototype, "create");
     __decorate([
         common_1.Get(),
@@ -53,13 +56,15 @@ var PostController = /** @class */ (function () {
         swagger_1.ApiOperation({ summary: '게시글 업데이트' }),
         common_1.UsePipes(new common_1.ValidationPipe({ whitelist: true })) // 유효성 검사 파이프 추가
         ,
-        __param(0, common_1.Param('id')), __param(1, common_1.Body())
+        __param(0, common_1.Param('id')),
+        __param(1, common_1.Body()),
+        __param(2, common_1.Req())
     ], PostController.prototype, "update");
     __decorate([
         common_1.Delete(':id'),
         common_1.UseGuards(jwt_auth_guard_1.JwtAuthGuard),
         swagger_1.ApiOperation({ summary: '특정 게시글 삭제' }),
-        __param(0, common_1.Param('id'))
+        __param(0, common_1.Param('id')), __param(1, common_1.Req())
     ], PostController.prototype, "remove");
     PostController = __decorate([
         swagger_1.ApiTags('post'),

@@ -9,6 +9,7 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -26,8 +27,10 @@ export class PostController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '게시글 생성' })
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  create(@Body() createPostDto: CreatePostDto, @Req() req: any) {
+    const userId = req.user._id; // JWT 토큰에서 사용자 ID 추출
+
+    return this.postService.create(createPostDto, userId);
   }
 
   @Get()
@@ -46,14 +49,20 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '게시글 업데이트' })
   @UsePipes(new ValidationPipe({ whitelist: true })) // 유효성 검사 파이프 추가
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(id, updatePostDto);
+  update(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+    @Req() req: any,
+  ) {
+    const userId = req.user._id; // JWT 토큰에서 사용자 ID 추출
+    return this.postService.update(id, updatePostDto, userId);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '특정 게시글 삭제' })
-  remove(@Param('id') id: string) {
-    return this.postService.remove(id);
+  remove(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user._id; // JWT 토큰에서 사용자 ID 추출
+    return this.postService.remove(id, userId);
   }
 }

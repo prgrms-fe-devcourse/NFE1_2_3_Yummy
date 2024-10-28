@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { UserSchema } from 'src/users/schemas/user.schema';
 
 @Schema({ timestamps: true })
 export class Post extends Document {
-  // @Prop({ required: true })
-  // user_id: string; // 회원가입 기능 완료 후 추가
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: string; // 회원가입 기능 완료 후 추가
 
   @Prop({ required: true })
   title: string; // 제목
