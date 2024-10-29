@@ -146,7 +146,7 @@ const Container = styled.div`
   padding: 20px;
   margin-top: 40px;
   box-sizing: border-box;
-  max-width: 100%;
+  max-width: 838px;
 `
 
 const CategorySelect = styled(Select)`
@@ -219,7 +219,7 @@ const EditorContainer = styled.div`
   width: 100%;
   margin-bottom: 20px;
   align-items: flex-end;
-  max-width: 838px;
+  /* max-width: 838px; */
 `
 
 // 이미지 업로더 컴포넌트 컨테이너
@@ -228,7 +228,7 @@ const UploadContainer = styled.div`
   justify-content: flex-end;
   width: 100%;
   margin-bottom: 20px;
-  max-width: 838px;
+  /* max-width: 838px; */
 `
 
 export default WritingPage
