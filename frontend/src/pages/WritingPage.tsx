@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Button, Select, Input, message } from 'antd'
 import DraftEditor from '../components/WritingPageComponents/DraftEditor'
@@ -8,6 +8,9 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { EditorState, ContentState, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import axios from 'axios'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import postApi from '@/apis/postService'
+import { queryClient } from '@/apis/api'
 
 const WritingPage: React.FC = () => {
   const navigate = useNavigate()
@@ -17,6 +20,56 @@ const WritingPage: React.FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
+  const { id: postId } = useParams()
+
+  // 게시물 불러오는 용도
+  const { data } = useQuery({
+    queryKey: ['post-edit', postId],
+    queryFn: async () => {
+      if (postId) {
+        return await postApi.getPostById(postId)
+      }
+    },
+    enabled: !!postId,
+  })
+
+  /**
+   * 게시물 수정할 때 사용
+   *
+   * 현재 mutate와 isPending 사용 중
+   * isError의 경우 추후 추가 필요
+   */
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      if (postId) {
+        return await postApi.updatePost(postId, {
+          title,
+          content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+          category,
+          image_url: imageUrl || 'http://example.com/image.jpg',
+        })
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['post', postId] })
+      navigate(`/post/${postId}`)
+    },
+  })
+
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title)
+      setCategory(data.category)
+
+      setEditorState(
+        EditorState.createWithContent(
+          ContentState.createFromText(data.content),
+        ),
+      )
+      setImageUrl(data.image_url)
+    }
+  }, [data])
+
   // 카테고리 토글
   const handleCategoryChange = (value: unknown) => {
     setCategory(value as string) // value를 string으로 변환
@@ -24,28 +77,32 @@ const WritingPage: React.FC = () => {
 
   // 버튼 클릭 -> 유효성 검사 및 POST 요청
   const handleSubmit = async () => {
-    const contentState = editorState.getCurrentContent() // ContentState 객체 가져오기
-    const rawContentState = convertToRaw(contentState) // ContentState를 RawDraftContentState로 변환
-    const htmlContent = draftToHtml(rawContentState) // 변환된 RawDraftContentState를 HTML로 변환
-
-    // 필드 검증
-    if (!category || !title || !htmlContent.trim()) {
-      message.error('모든 필드를 입력해주세요.')
+    if (postId) {
+      mutate()
     } else {
-      try {
-        const response = await axios.post('/api/post', {
-          title: title,
-          content: htmlContent,
-          category: category,
-          image_url: imageUrl || 'http://example.com/image.jpg',
-        })
+      const contentState = editorState.getCurrentContent() // ContentState 객체 가져오기
+      const rawContentState = convertToRaw(contentState) // ContentState를 RawDraftContentState로 변환
+      const htmlContent = draftToHtml(rawContentState) // 변환된 RawDraftContentState를 HTML로 변환
 
-        if (response.status === 201) {
-          message.success('게시글이 성공적으로 등록되었습니다.')
-          navigate('/') // 홈으로 네비게이터
+      // 필드 검증
+      if (!category || !title || !htmlContent.trim()) {
+        message.error('모든 필드를 입력해주세요.')
+      } else {
+        try {
+          const response = await axios.post('/api/post', {
+            title: title,
+            content: htmlContent,
+            category: category,
+            image_url: imageUrl || 'http://example.com/image.jpg',
+          })
+
+          if (response.status === 201) {
+            message.success('게시글이 성공적으로 등록되었습니다.')
+            navigate('/') // 홈으로 네비게이터
+          }
+        } catch (error) {
+          message.error('게시글 등록에 실패했습니다.')
         }
-      } catch (error) {
-        message.error('게시글 등록에 실패했습니다.')
       }
     }
   }
@@ -124,14 +181,16 @@ const WritingPage: React.FC = () => {
         <StyledButton
           type='primary'
           onClick={() => navigate('/')}
+          disabled={isPending}
         >
           나가기
         </StyledButton>
         <StyledButton
           type='primary'
           onClick={handleSubmit}
+          disabled={isPending}
         >
-          게시글 등록
+          {postId ? '수정하기' : '게시글 등록'}
         </StyledButton>
       </ButtonContainer>
     </Container>

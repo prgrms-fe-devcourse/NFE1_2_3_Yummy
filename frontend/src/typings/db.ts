@@ -25,3 +25,10 @@ export interface User {
   nickname: string
   bio: string
 }
+
+export interface PostForm {
+  title: string
+  image_url: string
+  content: string
+  category: string
+}

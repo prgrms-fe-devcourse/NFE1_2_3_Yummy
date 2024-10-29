@@ -17,8 +17,8 @@ export const UserCard = styled.div<UserCardProps>`
 `
 
 export const ProfileImage = styled.img<UserCardProps>`
-  width: 6.5rem;
-  height: 6.5rem;
+  width: 6rem;
+  height: 6rem;
   margin-top: 1rem;
   border-radius: 50%;
   object-fit: cover;

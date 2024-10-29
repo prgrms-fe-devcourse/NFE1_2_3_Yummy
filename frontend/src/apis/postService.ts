@@ -12,7 +12,7 @@ export const fetchPosts = async () => {
   }
 }
 
-import { Post, Comment } from '@/typings/db'
+import { Post, Comment, PostForm } from '@/typings/db'
 import { CommentForm } from '@/utils/Model/commentModel'
 import api from './ky'
 
@@ -34,6 +34,13 @@ const postApi = {
 
   getComment: async (id: string) => {
     const response = await api.get<Comment[]>(`post/${id}/comment`).json()
+    return response
+  },
+
+  updatePost: async (id: string, postData: PostForm) => {
+    const response = await api.put(`post/${id}`, {
+      json: postData,
+    })
     return response
   },
 
