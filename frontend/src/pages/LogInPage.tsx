@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const LoginPage = () => {
-  const [id, setId] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({
-    id: '',
+    email: '',
     password: '',
   })
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
@@ -18,14 +18,13 @@ const LoginPage = () => {
 
   // 유효성 검사 함수
   const validateForm = () => {
-    const newErrors = { id: '', password: '' }
-    const idRegex = /^\S+$/ // 공백이 없는 문자열
+    const newErrors = { email: '', password: '' }
 
-    // 아이디 유효성 검사
-    if (!id || !idRegex.test(id)) {
-      newErrors.id = '유효한 아이디를 입력해주세요.'
+    // 이메일 유효성 검사
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email || !emailRegex.test(email)) {
+      newErrors.email = '유효한 이메일을 입력해주세요.'
     }
-
     // 비밀번호 유효성 검사
     const passwordRegex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/
@@ -42,9 +41,9 @@ const LoginPage = () => {
 
   // 버튼 활성화 상태 관리
   useEffect(() => {
-    const isFormFilled = id !== '' && password !== ''
+    const isFormFilled = email !== '' && password !== ''
     setIsButtonDisabled(!isFormFilled)
-  }, [id, password])
+  }, [email, password])
 
   // 버튼 클릭 이벤트
   const handleLogIn = async () => {
@@ -52,21 +51,19 @@ const LoginPage = () => {
     if (validateForm()) {
       try {
         // 로그인 POST 요청 보내기
-        const response = await axios.post('https://your-server.com/login', {
-          id,
+        const response = await axios.post('api/auth/login', {
+          email,
           password,
         })
 
-        const { user, token } = response.data
+        if (response.status === 201) {
+          // JWT 토큰을 로컬 스토리지에 저장
+          const { access_token } = response.data // 응답에서 토큰 추출
+          localStorage.setItem('token', access_token)
 
-        // JWT 토큰을 로컬 스토리지에 저장
-        localStorage.setItem('token', token)
-
-        // 로그인 성공 메시지
-        message.success('로그인 성공!')
-
-        // 메인 페이지로 네비게이션
-        navigate('/')
+          message.success('로그인이 완료되었습니다.')
+          navigate('/') // 홈으로 이동
+        }
       } catch (error) {
         message.error('로그인 중 문제가 발생했습니다.')
       }
@@ -78,15 +75,14 @@ const LoginPage = () => {
   return (
     <Container>
       <Title>로그인</Title>
-      {/* ID 폼 */}
+      {/* Email 폼 */}
       <StyledInput
         size='large'
-        placeholder='ID'
+        placeholder='Email'
         prefix={<UserOutlined />}
-        onChange={(e) => setId(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
       />
-      {isSubmitted && errors.id && <ErrorText>{errors.id}</ErrorText>}
-
+      {isSubmitted && errors.email && <ErrorText>{errors.email}</ErrorText>}
       {/* PW 폼 */}
       <StyledInput
         size='large'
@@ -98,9 +94,7 @@ const LoginPage = () => {
       {isSubmitted && errors.password && (
         <ErrorText>{errors.password}</ErrorText>
       )}
-
-      <LinkText onClick={() => navigate('/')}>회원가입하기</LinkText>
-
+      <LinkText onClick={() => navigate('/signin')}>회원가입하기</LinkText>
       {/* 버튼 */}
       <StyledButton
         type='primary'
@@ -121,7 +115,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f0f0f0;
 `
 
 const Title = styled.h1`
@@ -134,8 +127,13 @@ const StyledInput = styled(Input)`
   height: 63px;
   margin-bottom: 20px;
   border-radius: 10px;
+  background-color: #f8f8f8;
   .ant-input-prefix {
     margin-right: 15px; // prefix와 placeholder 간의 간격을 벌림
+  }
+  &:hover {
+    background-color: white;
+    border-color: #7d7d7d;
   }
 `
 const LinkText = styled.p`
@@ -143,7 +141,7 @@ const LinkText = styled.p`
   margin-bottom: 15px;
   font-size: 14px;
   cursor: pointer;
-  color: black;
+  color: #7d7d7d;
 `
 
 const StyledButton = styled(Button)`
@@ -152,6 +150,10 @@ const StyledButton = styled(Button)`
   background-color: black;
   font-size: 18px;
   border-radius: 10px;
+  &:hover {
+    background-color: #333 !important;
+    color: white !important;
+  }
 `
 
 const ErrorText = styled.p`
