@@ -4,11 +4,33 @@ import {
   CommentCardContainer,
   CommentCardContent,
   CommentCardInfo,
-  CommentReplyContainer,
 } from './style'
-// import { PlusSquareOutlined } from '@ant-design/icons'
+import { Comment } from '@/typings/db'
+import { queryClient } from '@/apis/api'
+import { useParams } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import postApi from '@/apis/postService'
 
-const CommentCard = () => {
+const CommentCard = ({ content, author, createdAt, _id }: Comment) => {
+  const { id: postId } = useParams()
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: async (comment_id: string) => {
+      if (postId) {
+        await postApi.deleteComment(postId, comment_id)
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comment', postId] })
+    },
+  })
+
+  const handleDelete = () => {
+    mutate(_id)
+  }
+
+  const buttonDisabledPredicate = isPending || isError
+
   return (
     <CommentCardContainer>
       <CommentCardInfo>
@@ -17,20 +39,19 @@ const CommentCard = () => {
           alt='user Img'
         />
         <div>
-          <p>애드워드 리</p>
-          <p>{formatDate(new Date())}</p>
+          <p>{author}</p>
+          <p>{formatDate(createdAt)}</p>
         </div>
       </CommentCardInfo>
-      <CommentCardContent>잘 보고 갑니다</CommentCardContent>
+      <CommentCardContent>{content}</CommentCardContent>
       <CommentCardButtonContainer>
-        <CommentReplyContainer>
-          {/* 추후 대댓글 기능 추가 시 사용 */}
-          {/* <button>
-            <PlusSquareOutlined />
-          </button>
-          <p>답글 달기</p> */}
-        </CommentReplyContainer>
-        <button>
+        <button disabled={buttonDisabledPredicate}>
+          <p>수정</p>
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={buttonDisabledPredicate}
+        >
           <p>삭제</p>
         </button>
       </CommentCardButtonContainer>

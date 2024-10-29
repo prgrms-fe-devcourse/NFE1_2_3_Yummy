@@ -1,13 +1,7 @@
+import { useNavigateTo } from '@/hooks/useNavigateTo'
+import { Post } from '@/typings/db'
+import { formatDate } from '@/utils/formatDate'
 import styled from 'styled-components'
-
-interface CardProps {
-  category: string
-  title: string
-  author: string
-  date: string
-  text: string
-  image_url: string
-}
 
 const Card = styled.div`
   display: flex;
@@ -15,6 +9,7 @@ const Card = styled.div`
   margin: 0 50px;
   margin-bottom: 16px;
   background-color: #fff;
+  cursor: pointer;
 `
 
 const PostImage = styled.img`
@@ -61,24 +56,30 @@ const PostText = styled.p`
 
 function PostCard({
   title,
-  author,
-  date,
-  text,
+  userId,
+  createdAt,
+  content,
   category,
   image_url,
-}: CardProps) {
+  _id,
+}: Post) {
+  const handleNavigateTo = useNavigateTo()
+
+  const handleOpenPost = () => {
+    handleNavigateTo(`/post/${_id}`)
+  }
   return (
     <Card>
       <PostImage
         src={image_url}
         alt='Post Thumbnail'
       />
-      <PostContent>
+      <PostContent onClick={handleOpenPost}>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
-        <PostAuthor>{author}</PostAuthor>
-        <PostDate>{date}</PostDate>
-        <PostText>{text}</PostText>
+        <PostAuthor>{userId}</PostAuthor>
+        <PostDate>{formatDate(createdAt)}</PostDate>
+        <PostText>{content}</PostText>
       </PostContent>
     </Card>
   )

@@ -35,8 +35,12 @@ function App() {
             />
           </Route>
           <Route
-            path='/post'
+            path='/post/:id'
             element={<PostPage />}
+          />
+          <Route
+            path='/post/:id/edit'
+            element={<WritingPage />}
           />
           <Route
             path='/search'
