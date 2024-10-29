@@ -69,6 +69,7 @@ export class PostService {
       .find({
         title: { $regex: keyword, $options: 'i' },
       })
+      .populate('user')
       .exec();
   }
 
@@ -77,6 +78,7 @@ export class PostService {
       .find({
         content: { $regex: keyword, $options: 'i' },
       })
+      .populate('user')
       .exec();
   }
 }
