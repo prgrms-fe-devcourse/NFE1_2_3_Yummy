@@ -9,13 +9,10 @@ export class Comment extends Document {
   postId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId;
+  user: Types.ObjectId;
 
   @Prop({ required: true })
   content: string;
-
-  @Prop({ required: true }) // author 추가
-  author: string;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

@@ -6,11 +6,25 @@ import {
   CommentTextArea,
 } from './style'
 import { useMutation } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import { queryClient } from '@/apis/api'
+import { CommentForm } from '@/utils/Model/commentModel'
+import postApi from '@/apis/postService'
 
 const CommentInput = () => {
+  const { id: postId } = useParams()
+
   const [comment, setComment] = useState('')
+
   const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: async (comment: string) => {},
+    mutationFn: async (commentData: CommentForm) => {
+      if (postId) {
+        await postApi.createComment(postId, commentData)
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comment', postId] })
+    },
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -18,9 +32,18 @@ const CommentInput = () => {
   }
 
   const handleSubmit = () => {
-    console.log(comment)
-    setComment('')
+    if (postId) {
+      const commentData = new CommentForm(
+        comment,
+        Math.random().toString(36).substring(2, 15),
+        postId,
+      )
+      mutate(commentData)
+      setComment('')
+    }
   }
+
+  const buttonDisabledPredicate = isPending || comment.trim() === ''
 
   return (
     <CommentInputContainer>
@@ -30,16 +53,9 @@ const CommentInput = () => {
         onChange={handleChange}
       />
       <CommentButtonContainer>
-        {/* 추후 대댓글 기능 추가 시 사용 */}
-        {/* <CommentButton
-          $isDisplay={false}
-          $isCancel={true}
-        >
-          <p>취소</p>
-        </CommentButton> */}
         <CommentButton
           $isDisplay={true}
-          disabled={isPending || comment.trim() === ''}
+          disabled={buttonDisabledPredicate}
           onClick={handleSubmit}
         >
           <p>댓글 작성</p>

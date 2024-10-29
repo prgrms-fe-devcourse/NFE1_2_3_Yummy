@@ -16,20 +16,21 @@ export class CommentService {
     postId: Types.ObjectId,
     content: string,
     userId: Types.ObjectId,
-    author: string,
   ): Promise<Comment> {
     const newComment = new this.commentModel({
       postId,
       content,
-      userId,
-      author,
+      user: userId,
     });
-    return newComment.save();
+    return await newComment.save().then((comment) => comment.populate('user')); // populate 사용
   }
 
   // 특정 게시글의 댓글 조회
   async findByPostId(postId: string): Promise<Comment[]> {
-    return this.commentModel.find({ postId }).exec();
+    return this.commentModel
+      .find({ postId: new Types.ObjectId(postId) })
+      .populate('user')
+      .exec();
   }
 
   // 댓글 수정
@@ -56,6 +57,6 @@ export class CommentService {
   }
 
   async findById(commentId: string): Promise<Comment | null> {
-    return this.commentModel.findById(commentId).exec();
+    return this.commentModel.findById(commentId).populate('user').exec();
   }
 }

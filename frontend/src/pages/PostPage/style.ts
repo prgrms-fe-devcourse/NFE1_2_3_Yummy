@@ -19,4 +19,5 @@ export const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-block: 6rem 3rem;
 `

@@ -51,7 +51,7 @@ export const Dot = styled.p`
   margin-inline: 0.5rem;
 `
 
-export const PostContent = styled.pre`
+export const PostContent = styled.code`
   font-family: 'Noto Sans KR', sans-serif !important;
   font-size: 1rem;
   white-space: pre-wrap;

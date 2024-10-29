@@ -1,14 +1,14 @@
 import { PostPageContainer } from './style'
-import LikeButton from '@/components/LikeButton'
 import PostContainer from '@/components/PostContainer'
 import PostCommentContainer from '@/components/PostCommentContainer'
+import PostSideButton from '@/components/PostSideButton'
 
 const PostPage = () => {
   return (
     <PostPageContainer>
       <PostContainer />
-      <LikeButton />
       <PostCommentContainer />
+      <PostSideButton />
     </PostPageContainer>
   )
 }

@@ -1,18 +1,37 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Body, UseGuards, Put, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './schemas/user.schema';
-import { CreateUserDto } from './dto/create-user.dto'; // DTO를 import
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { UpdateProfileDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@ApiTags('Auth')
-@Controller('auth')
+@ApiTags('User')
+@ApiBearerAuth()
+@Controller('user')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly userService: UsersService) {}
 
-  //   @Post('register')
-  //   @ApiOperation({ summary: '회원가입' }) // Swagger 설명 추가
-  //   async register(@Body() createUserDto: CreateUserDto): Promise<User> {
-  //     const { email, password, nickname } = createUserDto; // DTO로 받은 데이터 구조분해 할당
-  //     return this.usersService.create(email, password, nickname);
-  //   }
+  @Put('/profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '사용자 프로필 정보 수정' })
+  @ApiResponse({
+    status: 200,
+    description: '프로필이 성공적으로 수정되었습니다.',
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiBody({ type: UpdateProfileDto, description: '수정할 프로필 정보' })
+  async updateProfile(
+    @Req() req: any,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
+    const userId = req.user._id;
+    console.log('User ID from JWT:', userId);
+
+    return this.userService.updateProfile(userId, updateProfileDto);
+  }
 }
