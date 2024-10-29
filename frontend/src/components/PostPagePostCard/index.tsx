@@ -1,65 +1,54 @@
 import { formatDate } from '@/utils/formatDate'
 import {
   AuthorDetail,
+  AuthorProfileImage,
   Dot,
   PostContent,
   PostDetail,
   PostInfo,
   PostPagePostCardContainer,
 } from './style'
-import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import postApi from '@/apis/postService'
 
-const PostPagePostCard = () => {
-  const { id: postId } = useParams()
+import { UserOutlined } from '@ant-design/icons'
+import { Post } from '@typings/db'
+import { Avatar } from 'antd'
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['post', postId],
-    queryFn: () => {
-      if (postId) {
-        return postApi.getPostById(postId)
-      }
-    },
-    enabled: !!postId,
-  })
+const PostPagePostCard = ({
+  user,
+  category,
+  title,
+  createdAt,
+  content,
+}: Post) => {
+  const { profileImageUrl, nickname } = user
 
-  let content
+  const authorProfileImage = profileImageUrl ? (
+    <AuthorProfileImage
+      src={profileImageUrl}
+      alt='Author'
+    />
+  ) : (
+    <Avatar icon={<UserOutlined />} />
+  )
 
-  if (isLoading) {
-    content = <div>Loading...</div>
-  }
+  return (
+    <PostPagePostCardContainer>
+      <PostInfo>
+        <p>{category}</p>
+        <h1>{title}</h1>
+        <PostDetail>
+          <AuthorDetail>
+            {authorProfileImage}
+            <span>{nickname}</span>
+          </AuthorDetail>
+          <Dot>·</Dot>
+          <p>{formatDate(createdAt)}</p>
+        </PostDetail>
+      </PostInfo>
 
-  if (isError) {
-    content = <div>Error: {error.message}</div>
-  }
-
-  if (data) {
-    console.log(data)
-    content = (
-      <PostPagePostCardContainer>
-        <PostInfo>
-          <p>{data?.category}</p>
-          <h1>{data?.title}</h1>
-          <PostDetail>
-            <AuthorDetail>
-              <img
-                src='https://static.inews24.com/v1/0ea0b53518da00.jpg'
-                alt='Author'
-              />
-              <span>애드워드 리</span>
-            </AuthorDetail>
-            <Dot>·</Dot>
-            <p>{formatDate(data?.createdAt)}</p>
-          </PostDetail>
-        </PostInfo>
-
-        <PostContent dangerouslySetInnerHTML={{ __html: data?.content }} />
-      </PostPagePostCardContainer>
-    )
-  }
-
-  return <>{content}</>
+      <PostContent dangerouslySetInnerHTML={{ __html: content }} />
+    </PostPagePostCardContainer>
+  )
 }
 
 export default PostPagePostCard

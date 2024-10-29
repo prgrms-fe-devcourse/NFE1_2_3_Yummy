@@ -36,15 +36,15 @@ export const AuthorDetail = styled.p`
   & span {
     margin-left: 0.5rem;
   }
+`
 
-  & img {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid #eee;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  }
+export const AuthorProfileImage = styled.img`
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #eee;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 `
 
 export const Dot = styled.p`
