@@ -23,7 +23,11 @@ const WritingPage: React.FC = () => {
 
   const { id: postId } = useParams()
 
-  // 게시물 불러오는 용도
+  /**
+   * 게시물 불러오는 용도
+   *
+   * isPending, isError의 경우 상의 후 진행 필요함
+   */
   const { data } = useQuery({
     queryKey: ['post-edit', postId],
     queryFn: async () => {
@@ -38,7 +42,7 @@ const WritingPage: React.FC = () => {
    * 게시물 수정할 때 사용
    *
    * 현재 mutate와 isPending 사용 중
-   * isError의 경우 추후 추가 필요
+   * isError의 경우 상의 후 진행 필요함
    */
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
@@ -62,11 +66,13 @@ const WritingPage: React.FC = () => {
       setTitle(data.title)
       setCategory(data.category)
 
+      // html to draftjs 변환
       const contentBlock = htmlToDraft(data.content)
       const contentState = ContentState.createFromBlockArray(
         contentBlock.contentBlocks,
       )
       const editorState = EditorState.createWithContent(contentState)
+
       setEditorState(editorState)
       setImageUrl(data.image_url)
     }
