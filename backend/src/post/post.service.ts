@@ -8,7 +8,7 @@ import { Model, Types } from 'mongoose';
 import { Post } from './entities/post.schema';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { UserDocument } from '../users/schemas/user.schema'; // UserDocument 임포트 추가
+import { UserDocument } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class PostService {
@@ -16,21 +16,22 @@ export class PostService {
 
   async create(
     createPostDto: CreatePostDto,
-    userId: Types.ObjectId,
+    user: UserDocument,
   ): Promise<Post> {
     const createdPost = new this.postModel({
       ...createPostDto,
-      userId, // 게시글 작성자 ID 설정
+      user, // 게시글 작성자 ID 설정
     });
-    return await createdPost.save();
+    await createdPost.save();
+    return await createdPost.populate('user'); // userId를 User 객체로 채워 반
   }
 
   async findAll(): Promise<Post[]> {
-    return await this.postModel.find().exec();
+    return await this.postModel.find().populate('user').exec();
   }
 
   async findOne(id: string): Promise<Post> {
-    const post = await this.postModel.findById(id).exec();
+    const post = await this.postModel.findById(id).populate('user').exec();
     if (!post) {
       throw new NotFoundException('게시글을 찾을 수 없습니다.');
     }
@@ -40,22 +41,23 @@ export class PostService {
   async update(
     id: string,
     updatePostDto: UpdatePostDto,
-    userId: string,
+    user: UserDocument,
   ): Promise<Post> {
     const post = await this.findOne(id); // 게시글 찾기
 
-    if (post.userId.toString() !== userId.toString()) {
+    if ((post.user as UserDocument)._id.toString() !== user._id.toString()) {
       // 권한 체크
       throw new ForbiddenException('본인의 게시글만 수정할 수 있습니다.');
     }
     return await this.postModel
       .findByIdAndUpdate(id, updatePostDto, { new: true })
+      .populate('user')
       .exec();
   }
 
-  async remove(id: string, userId: string): Promise<any> {
+  async remove(id: string, user: UserDocument): Promise<any> {
     const post = await this.findOne(id); // 게시글 찾기
-    if (post.userId.toString() !== userId.toString()) {
+    if ((post.user as UserDocument)._id.toString() !== user._id.toString()) {
       // 권한 체크
       throw new ForbiddenException('본인의 게시글만 삭제할 수 있습니다.');
     }
