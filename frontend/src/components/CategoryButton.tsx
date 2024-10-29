@@ -51,7 +51,6 @@ const PostsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
 `
 
 const CategoryButton: React.FC<CategoryButtonProps> = ({ label, onClick, isSelected }) => {
