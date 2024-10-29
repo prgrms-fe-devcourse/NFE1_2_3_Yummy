@@ -63,4 +63,20 @@ export class PostService {
     }
     return await this.postModel.findByIdAndDelete(id).exec();
   }
+
+  async searchByTitle(keyword: string) {
+    return this.postModel
+      .find({
+        title: { $regex: keyword, $options: 'i' },
+      })
+      .exec();
+  }
+
+  async searchByContent(keyword: string) {
+    return this.postModel
+      .find({
+        content: { $regex: keyword, $options: 'i' },
+      })
+      .exec();
+  }
 }

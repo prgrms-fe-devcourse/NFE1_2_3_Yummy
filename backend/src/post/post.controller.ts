@@ -10,6 +10,7 @@ import {
   ValidationPipe,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -43,6 +44,18 @@ export class PostController {
   @ApiOperation({ summary: '특정 게시글 조회' })
   findOne(@Param('id') id: string) {
     return this.postService.findOne(id);
+  }
+
+  @Get('search/title')
+  @ApiOperation({ summary: '게시글 제목으로 검색' })
+  searchByTitle(@Query('keyword') keyword: string) {
+    return this.postService.searchByTitle(keyword);
+  }
+
+  @Get('search/content')
+  @ApiOperation({ summary: '게시글 내용으로 검색' })
+  searchByContent(@Query('keyword') keyword: string) {
+    return this.postService.searchByContent(keyword);
   }
 
   @Put(':id')
