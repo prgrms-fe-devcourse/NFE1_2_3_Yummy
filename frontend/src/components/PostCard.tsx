@@ -8,7 +8,10 @@ const Card = styled.div`
   padding: 16px;
   margin: 0 50px;
   margin-bottom: 16px;
+  width: 400px;
+  height: 200px;
   background-color: #fff;
+  font-family: sans-serif;
   cursor: pointer;
 `
 

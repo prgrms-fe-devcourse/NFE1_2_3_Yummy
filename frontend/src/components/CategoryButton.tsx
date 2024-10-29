@@ -8,14 +8,15 @@ import { Post } from '@/typings/db'
 interface CategoryButtonProps {
   label: string
   onClick: () => void
+  isSelected: boolean
 }
 
-const Button = styled.button`
+const Button = styled.button<{ $isSelected: boolean }>`
   height: 125px;
   width: 125px;
   border: 1px solid #7d7d7d;
-  background-color: #ffffff;
-  color: #1c1c1c;
+  background-color: ${({ $isSelected }) => ($isSelected ? '#1c1c1c' : '#ffffff')};
+  color: ${({ $isSelected }) => ($isSelected ? '#ffffff' : '#1c1c1c')};
   cursor: pointer;
   font-size: 16px;
   &:hover {
@@ -23,32 +24,38 @@ const Button = styled.button`
     color: #ffffff;
   }
   padding: 0;
+  margin-right: -1px;
+  //겹치는 보더라인 제거
+  &:not(:last-child) {
+    margin-bottom: -1px;
+  }
 `
 
 const ButtonGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 0;
+  margin-top: 0.5rem;
+  padding: 16px;
 `
 
 const CenteredContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
-  width: 100%;
+  margin: 16px 0;
 `
 
 const PostsContainer = styled.div`
   margin-top: 20px;
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
 `
 
-const CategoryButton: React.FC<CategoryButtonProps> = ({ label, onClick }) => {
-  return <Button onClick={onClick}>{label}</Button>
+const CategoryButton: React.FC<CategoryButtonProps> = ({ label, onClick, isSelected }) => {
+  return <Button onClick={onClick} $isSelected={isSelected}>{label}</Button>
 }
 
 const categories = [
@@ -105,6 +112,7 @@ const CategoryButtons: React.FC = () => {
             key={category}
             label={category}
             onClick={() => handleClick(category)}
+            isSelected={selectedCategory === category}
           />
         ))}
       </ButtonGrid>
