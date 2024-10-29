@@ -7,8 +7,23 @@ import axios from 'axios'
 import styled from 'styled-components'
 
 const Header = styled.h1`
+  font-family: 'Libre Baskerville';
+  font-size: 42px;
   text-align: center;
   margin: 20px 0;
+`
+const Hr = styled.hr`
+    margin: 16px auto 0;
+    height: 0.25rem;
+    width: 190px;
+    border: none;
+    background: black;
+`
+const PostsContainer = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const MainPage = () => {
@@ -39,13 +54,17 @@ const MainPage = () => {
     <div>
       <TopPost {...topPost} />
       <Header>Trending Now</Header>
-      {sortedPosts.map((post) => (
-        <PostCard
-          key={post._id}
-          {...post}
-        />
-      ))}
+      <Hr />
+      <PostsContainer>
+        {sortedPosts.map((post) => (
+          <PostCard
+            key={post._id}
+            {...post}
+          />
+        ))}
+      </PostsContainer>
       <Header>Category</Header>
+      <Hr/>
       <CategoryButtons />
     </div>
   )
