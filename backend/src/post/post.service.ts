@@ -9,10 +9,14 @@ import { Post } from './entities/post.schema';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserDocument } from 'src/users/schemas/user.schema';
+import { User } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class PostService {
-  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<Post>,
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {}
 
   async create(
     createPostDto: CreatePostDto,
@@ -80,5 +84,13 @@ export class PostService {
       })
       .populate('user')
       .exec();
+  }
+
+  async searchByNickname(nickname: string) {
+    const user = await this.userModel.findOne({ nickname }).exec();
+
+    if (!user) return [];
+
+    return this.postModel.find({ user: user._id }).populate('user').exec();
   }
 }

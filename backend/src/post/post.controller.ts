@@ -58,6 +58,12 @@ export class PostController {
     return this.postService.searchByContent(keyword);
   }
 
+  @Get('search/nickname')
+  @ApiOperation({ summary: '사용자 닉네임으로 게시글 검색' })
+  searchByNickname(@Query('nickname') nickname: string) {
+    return this.postService.searchByNickname(nickname);
+  }
+
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '게시글 업데이트' })
