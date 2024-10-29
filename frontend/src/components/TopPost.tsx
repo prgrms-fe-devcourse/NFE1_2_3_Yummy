@@ -1,17 +1,7 @@
+import { Post } from '@/typings/db'
+import { formatDate } from '@/utils/formatDate'
 import React from 'react'
 import styled from 'styled-components'
-
-interface TopPostProps {
-  post: {
-    category: string
-    title: string
-    author: string
-    date: string
-    text: string
-    image_url: string
-    heartCount: number
-  }
-}
 
 const TopPostContainer = styled.div<{ $imgUrl: string }>`
   position: relative;
@@ -53,18 +43,23 @@ const PostText = styled.p`
   margin-top: 8px;
 `
 
-const TopPost: React.FC<TopPostProps> = ({ post }) => {
-  const { image_url, category, title, author, date, text } = post
-
+const TopPost: React.FC<Post> = ({
+  image_url,
+  category,
+  title,
+  userId,
+  createdAt,
+  content,
+}) => {
   return (
     <TopPostContainer $imgUrl={image_url}>
       <ContentContainer>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
         <PostAuthor>
-          {author} | {date}
+          {userId} | {formatDate(createdAt)}
         </PostAuthor>
-        <PostText>{text}</PostText>
+        <PostText>{content}</PostText>
       </ContentContainer>
     </TopPostContainer>
   )

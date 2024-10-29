@@ -1,6 +1,7 @@
 import CategoryButtons from '@/components/CategoryButton'
 import PostCard from '@/components/PostCard'
 import TopPost from '@/components/TopPost'
+import { Post } from '@/typings/db'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import styled from 'styled-components'
@@ -15,7 +16,7 @@ const MainPage = () => {
     data: posts,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<Post[]>({
     queryKey: ['posts'],
     queryFn: async () => {
       const response = await axios.get('/api/post')
@@ -30,23 +31,18 @@ const MainPage = () => {
     return <p>포스트 데이터가 올바르지 않습니다.</p>
   }
 
-  console.log('posts', posts)
+  // 추후에 좋아요 데이터 넘어오면 확인해야할듯
   const sortedPosts = posts.sort((a, b) => b.heartCount - a.heartCount)
   const topPost = sortedPosts[0]
 
   return (
     <div>
-      <TopPost post={topPost} />
+      <TopPost {...topPost} />
       <Header>Trending Now</Header>
       {sortedPosts.map((post) => (
         <PostCard
-          key={post.id}
-          category={post.category}
-          title={post.title}
-          author={post.author}
-          date={post.date}
-          text={post.text}
-          image_url={post.image_url}
+          key={post._id}
+          {...post}
         />
       ))}
       <Header>Category</Header>

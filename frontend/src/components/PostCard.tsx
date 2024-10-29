@@ -3,15 +3,6 @@ import { Post } from '@/typings/db'
 import { formatDate } from '@/utils/formatDate'
 import styled from 'styled-components'
 
-interface CardProps {
-  category: string
-  title: string
-  author: string
-  date: string
-  text: string
-  image_url: string
-}
-
 const Card = styled.div`
   display: flex;
   padding: 16px;
@@ -63,43 +54,32 @@ const PostText = styled.p`
   margin-top: 8px;
 `
 
-// author 속성은 추후 확인해야됨
-
-// function PostCard({
-//   title,
-//   author,
-//   createdAt,
-//   content,
-//   category,
-//   image_url,
-//   _id,
-// }: Post) {
-//   const handleNavigateTo = useNavigateTo()
-
-//   const handleOpenPost = () => {
-//     handleNavigateTo(`/post/${_id}`)
-//   }
-
 function PostCard({
   title,
-  author,
-  date,
-  text,
+  userId,
+  createdAt,
+  content,
   category,
   image_url,
-}: CardProps) {
+  _id,
+}: Post) {
+  const handleNavigateTo = useNavigateTo()
+
+  const handleOpenPost = () => {
+    handleNavigateTo(`/post/${_id}`)
+  }
   return (
     <Card>
       <PostImage
         src={image_url}
         alt='Post Thumbnail'
       />
-      <PostContent>
+      <PostContent onClick={handleOpenPost}>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
-        <PostAuthor>{author}</PostAuthor>
-        <PostDate>{formatDate(date)}</PostDate>
-        <PostText>{text}</PostText>
+        <PostAuthor>{userId}</PostAuthor>
+        <PostDate>{formatDate(createdAt)}</PostDate>
+        <PostText>{content}</PostText>
       </PostContent>
     </Card>
   )

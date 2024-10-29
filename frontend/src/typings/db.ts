@@ -1,6 +1,7 @@
 export interface Post {
   category: string
   title: string
+  userId: string
   content: string
   image_url: string
   createdAt: string
