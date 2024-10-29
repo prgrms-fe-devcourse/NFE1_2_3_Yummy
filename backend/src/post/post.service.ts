@@ -9,10 +9,15 @@ import { Post } from './entities/post.schema';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserDocument } from 'src/users/schemas/user.schema';
+import { User } from 'src/users/schemas/user.schema';
+import { PaginatedPostsDto } from './dto/paginated-post.dto';
 
 @Injectable()
 export class PostService {
-  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<Post>,
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {}
 
   async create(
     createPostDto: CreatePostDto,
@@ -26,8 +31,21 @@ export class PostService {
     return await createdPost.populate('user'); // userId를 User 객체로 채워 반
   }
 
-  async findAll(): Promise<Post[]> {
-    return await this.postModel.find().populate('user').exec();
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedPostsDto> {
+    const skip = (page - 1) * limit;
+    const totalCount = await this.postModel.countDocuments();
+
+    const posts = await this.postModel
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .populate('user')
+      .exec();
+
+    return { totalCount, posts };
   }
 
   async findOne(id: string): Promise<Post> {
@@ -62,5 +80,58 @@ export class PostService {
       throw new ForbiddenException('본인의 게시글만 삭제할 수 있습니다.');
     }
     return await this.postModel.findByIdAndDelete(id).exec();
+  }
+
+  async searchByTitle(keyword: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const totalCount = await this.postModel.countDocuments({
+      title: { $regex: keyword, $options: 'i' },
+    });
+
+    const posts = await this.postModel
+      .find({ title: { $regex: keyword, $options: 'i' } })
+      .skip(skip)
+      .limit(limit)
+      .populate('user')
+      .exec();
+
+    return { totalCount, posts };
+  }
+
+  async searchByContent(keyword: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const totalCount = await this.postModel.countDocuments({
+      content: { $regex: keyword, $options: 'i' },
+    });
+
+    const posts = await this.postModel
+      .find({ content: { $regex: keyword, $options: 'i' } })
+      .skip(skip)
+      .limit(limit)
+      .populate('user')
+      .exec();
+
+    return { totalCount, posts };
+  }
+
+  async searchByNickname(
+    nickname: string,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const user = await this.userModel.findOne({ nickname }).exec();
+    if (!user) return { totalCount: 0, posts: [] };
+
+    const skip = (page - 1) * limit;
+    const totalCount = await this.postModel.countDocuments({ user: user._id });
+
+    const posts = await this.postModel
+      .find({ user: user._id })
+      .skip(skip)
+      .limit(limit)
+      .populate('user')
+      .exec();
+
+    return { totalCount, posts };
   }
 }
