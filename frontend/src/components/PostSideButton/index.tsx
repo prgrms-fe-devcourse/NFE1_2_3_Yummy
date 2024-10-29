@@ -7,15 +7,13 @@ import {
 import { PostSideButtonContainer, PostSideButtonItem } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import usePostModal from '@/store/usePostModal'
 
-interface PostSideButtonProps {
-  onhandleDeleteModal: () => void
-}
-
-const PostSideButton = ({ onhandleDeleteModal }: PostSideButtonProps) => {
+const PostSideButton = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
+  const { openModal } = usePostModal()
   const [postLiked, setPostLiked] = useState(false)
   const [postLikeCount, setPostLikeCount] = useState(0)
 
@@ -44,7 +42,7 @@ const PostSideButton = ({ onhandleDeleteModal }: PostSideButtonProps) => {
       />
       <PostSideButtonItem
         icon={<DeleteOutlined />}
-        onClick={onhandleDeleteModal}
+        onClick={openModal}
       />
     </PostSideButtonContainer>
   )

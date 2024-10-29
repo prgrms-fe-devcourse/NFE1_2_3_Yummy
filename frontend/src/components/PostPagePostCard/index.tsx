@@ -10,6 +10,8 @@ import {
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
+import { Avatar } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
 
 const PostPagePostCard = () => {
   const { id: postId } = useParams()
@@ -35,7 +37,17 @@ const PostPagePostCard = () => {
   }
 
   if (data) {
-    console.log(data)
+    const { user: author } = data
+
+    const authorProfileImage = author.profileImageUrl ? (
+      <img
+        src={author?.profileImageUrl}
+        alt='Author'
+      />
+    ) : (
+      <Avatar icon={<UserOutlined />} />
+    )
+
     content = (
       <PostPagePostCardContainer>
         <PostInfo>
@@ -43,11 +55,8 @@ const PostPagePostCard = () => {
           <h1>{data?.title}</h1>
           <PostDetail>
             <AuthorDetail>
-              <img
-                src='https://static.inews24.com/v1/0ea0b53518da00.jpg'
-                alt='Author'
-              />
-              <span>애드워드 리</span>
+              {authorProfileImage}
+              <span>{author?.nickname}</span>
             </AuthorDetail>
             <Dot>·</Dot>
             <p>{formatDate(data?.createdAt)}</p>

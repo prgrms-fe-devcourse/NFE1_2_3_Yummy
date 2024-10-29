@@ -10,8 +10,10 @@ import { queryClient } from '@/apis/api'
 import { useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
+import { Avatar } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
 
-const CommentCard = ({ content, author, createdAt, _id }: Comment) => {
+const CommentCard = ({ content, createdAt, _id, user }: Comment) => {
   const { id: postId } = useParams()
 
   const { mutate, isPending, isError, error } = useMutation({
@@ -30,16 +32,21 @@ const CommentCard = ({ content, author, createdAt, _id }: Comment) => {
   }
 
   const buttonDisabledPredicate = isPending || isError
+  const authorProfileImage = user.profileImageUrl ? (
+    <img
+      src={user.profileImageUrl}
+      alt='user Img'
+    />
+  ) : (
+    <Avatar icon={<UserOutlined />} />
+  )
 
   return (
     <CommentCardContainer>
       <CommentCardInfo>
-        <img
-          src='https://static.inews24.com/v1/0ea0b53518da00.jpg'
-          alt='user Img'
-        />
+        {authorProfileImage}
         <div>
-          <p>{author}</p>
+          <p>{user.nickname}</p>
           <p>{formatDate(createdAt)}</p>
         </div>
       </CommentCardInfo>

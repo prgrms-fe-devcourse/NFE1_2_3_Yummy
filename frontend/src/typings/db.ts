@@ -1,7 +1,7 @@
 export interface Post {
   category: string
   title: string
-  userId: string
+  user: User
   content: string
   image_url: string
   createdAt: string
@@ -12,8 +12,16 @@ export interface Post {
 export interface Comment {
   _id: string
   postId: string
+  user: User
   content: string
   author: string
   createdAt: string
   updatedAt: string
+}
+
+export interface User {
+  _id?: string
+  profileImageUrl?: string
+  nickname: string
+  bio: string
 }

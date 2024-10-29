@@ -4,26 +4,25 @@ import postApi from '@/apis/postService'
 import { useNavigate, useParams } from 'react-router-dom'
 import { LoadingOutlined } from '@ant-design/icons'
 import { queryClient } from '@/apis/api'
+import usePostModal from '@/store/usePostModal'
 
-interface DeleteModalProps {
-  isModalOpen: boolean
-  onhandleDeleteModal: () => void
-}
-
-const DeleteModal = ({
-  isModalOpen,
-  onhandleDeleteModal,
-}: DeleteModalProps) => {
+const DeleteModal = ({ type }: { type: 'post' | 'comment' }) => {
   const { id: postId } = useParams()
   const navigate = useNavigate()
 
-  const { mutate, isPending, isError, error } = useMutation({
+  const { isModalOpen, closeModal } = usePostModal()
+
+  const {
+    mutate: deletePost,
+    isPending: isDeletingPost,
+    isError: isDeletingPostError,
+    error: deletingPostError,
+  } = useMutation({
     mutationFn: async () => {
       if (postId) {
         await postApi.deletePost(postId)
       }
     },
-
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] })
       navigate('/')
@@ -32,16 +31,16 @@ const DeleteModal = ({
 
   let content
 
-  if (isError) {
+  if (isDeletingPostError) {
     content = (
       <>
         <h3>삭제 실패</h3>
-        <p>{error.message}</p>
+        <p>{deletingPostError.message}</p>
       </>
     )
   }
 
-  if (isModalOpen) {
+  if (type === 'post') {
     content = (
       <>
         <h3>정말로 삭제하시겠습니까?</h3>
@@ -51,15 +50,15 @@ const DeleteModal = ({
   }
 
   const handleDelete = () => {
-    mutate()
+    deletePost()
   }
 
   return (
     <DeleteModalContainer
       open={isModalOpen}
-      onCancel={onhandleDeleteModal}
+      onCancel={closeModal}
       onOk={handleDelete}
-      okText={isPending ? <LoadingOutlined /> : '삭제'}
+      okText={isDeletingPost ? <LoadingOutlined /> : '삭제'}
       cancelText='취소'
       centered
     >

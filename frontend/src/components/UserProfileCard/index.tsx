@@ -1,4 +1,4 @@
-import { SettingOutlined } from '@ant-design/icons'
+import { SettingOutlined, UserOutlined } from '@ant-design/icons'
 import {
   UserCard,
   Description,
@@ -9,18 +9,17 @@ import {
   ProfileNameContainer,
 } from './style'
 import { useNavigateTo } from '@/hooks/useNavigateTo'
+import { User } from '@typings/db'
+import { Avatar } from 'antd'
 
-interface UserProfileCardProps {
-  imageUrl: string
-  name: string
-  description: string
+interface UserProfileCardProps extends User {
   isDisplay: boolean
 }
 
 const UserProfileCard = ({
-  imageUrl,
-  name,
-  description,
+  nickname,
+  bio,
+  profileImageUrl,
   isDisplay,
 }: UserProfileCardProps) => {
   const handleNavigateTo = useNavigateTo()
@@ -28,15 +27,21 @@ const UserProfileCard = ({
     handleNavigateTo('/profile/edit')
   }
 
+  const profileImage = profileImageUrl ? (
+    <ProfileImage
+      src={profileImageUrl}
+      alt={nickname}
+    />
+  ) : (
+    <Avatar icon={<UserOutlined />} />
+  )
+
   return (
     <UserCard>
-      <ProfileImage
-        src={imageUrl}
-        alt={name}
-      />
+      {profileImage}
       <ProfileIntroduce>
         <ProfileNameContainer>
-          <Name>{name}</Name>
+          <Name>{nickname}</Name>
           <EditButton
             $isDisplay={isDisplay}
             onClick={handleEditProfile}
@@ -44,7 +49,7 @@ const UserProfileCard = ({
             <SettingOutlined style={{ color: '#7d7d7d', fontSize: '1.2rem' }} />
           </EditButton>
         </ProfileNameContainer>
-        <Description>{description}</Description>
+        <Description>{bio}</Description>
       </ProfileIntroduce>
     </UserCard>
   )
