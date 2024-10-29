@@ -58,8 +58,8 @@ const LoginPage = () => {
 
         if (response.status === 201) {
           // JWT 토큰을 로컬 스토리지에 저장
-          const { token } = response.data // 응답에서 토큰 추출
-          localStorage.setItem('token', token)
+          const { access_token } = response.data // 응답에서 토큰 추출
+          localStorage.setItem('token', access_token)
 
           message.success('로그인이 완료되었습니다.')
           navigate('/') // 홈으로 이동
@@ -75,7 +75,6 @@ const LoginPage = () => {
   return (
     <Container>
       <Title>로그인</Title>
-
       {/* Email 폼 */}
       <StyledInput
         size='large'
@@ -84,7 +83,6 @@ const LoginPage = () => {
         onChange={(e) => setEmail(e.target.value)}
       />
       {isSubmitted && errors.email && <ErrorText>{errors.email}</ErrorText>}
-
       {/* PW 폼 */}
       <StyledInput
         size='large'
@@ -96,9 +94,7 @@ const LoginPage = () => {
       {isSubmitted && errors.password && (
         <ErrorText>{errors.password}</ErrorText>
       )}
-
-      <LinkText onClick={() => navigate('/')}>회원가입하기</LinkText>
-
+      <LinkText onClick={() => navigate('/signin')}>회원가입하기</LinkText>
       {/* 버튼 */}
       <StyledButton
         type='primary'
