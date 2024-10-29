@@ -10,6 +10,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserDocument } from 'src/users/schemas/user.schema';
 import { User } from 'src/users/schemas/user.schema';
+import { PaginatedPostsDto } from './dto/paginated-post.dto';
 
 @Injectable()
 export class PostService {
@@ -30,8 +31,21 @@ export class PostService {
     return await createdPost.populate('user'); // userId를 User 객체로 채워 반
   }
 
-  async findAll(): Promise<Post[]> {
-    return await this.postModel.find().populate('user').exec();
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedPostsDto> {
+    const skip = (page - 1) * limit;
+    const totalCount = await this.postModel.countDocuments();
+
+    const posts = await this.postModel
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .populate('user')
+      .exec();
+
+    return { totalCount, posts };
   }
 
   async findOne(id: string): Promise<Post> {
@@ -68,29 +82,44 @@ export class PostService {
     return await this.postModel.findByIdAndDelete(id).exec();
   }
 
-  async searchByTitle(keyword: string) {
+  async searchByTitle(keyword: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
     return this.postModel
       .find({
         title: { $regex: keyword, $options: 'i' },
       })
+      .skip(skip)
+      .limit(limit)
       .populate('user')
       .exec();
   }
 
-  async searchByContent(keyword: string) {
+  async searchByContent(keyword: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
     return this.postModel
       .find({
         content: { $regex: keyword, $options: 'i' },
       })
+      .skip(skip)
+      .limit(limit)
       .populate('user')
       .exec();
   }
 
-  async searchByNickname(nickname: string) {
+  async searchByNickname(
+    nickname: string,
+    page: number = 1,
+    limit: number = 10,
+  ) {
     const user = await this.userModel.findOne({ nickname }).exec();
-
     if (!user) return [];
 
-    return this.postModel.find({ user: user._id }).populate('user').exec();
+    const skip = (page - 1) * limit;
+    return this.postModel
+      .find({ user: user._id })
+      .skip(skip)
+      .limit(limit)
+      .populate('user')
+      .exec();
   }
 }
