@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { Types } from 'mongoose';
+import { UpdateProfileDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -31,5 +32,23 @@ export class UsersService {
     // userId를 Types.ObjectId로 변환
     const id = new Types.ObjectId(userId);
     return this.userModel.findById(id).exec(); // exec()를 사용하여 쿼리 실행
+  }
+
+  async updateProfile(
+    userId: string,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<User> {
+    // userId를 Types.ObjectId로 변환
+    console.log(userId);
+    const id = new Types.ObjectId(userId);
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      id,
+      { $set: updateProfileDto },
+      { new: true },
+    );
+    if (!updatedUser) {
+      throw new NotFoundException('User not found');
+    }
+    return updatedUser;
   }
 }

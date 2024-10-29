@@ -3,7 +3,6 @@
 /src/*/dist
 /node_modules
 /build
-
 /**/dist
 # Logs
 logs

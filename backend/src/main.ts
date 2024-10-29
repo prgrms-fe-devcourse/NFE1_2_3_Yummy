@@ -9,8 +9,6 @@ async function bootstrap() {
     .setTitle('3차 프로젝트 7팀 API')
     .setDescription('3차 프로젝트 7팀 API 입니다.')
     .setVersion('1.0')
-    .addTag('post')
-    .addTag('comments')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);

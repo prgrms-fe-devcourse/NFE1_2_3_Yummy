@@ -5,6 +5,7 @@ import WritingPage from './pages/WritingPage'
 import PageLayout from './layouts/pageLayout'
 import MyPage from './pages/MyPage'
 import PostPage from './pages/PostPage'
+import MainPage from './pages/MainPage'
 import SearchPage from './pages/SearchPage'
 import UserEditModal from './components/UserEditModal'
 function App() {
@@ -53,6 +54,10 @@ function App() {
           <Route
             path='/search/category'
             element={<SearchPage />}
+          />
+          <Route
+            path='/'
+            element={<MainPage />}
           />
         </Route>
       </Routes>

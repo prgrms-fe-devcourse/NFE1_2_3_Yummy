@@ -13,6 +13,12 @@ export class User {
 
   @Prop({ required: true })
   nickname: string;
+
+  @Prop({ required: false })
+  profileImageUrl?: string;
+
+  @Prop({ required: false })
+  bio?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
