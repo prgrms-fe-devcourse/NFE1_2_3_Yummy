@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
 import { Post } from '@/typings/db'
 import { useState } from 'react'
+import { Radio } from 'antd'
 
 const SearchPage = () => {
   const [search, setSearch] = useState('')
@@ -38,10 +39,12 @@ const SearchPage = () => {
   }
 
   if (data) {
-    const filteredPosts: Post[] =
+    const { posts } = data
+
+    const filteredPosts =
       category === '전체'
-        ? data
-        : data.filter((post: Post) => post.category === category)
+        ? posts
+        : posts.filter((post: Post) => post.category === category)
 
     const searchPredicate = ({ title, content }: Post) =>
       title.includes(search) || content.includes(search)
@@ -59,6 +62,11 @@ const SearchPage = () => {
   return (
     <SearchPageContainer>
       <SearchPageInput onHandleSearch={handleSearch} />
+      <Radio.Group style={{ marginLeft: '1rem' }}>
+        <Radio value={1}>제목</Radio>
+        <Radio value={2}>내용</Radio>
+        <Radio value={3}>작성자</Radio>
+      </Radio.Group>
       <SearchPageResultContainer>
         <SearchPageNav />
         <SearchPageResult>{content}</SearchPageResult>

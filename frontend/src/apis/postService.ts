@@ -12,13 +12,20 @@ export const fetchPosts = async () => {
   }
 }
 
-import { Post, Comment, PostForm } from '@/typings/db'
+import { Post, Comment, PostForm, Posts } from '@/typings/db'
 import { CommentForm } from '@/utils/Model/commentModel'
 import api from './ky'
 
+interface SearchEvent {
+  type: 'title' | 'content' | 'nickname'
+  keyword: string
+  length: number
+  page: number
+}
+
 const postApi = {
   getPost: async () => {
-    const response = await api.get<Post[]>('post').json()
+    const response = await api.get<Posts>('post').json()
     return response
   },
 
@@ -60,6 +67,16 @@ const postApi = {
 
   deleteComment: async (id: string, comment_id: string) => {
     const response = await api.delete(`post/${id}/comment/${comment_id}`)
+    return response
+  },
+
+  searchPost: async (searchEvent: SearchEvent) => {
+    const { type, keyword, length, page } = searchEvent
+    const response = await api
+      .get<Posts>(
+        `post/search/${type}?keyword=${keyword}&limit=${length}&page=${page}`,
+      )
+      .json()
     return response
   },
 }

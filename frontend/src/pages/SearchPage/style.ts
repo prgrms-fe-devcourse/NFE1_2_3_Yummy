@@ -5,8 +5,6 @@ export const SearchPageContainer = styled.div`
   display: flex;
   padding-block: 2rem;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   width: 60%;
   gap: 2rem;
 `
