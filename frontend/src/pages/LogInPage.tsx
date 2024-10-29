@@ -127,9 +127,13 @@ const StyledInput = styled(Input)`
   height: 63px;
   margin-bottom: 20px;
   border-radius: 10px;
-  background-color: #f0f0f0;
+  background-color: #f8f8f8;
   .ant-input-prefix {
     margin-right: 15px; // prefix와 placeholder 간의 간격을 벌림
+  }
+  &:hover {
+    background-color: white;
+    border-color: #7d7d7d;
   }
 `
 const LinkText = styled.p`
@@ -137,7 +141,7 @@ const LinkText = styled.p`
   margin-bottom: 15px;
   font-size: 14px;
   cursor: pointer;
-  color: black;
+  color: #7d7d7d;
 `
 
 const StyledButton = styled(Button)`
@@ -146,6 +150,10 @@ const StyledButton = styled(Button)`
   background-color: black;
   font-size: 18px;
   border-radius: 10px;
+  &:hover {
+    background-color: #333 !important;
+    color: white !important;
+  }
 `
 
 const ErrorText = styled.p`

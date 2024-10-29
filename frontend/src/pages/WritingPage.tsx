@@ -189,6 +189,10 @@ const StyledButton = styled(Button)`
   height: 50px;
   font-size: 18px;
   border-radius: 10px;
+  &:hover {
+    background-color: #333 !important;
+    color: white !important;
+  }
 `
 
 const UploadedImage = styled.img`
