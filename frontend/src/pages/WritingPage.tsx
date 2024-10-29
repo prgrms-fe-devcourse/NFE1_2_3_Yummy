@@ -11,6 +11,7 @@ import axios from 'axios'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
 import { queryClient } from '@/apis/api'
+import htmlToDraft from 'html-to-draftjs'
 
 const WritingPage: React.FC = () => {
   const navigate = useNavigate()
@@ -61,11 +62,12 @@ const WritingPage: React.FC = () => {
       setTitle(data.title)
       setCategory(data.category)
 
-      setEditorState(
-        EditorState.createWithContent(
-          ContentState.createFromText(data.content),
-        ),
+      const contentBlock = htmlToDraft(data.content)
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks,
       )
+      const editorState = EditorState.createWithContent(contentState)
+      setEditorState(editorState)
       setImageUrl(data.image_url)
     }
   }, [data])
