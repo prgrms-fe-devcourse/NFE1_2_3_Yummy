@@ -8,7 +8,11 @@ import { PostSideButtonContainer, PostSideButtonItem } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-const PostSideButton = () => {
+interface PostSideButtonProps {
+  onhandleDeleteModal: () => void
+}
+
+const PostSideButton = ({ onhandleDeleteModal }: PostSideButtonProps) => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
@@ -38,7 +42,10 @@ const PostSideButton = () => {
         icon={<EditOutlined />}
         onClick={handleEdit}
       />
-      <PostSideButtonItem icon={<DeleteOutlined />} />
+      <PostSideButtonItem
+        icon={<DeleteOutlined />}
+        onClick={onhandleDeleteModal}
+      />
     </PostSideButtonContainer>
   )
 }
