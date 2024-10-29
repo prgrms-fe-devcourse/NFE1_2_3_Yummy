@@ -7,10 +7,10 @@ import {
   ProfileIntroduce,
   EditButton,
   ProfileNameContainer,
+  AuthorProfileIcon,
 } from './style'
 import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { User } from '@typings/db'
-import { Avatar } from 'antd'
 
 interface UserProfileCardProps extends User {
   isDisplay: boolean
@@ -33,7 +33,7 @@ const UserProfileCard = ({
       alt={nickname}
     />
   ) : (
-    <Avatar icon={<UserOutlined />} />
+    <AuthorProfileIcon icon={<UserOutlined />} />
   )
 
   return (
@@ -49,7 +49,7 @@ const UserProfileCard = ({
             <SettingOutlined style={{ color: '#7d7d7d', fontSize: '1.2rem' }} />
           </EditButton>
         </ProfileNameContainer>
-        <Description>{bio}</Description>
+        <Description>{bio || `${nickname}님입니다.`}</Description>
       </ProfileIntroduce>
     </UserCard>
   )

@@ -1,3 +1,4 @@
+import { Avatar } from 'antd'
 import styled from 'styled-components'
 
 interface UserCardProps {
@@ -23,6 +24,21 @@ export const ProfileImage = styled.img<UserCardProps>`
   object-fit: cover;
   border: 1px solid #eee;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+`
+
+export const AuthorProfileIcon = styled(Avatar)`
+  width: 5rem;
+  height: 5rem;
+  margin-top: 1rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #eee;
+  position: relative;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+
+  & svg {
+    font-size: 3.5rem;
+  }
 `
 
 export const ProfileIntroduce = styled.div`
