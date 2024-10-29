@@ -6,7 +6,7 @@ interface CardProps {
   author: string
   date: string
   text: string
-  imgUrl: string
+  image_url: string
 }
 
 const Card = styled.div`
@@ -59,11 +59,18 @@ const PostText = styled.p`
   margin-top: 8px;
 `
 
-function PostCard({ title, author, date, text, category, imgUrl }: CardProps) {
+function PostCard({
+  title,
+  author,
+  date,
+  text,
+  category,
+  image_url,
+}: CardProps) {
   return (
     <Card>
       <PostImage
-        src={imgUrl}
+        src={image_url}
         alt='Post Thumbnail'
       />
       <PostContent>
