@@ -84,26 +84,34 @@ export class PostService {
 
   async searchByTitle(keyword: string, page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
-    return this.postModel
-      .find({
-        title: { $regex: keyword, $options: 'i' },
-      })
+    const totalCount = await this.postModel.countDocuments({
+      title: { $regex: keyword, $options: 'i' },
+    });
+
+    const posts = await this.postModel
+      .find({ title: { $regex: keyword, $options: 'i' } })
       .skip(skip)
       .limit(limit)
       .populate('user')
       .exec();
+
+    return { totalCount, posts };
   }
 
   async searchByContent(keyword: string, page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
-    return this.postModel
-      .find({
-        content: { $regex: keyword, $options: 'i' },
-      })
+    const totalCount = await this.postModel.countDocuments({
+      content: { $regex: keyword, $options: 'i' },
+    });
+
+    const posts = await this.postModel
+      .find({ content: { $regex: keyword, $options: 'i' } })
       .skip(skip)
       .limit(limit)
       .populate('user')
       .exec();
+
+    return { totalCount, posts };
   }
 
   async searchByNickname(
@@ -112,14 +120,18 @@ export class PostService {
     limit: number = 10,
   ) {
     const user = await this.userModel.findOne({ nickname }).exec();
-    if (!user) return [];
+    if (!user) return { totalCount: 0, posts: [] };
 
     const skip = (page - 1) * limit;
-    return this.postModel
+    const totalCount = await this.postModel.countDocuments({ user: user._id });
+
+    const posts = await this.postModel
       .find({ user: user._id })
       .skip(skip)
       .limit(limit)
       .populate('user')
       .exec();
+
+    return { totalCount, posts };
   }
 }

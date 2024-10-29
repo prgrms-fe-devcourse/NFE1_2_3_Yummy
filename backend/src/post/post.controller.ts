@@ -72,6 +72,24 @@ export class PostController {
 
   @Get('search/title')
   @ApiOperation({ summary: '게시글 제목으로 검색' })
+  @ApiQuery({ name: 'keyword', description: '검색 키워드', required: true })
+  @ApiQuery({
+    name: 'page',
+    description: '페이지 번호',
+    required: false,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    description: '페이지당 게시글 수',
+    required: false,
+    example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: '성공적으로 검색된 게시글 목록을 반환합니다.',
+    type: PaginatedPostsDto,
+  })
   searchByTitle(
     @Query('keyword') keyword: string,
     @Query('page') page = 1,
@@ -82,6 +100,24 @@ export class PostController {
 
   @Get('search/content')
   @ApiOperation({ summary: '게시글 내용으로 검색' })
+  @ApiQuery({ name: 'keyword', description: '검색 키워드', required: true })
+  @ApiQuery({
+    name: 'page',
+    description: '페이지 번호',
+    required: false,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    description: '페이지당 게시글 수',
+    required: false,
+    example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: '성공적으로 검색된 게시글 목록을 반환합니다.',
+    type: PaginatedPostsDto,
+  })
   searchByContent(
     @Query('keyword') keyword: string,
     @Query('page') page = 1,
@@ -92,6 +128,24 @@ export class PostController {
 
   @Get('search/nickname')
   @ApiOperation({ summary: '사용자 닉네임으로 게시글 검색' })
+  @ApiQuery({ name: 'nickname', description: '사용자 닉네임', required: true })
+  @ApiQuery({
+    name: 'page',
+    description: '페이지 번호',
+    required: false,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    description: '페이지당 게시글 수',
+    required: false,
+    example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: '성공적으로 검색된 게시글 목록을 반환합니다.',
+    type: PaginatedPostsDto,
+  })
   searchByNickname(
     @Query('nickname') nickname: string,
     @Query('page') page = 1,
