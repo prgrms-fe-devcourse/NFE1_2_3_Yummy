@@ -51,11 +51,11 @@ export const Dot = styled.p`
   margin-inline: 0.5rem;
 `
 
-export const PostContent = styled.code`
+export const PostContent = styled.div`
   font-family: 'Noto Sans KR', sans-serif !important;
   font-size: 1rem;
   white-space: pre-wrap;
-  word-break: keep-all;
+  /* word-break: keep-all; */
   word-wrap: break-word;
   line-height: 1.5;
   margin-block: 3.5rem;
