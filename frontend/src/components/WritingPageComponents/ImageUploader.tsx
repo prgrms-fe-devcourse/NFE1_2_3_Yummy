@@ -76,7 +76,8 @@ const StyledButton = styled(Button)`
   border: 1px solid black;
   color: #000000;
   &:hover {
-    background-color: #40a9ff;
+    border-color: #333 !important;
+    color: #333 !important;
   }
 `
 
