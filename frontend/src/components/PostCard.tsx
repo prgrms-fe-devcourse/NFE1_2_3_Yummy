@@ -87,7 +87,7 @@ function PostCard({
         <PostTitle>{title}</PostTitle>
         <PostAuthor>{userId}</PostAuthor>
         <PostDate>{formatDate(createdAt)}</PostDate>
-        <PostText>{content}</PostText>
+        <div dangerouslySetInnerHTML={{ __html: content }} />
       </PostContent>
     </Card>
   )

@@ -69,7 +69,7 @@ const TopPost: React.FC<Post> = ({
         <PostAuthor>
           {userId} | {formatDate(createdAt)}
         </PostAuthor>
-        <PostText>{content}</PostText>
+        <div dangerouslySetInnerHTML={{ __html: content }} />
       </ContentContainer>
     </TopPostContainer>
   )
