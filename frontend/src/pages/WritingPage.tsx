@@ -78,49 +78,45 @@ const WritingPage: React.FC = () => {
     }
   }, [data])
 
-  // 카테고리 토글
-  const handleCategoryChange = (value: unknown) => {
-    setCategory(value as string) // value를 string으로 변환
-  }
-
   // 버튼 클릭 -> 유효성 검사 및 POST 요청
   const handleSubmit = async () => {
-    if (postId) {
-      mutate()
-    } else {
-      const contentState = editorState.getCurrentContent() // ContentState 객체 가져오기
-      const rawContentState = convertToRaw(contentState) // ContentState를 RawDraftContentState로 변환
-      const htmlContent = draftToHtml(rawContentState) // 변환된 RawDraftContentState를 HTML로 변환
+    const contentState = editorState.getCurrentContent() // ContentState 객체 가져오기
+    const rawContentState = convertToRaw(contentState) // ContentState를 RawDraftContentState로 변환
+    const htmlContent = draftToHtml(rawContentState) // 변환된 RawDraftContentState를 HTML로 변환
 
-      // 필드 검증
-      if (!category || !title || !htmlContent.trim()) {
-        message.error('모든 필드를 입력해주세요.')
-      } else {
-        try {
-          const token = localStorage.getItem('token')
-          const response = await axios.post(
-            '/api/post',
-            {
-              title: title,
-              content: htmlContent,
-              category: category,
-              image_url: imageUrl || 'http://example.com/image.jpg',
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
-              },
-            },
-          )
+    if (!category || !title || !htmlContent.trim()) {
+      message.error('모든 필드를 입력해주세요.')
+      return
+    }
+    postId ? mutate() : createPost()
+  }
 
-          if (response.status === 201) {
-            message.success('게시글이 성공적으로 등록되었습니다.')
-            navigate('/') // 홈으로 네비게이터
-          }
-        } catch (error) {
-          message.error('게시글 등록에 실패했습니다.')
-        }
+  const createPost = async () => {
+    const contentState = editorState.getCurrentContent() // ContentState 객체 가져오기
+    const rawContentState = convertToRaw(contentState) // ContentState를 RawDraftContentState로 변환
+    const htmlContent = draftToHtml(rawContentState) // 변환된 RawDraftContentState를 HTML로 변환
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.post(
+        '/api/post',
+        {
+          title,
+          content: htmlContent,
+          category,
+          image_url: imageUrl || 'http://example.com/image.jpg',
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      )
+
+      if (response.status === 201) {
+        message.success('게시글이 성공적으로 등록되었습니다.')
+        navigate('/')
       }
+    } catch (error) {
+      message.error('게시글 등록에 실패했습니다.')
     }
   }
 
@@ -140,28 +136,29 @@ const WritingPage: React.FC = () => {
     '디저트 요리',
   ]
 
-  // Ant Design Select
-  const { Option } = Select
-
   // 이미지 업로드 성공 핸들러
   const handleImageUploadSuccess = (url: string) => {
     setImageUrl(url)
   }
 
+  // 토큰 확인
+  // const token = localStorage.getItem('token')
+  // console.log('Token from localStorage:', token)
+
   return (
     <Container>
       <CategorySelect
         placeholder='카테고리 선택'
-        onChange={handleCategoryChange}
+        onChange={(value) => setCategory(value as string)}
         value={category || undefined}
       >
         {categories.map((category, index) => (
-          <Option
+          <Select.Option
             key={index}
             value={category}
           >
             {category}
-          </Option>
+          </Select.Option>
         ))}
       </CategorySelect>
 
