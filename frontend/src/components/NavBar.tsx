@@ -11,39 +11,19 @@ const NavigationBar: React.FC = () => {
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // 로그인 여부 확인
-  const isLoggedIn = () => {
-    return !!localStorage.getItem('token') // JWT 토큰이 있으면 true 반환
-  }
-  // 로그인 상태 체크
-  const loggedIn = isLoggedIn()
+  const loggedIn = Boolean(localStorage.getItem('token'))
 
-  // 프로필 모달 토글
-  const handleProfileMouseEnter = () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current)
+  // 타이머 설정 함수
+  const toggleVisibility = (
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>,
+    visible: boolean,
+  ) => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+    if (visible) {
+      setVisible(true)
+    } else {
+      closeTimeoutRef.current = setTimeout(() => setVisible(false), 200)
     }
-    setIsModalVisible(true)
-  }
-
-  const handleProfileMouseLeave = () => {
-    closeTimeoutRef.current = setTimeout(() => {
-      setIsModalVisible(false)
-    }, 200)
-  }
-
-  // 카테고리 모달 토글
-  const handleCategoryMouseEnter = () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current)
-      closeTimeoutRef.current = null
-    }
-    setIsCategoryVisible(true)
-  }
-
-  const handleCategoryMouseLeave = () => {
-    closeTimeoutRef.current = setTimeout(() => {
-      setIsCategoryVisible(false)
-    }, 200)
   }
 
   // 로그아웃 함수
@@ -52,16 +32,6 @@ const NavigationBar: React.FC = () => {
     setIsModalVisible(false)
     message.success('로그아웃이 완료되었습니다.')
     navigate('/')
-  }
-
-  // 내 정보 페이지 이동
-  const handleProfile = () => {
-    navigate('/profile')
-  }
-
-  // 게시물 작성 네비게이션
-  const handleWriting = () => {
-    navigate('/write')
   }
 
   // 카테고리 배열
@@ -90,17 +60,13 @@ const NavigationBar: React.FC = () => {
         />
         <NavLinks>
           <StyledLink to='/'>Home</StyledLink>
-
           <CategoryContainer
-            onMouseEnter={handleCategoryMouseEnter}
-            onMouseLeave={handleCategoryMouseLeave}
+            onMouseEnter={() => toggleVisibility(setIsCategoryVisible, true)}
+            onMouseLeave={() => toggleVisibility(setIsCategoryVisible, false)}
           >
             <Category>Category</Category>
             {isCategoryVisible && (
-              <CategoryModal
-                onMouseEnter={handleCategoryMouseEnter}
-                onMouseLeave={handleCategoryMouseLeave}
-              >
+              <CategoryModal>
                 {categories.map((category, index) => (
                   <CategoryItem key={index}>{category}</CategoryItem>
                 ))}
@@ -117,8 +83,8 @@ const NavigationBar: React.FC = () => {
         <LogInBtnContainer>
           {loggedIn ? (
             <AvatarContainer
-              onMouseEnter={handleProfileMouseEnter}
-              onMouseLeave={handleProfileMouseLeave}
+              onMouseEnter={() => toggleVisibility(setIsModalVisible, true)}
+              onMouseLeave={() => toggleVisibility(setIsModalVisible, false)}
             >
               <StyledAvatar
                 size={64}
@@ -128,17 +94,19 @@ const NavigationBar: React.FC = () => {
 
               {/* 아바타 모달창 */}
               {isModalVisible && (
-                <CustomModal>
+                <AvatorModal>
                   <ModalContent>
-                    <ModalButton onClick={handleProfile}>내 정보</ModalButton>
+                    <ModalButton onClick={() => navigate('/profile')}>
+                      내 정보
+                    </ModalButton>
                     <ModalDivider />
-                    <ModalButton onClick={handleWriting}>
+                    <ModalButton onClick={() => navigate('/write')}>
                       게시물 작성
                     </ModalButton>
                     <ModalDivider />
                     <ModalButton onClick={handleLogout}>로그아웃</ModalButton>
                   </ModalContent>
-                </CustomModal>
+                </AvatorModal>
               )}
             </AvatarContainer>
           ) : (
@@ -239,17 +207,23 @@ const Category = styled.div`
   }
 `
 
-const CategoryModal = styled.div`
-  position: absolute;
-  top: 75px;
-  left: 300px;
+// 모달 공통
+const modalStyles = `
   width: 170px;
   background-color: black;
   color: white;
-  padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
+`
+
+// 카테고리 모달
+const CategoryModal = styled.div`
+  ${modalStyles}
+  position: absolute;
+  top: 75px;
+  left: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -265,17 +239,12 @@ const CategoryItem = styled.div`
   }
 `
 
-// 아바타 모달창
-const CustomModal = styled.div`
+// 아바타 모달
+const AvatorModal = styled.div`
+  ${modalStyles}
   position: absolute;
   top: 75px;
   left: -103px;
-  width: 170px;
-  background-color: black;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
 `
 
 const ModalContent = styled.div`
