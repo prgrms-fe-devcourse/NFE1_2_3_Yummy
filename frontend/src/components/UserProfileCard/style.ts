@@ -76,5 +76,6 @@ export const EditButton = styled.button<EditButtonProps>`
   display: ${({ $isDisplay }) => ($isDisplay ? 'block' : 'none')};
   border: none;
   background: none;
+  z-index: 999;
   cursor: pointer;
 `

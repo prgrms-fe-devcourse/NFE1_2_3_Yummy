@@ -3,7 +3,7 @@ import api from './ky'
 
 const userApi = {
   getUserData: async (id: string) => {
-    const response = await api.get(`user/${id}`).json()
+    const response = await api<User>(`user/${id}`).json()
     return response
   },
 

@@ -25,10 +25,11 @@ export interface Comment {
 }
 
 export interface User {
-  _id?: string
+  _id: string
+  bio?: string
   profileImageUrl?: string
+  posts?: Post[]
   nickname: string
-  bio: string
 }
 
 export interface PostForm {

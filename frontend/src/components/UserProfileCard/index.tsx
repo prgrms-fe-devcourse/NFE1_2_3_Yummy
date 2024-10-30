@@ -14,6 +14,7 @@ import { User } from '@typings/db'
 
 interface UserProfileCardProps extends User {
   isDisplay: boolean
+  type?: 'post'
 }
 
 const UserProfileCard = ({
@@ -21,10 +22,16 @@ const UserProfileCard = ({
   bio,
   profileImageUrl,
   isDisplay,
+  _id: userId,
 }: UserProfileCardProps) => {
   const handleNavigateTo = useNavigateTo()
+
+  const handleNavigateToProfile = () => {
+    handleNavigateTo(`/profile/${userId}`)
+  }
+
   const handleEditProfile = () => {
-    handleNavigateTo('/profile/edit')
+    handleNavigateTo(`/profile/${userId}/edit`)
   }
 
   const profileImage = profileImageUrl ? (
