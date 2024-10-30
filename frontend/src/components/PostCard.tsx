@@ -58,7 +58,7 @@ const PostText = styled.p`
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; 
+  -webkit-line-clamp: 2;
   text-overflow: ellipsis;
 `
 

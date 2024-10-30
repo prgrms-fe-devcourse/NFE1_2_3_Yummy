@@ -12,7 +12,6 @@ const Top = styled.div`
 const Main = styled.div`
   display: flex;
   flex-direction: column;
-  
 `
 const Header = styled.h1`
   font-family: 'Libre Baskerville';
@@ -82,7 +81,6 @@ const MainPage = () => {
           <Hr />
           <CategoryButtons />
         </Main>
-        
       </div>
     )
   }
