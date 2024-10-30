@@ -18,6 +18,10 @@ export class Post extends Document {
 
   @Prop()
   image_url: string; // 이미지 URL
+
+  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] }) // 좋아요 배열
+  hearts: Types.ObjectId[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
+PostSchema.set('versionKey', false);
