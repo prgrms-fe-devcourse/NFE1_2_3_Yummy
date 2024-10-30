@@ -1,3 +1,4 @@
+import Radio from 'antd/es/radio/radio'
 import styled from 'styled-components'
 
 export const SearchPageContainer = styled.div`
@@ -17,4 +18,10 @@ export const SearchPageResultContainer = styled.div`
 
 export const SearchPageResult = styled.div`
   width: 80%;
+`
+
+export const SearchRadio = styled(Radio)`
+  &:hover {
+    outline: none !important;
+  }
 `
