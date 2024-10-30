@@ -7,6 +7,7 @@ import userApi from '@/apis/userService'
 
 const MyPage = () => {
   const { id: userId } = useParams()
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['userData', userId],
     queryFn: () => {

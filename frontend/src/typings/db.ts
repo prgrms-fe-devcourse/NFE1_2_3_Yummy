@@ -38,3 +38,9 @@ export interface PostForm {
   content: string
   category: string
 }
+
+export interface UserForm {
+  nickname: string
+  bio?: string
+  profileImageUrl?: string
+}
