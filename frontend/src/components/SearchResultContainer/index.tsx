@@ -1,13 +1,12 @@
-import { SearchPageResult, SearchResultContainer } from './style'
-import { Pagination } from 'antd'
+import { SearchPageNav, SearchPageResult, SearchResultContainer } from './style'
 
 interface SearchContainerProps {
   children: React.ReactNode
   handlePageChange: (pageNumber: number) => void
   totalCount: number
   pageSize: number
-  loading: boolean
   currentPage: number
+  isLoading: boolean
 }
 
 const SearchResult = ({
@@ -15,20 +14,19 @@ const SearchResult = ({
   handlePageChange,
   totalCount,
   pageSize,
-  loading,
   currentPage,
+  isLoading,
 }: SearchContainerProps) => {
   return (
     <>
       <SearchResultContainer>
         <SearchPageResult>{children}</SearchPageResult>
-        <Pagination
+        <SearchPageNav
           current={currentPage}
           pageSize={pageSize}
           total={totalCount}
           onChange={handlePageChange}
-          disabled={loading}
-          showSizeChanger={false}
+          disabled={isLoading}
         />
       </SearchResultContainer>
     </>

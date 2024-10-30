@@ -82,29 +82,19 @@ const SearchPage = () => {
   }
 
   if (data) {
-    const { posts, totalCount } = data
+    const { posts } = data
     const category = searchParams.get('search') || '전체'
 
     const filterPostsIndicate = (post: Post) => post.category === category
     const filteredPosts =
       category === '전체' ? posts : posts.filter(filterPostsIndicate)
 
-    content = (
-      <SearchResult
-        handlePageChange={handlePageChange}
-        totalCount={totalCount}
-        pageSize={ITEMS_PER_PAGE}
-        loading={isLoading}
-        currentPage={pageNumber}
-      >
-        {filteredPosts.map((post) => (
-          <PostCard
-            key={post._id}
-            {...post}
-          />
-        ))}
-      </SearchResult>
-    )
+    content = filteredPosts.map((post) => (
+      <PostCard
+        key={post._id}
+        {...post}
+      />
+    ))
   }
 
   return (
@@ -115,7 +105,15 @@ const SearchPage = () => {
       />
       <SearchPageResultContainer>
         <SearchPageNav />
-        {content}
+        <SearchResult
+          handlePageChange={handlePageChange}
+          totalCount={data?.totalCount || 0}
+          isLoading={isLoading}
+          pageSize={ITEMS_PER_PAGE}
+          currentPage={pageNumber}
+        >
+          {content}
+        </SearchResult>
       </SearchPageResultContainer>
     </SearchPageContainer>
   )
