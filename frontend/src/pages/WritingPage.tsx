@@ -20,6 +20,7 @@ const WritingPage: React.FC = () => {
   const [category, setCategory] = useState<string>('')
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
 
   const { id: postId } = useParams()
 
@@ -179,7 +180,10 @@ const WritingPage: React.FC = () => {
       {/* 이미지 업로더 컴포넌트, 에디터 컴포넌트 컨테이너 */}
       <PageContainer>
         <UploadContainer>
-          <ImageUploader onUploadSuccess={handleImageUploadSuccess} />
+          <ImageUploader
+            onUploadSuccess={handleImageUploadSuccess}
+            onLoadingChange={setUploading}
+          />
         </UploadContainer>
 
         <EditorContainer>
@@ -195,14 +199,14 @@ const WritingPage: React.FC = () => {
         <StyledButton
           type='primary'
           onClick={() => navigate('/')}
-          disabled={isPending}
+          disabled={isPending || uploading}
         >
           나가기
         </StyledButton>
         <StyledButton
           type='primary'
           onClick={handleSubmit}
-          disabled={isPending}
+          disabled={isPending || uploading}
         >
           {postId ? '수정하기' : '게시글 등록'}
         </StyledButton>
