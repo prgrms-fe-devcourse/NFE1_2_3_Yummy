@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { Post } from 'src/post/entities/post.schema';
 
 export type UserDocument = User & Document;
 
@@ -19,6 +20,9 @@ export class User {
 
   @Prop({ required: false })
   bio?: string;
+
+  @Prop({ type: [Types.ObjectId], ref: 'Post' }) // 포스트 참조 추가
+  posts?: Types.ObjectId[]; // 사용자가 작성한 포스트의 ObjectId 배열
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

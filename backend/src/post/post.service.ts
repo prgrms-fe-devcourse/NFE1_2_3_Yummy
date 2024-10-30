@@ -28,7 +28,13 @@ export class PostService {
       user, // 게시글 작성자 ID 설정
     });
     await createdPost.save();
-    return await createdPost.populate('user'); // userId를 User 객체로 채워 반
+
+    // 유저의 posts 배열에 새 포스트 ObjectId 추가
+    await this.userModel.findByIdAndUpdate(user._id, {
+      $push: { posts: createdPost._id },
+    });
+
+    return await createdPost.populate('user'); // userId를 User 객체로 채워 반환
   }
 
   async findAll(

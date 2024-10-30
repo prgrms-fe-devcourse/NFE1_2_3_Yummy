@@ -8,7 +8,7 @@ const Card = styled.div`
   padding: 16px;
   margin: 0 50px;
   margin-bottom: 16px;
-  width: 400px;
+  width: 900px;
   height: 200px;
   background-color: #fff;
   font-family: sans-serif;
@@ -55,6 +55,11 @@ const PostText = styled.p`
   font-size: 1rem;
   color: #1c1c1c;
   margin-top: 8px;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
 `
 
 function PostCard({

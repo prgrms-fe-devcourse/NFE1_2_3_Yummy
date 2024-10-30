@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useQuery } from '@tanstack/react-query'
 import PostCard from '@/components/PostCard'
 import axios from 'axios'
-import { Post } from '@/typings/db'
+import { Post, Posts } from '@/typings/db'
 
 interface CategoryButtonProps {
   label: string
@@ -15,7 +15,8 @@ const Button = styled.button<{ $isSelected: boolean }>`
   height: 125px;
   width: 125px;
   border: 1px solid #7d7d7d;
-  background-color: ${({ $isSelected }) => ($isSelected ? '#1c1c1c' : '#ffffff')};
+  background-color: ${({ $isSelected }) =>
+    $isSelected ? '#1c1c1c' : '#ffffff'};
   color: ${({ $isSelected }) => ($isSelected ? '#ffffff' : '#1c1c1c')};
   cursor: pointer;
   font-size: 16px;
@@ -48,13 +49,26 @@ const CenteredContainer = styled.div`
 
 const PostsContainer = styled.div`
   margin-top: 20px;
+  padding: 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `
 
-const CategoryButton: React.FC<CategoryButtonProps> = ({ label, onClick, isSelected }) => {
-  return <Button onClick={onClick} $isSelected={isSelected}>{label}</Button>
+const CategoryButton: React.FC<CategoryButtonProps> = ({
+  label,
+  onClick,
+  isSelected,
+}) => {
+  return (
+    <Button
+      onClick={onClick}
+      $isSelected={isSelected}
+    >
+      {label}
+    </Button>
+  )
 }
 
 const categories = [
@@ -79,7 +93,7 @@ const CategoryButtons: React.FC = () => {
     data: posts = [],
     isLoading,
     error,
-  } = useQuery<Post[]>({
+  } = useQuery<Posts>({
     queryKey: ['posts'],
     queryFn: async () => {
       const response = await axios.get('/api/post')
@@ -94,8 +108,8 @@ const CategoryButtons: React.FC = () => {
 
   // 선택된 카테고리에 따라 포스트 필터링
   const filteredPosts = selectedCategory
-    ? posts.filter((post: Post) => post.category === selectedCategory)
-    : [...posts].sort(
+    ? posts.posts.filter((post: Post) => post.category === selectedCategory)
+    : [...posts.posts].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       ) // 최신순 정렬
