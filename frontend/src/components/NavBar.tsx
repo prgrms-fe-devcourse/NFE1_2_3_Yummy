@@ -1,17 +1,37 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Avatar, message } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // 로그인 여부 확인
   const loggedIn = Boolean(localStorage.getItem('token'))
+
+  // userId로 프로필 이미지 URL 가져오기
+  useEffect(() => {
+    const fetchProfileImageUrl = async () => {
+      const userId = localStorage.getItem('userId')
+      if (userId) {
+        try {
+          const response = await axios.get(`/user/${userId}`)
+          setProfileImageUrl(response.data.profileImageUrl)
+        } catch (error) {
+          console.error('Error fetching profile image URL:', error)
+        }
+      }
+    }
+    if (loggedIn) {
+      fetchProfileImageUrl()
+    }
+  }, [loggedIn])
 
   // 타이머 설정 함수
   const toggleVisibility = (
@@ -89,7 +109,9 @@ const NavigationBar: React.FC = () => {
               <StyledAvatar
                 size={64}
                 icon={<UserOutlined />}
-                src='https://res.cloudinary.com/dee7rlglp/image/upload/v1730189677/apple_zbncqv.jpg' // 사용자 아바타 이미지로 변경
+                src={
+                  profileImageUrl || 'https://example.com/default-avatar.jpg'
+                }
               />
 
               {/* 아바타 모달창 */}
@@ -192,7 +214,7 @@ const StyledAvatar = styled(Avatar)`
   border: 2px solid #ddd;
 `
 
-//카테고리 컨테이너
+// 카테고리 컨테이너
 const CategoryContainer = styled.div``
 
 const Category = styled.div`
@@ -207,7 +229,7 @@ const Category = styled.div`
   }
 `
 
-// 모달 공통
+// 모달 공통 스타일
 const modalStyles = `
   width: 170px;
   background-color: black;
@@ -235,7 +257,7 @@ const CategoryModal = styled.div`
 const CategoryItem = styled.div`
   cursor: pointer;
   &:hover {
-    color: #ccc; // 호버 시 약간 밝은 회색으로 변경
+    color: #ccc;
   }
 `
 
