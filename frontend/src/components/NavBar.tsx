@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Avatar, message } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
@@ -18,8 +18,17 @@ const NavigationBar: React.FC = () => {
   const loggedIn = isLoggedIn()
 
   // 프로필 모달 토글
-  const toggleModal = () => {
-    setIsModalVisible((prev) => !prev)
+  const handleProfileMouseEnter = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+    }
+    setIsModalVisible(true)
+  }
+
+  const handleProfileMouseLeave = () => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsModalVisible(false)
+    }, 200)
   }
 
   // 카테고리 모달 토글
@@ -34,8 +43,9 @@ const NavigationBar: React.FC = () => {
   const handleCategoryMouseLeave = () => {
     closeTimeoutRef.current = setTimeout(() => {
       setIsCategoryVisible(false)
-    }, 100)
+    }, 200)
   }
+
   // 로그아웃 함수
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -106,12 +116,14 @@ const NavigationBar: React.FC = () => {
         />
         <LogInBtnContainer>
           {loggedIn ? (
-            <AvatarContainer>
+            <AvatarContainer
+              onMouseEnter={handleProfileMouseEnter}
+              onMouseLeave={handleProfileMouseLeave}
+            >
               <StyledAvatar
                 size={64}
                 icon={<UserOutlined />}
                 src='https://your-avatar-image-url' // 사용자 아바타 이미지로 변경 가능
-                onClick={toggleModal}
               />
 
               {/* 아바타 모달창 */}
@@ -257,7 +269,7 @@ const CategoryItem = styled.div`
 const CustomModal = styled.div`
   position: absolute;
   top: 75px;
-  left: -125px;
+  left: -103px;
   width: 170px;
   background-color: black;
   border-radius: 10px;
