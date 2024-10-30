@@ -97,12 +97,21 @@ const WritingPage: React.FC = () => {
         message.error('모든 필드를 입력해주세요.')
       } else {
         try {
-          const response = await axios.post('/api/post', {
-            title: title,
-            content: htmlContent,
-            category: category,
-            image_url: imageUrl || 'http://example.com/image.jpg',
-          })
+          const token = localStorage.getItem('token')
+          const response = await axios.post(
+            '/api/post',
+            {
+              title: title,
+              content: htmlContent,
+              category: category,
+              image_url: imageUrl || 'http://example.com/image.jpg',
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
+              },
+            },
+          )
 
           if (response.status === 201) {
             message.success('게시글이 성공적으로 등록되었습니다.')
@@ -213,7 +222,7 @@ const Container = styled.div`
   padding: 20px;
   margin-top: 40px;
   box-sizing: border-box;
-  max-width: 100%;
+  max-width: 838px;
 `
 
 const CategorySelect = styled(Select)`
@@ -256,6 +265,10 @@ const StyledButton = styled(Button)`
   height: 50px;
   font-size: 18px;
   border-radius: 10px;
+  &:hover {
+    background-color: #333 !important;
+    color: white !important;
+  }
 `
 
 const UploadedImage = styled.img`

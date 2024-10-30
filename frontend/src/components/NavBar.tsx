@@ -242,7 +242,7 @@ const CategoryModal = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  font-size: 20px;
+  font-size: 16px;
   font-family: 'Libre Baskerville';
 `
 
