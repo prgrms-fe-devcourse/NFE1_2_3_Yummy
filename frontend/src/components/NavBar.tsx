@@ -89,7 +89,7 @@ const NavigationBar: React.FC = () => {
               <StyledAvatar
                 size={64}
                 icon={<UserOutlined />}
-                src='https://your-avatar-image-url' // 사용자 아바타 이미지로 변경 가능
+                src='https://res.cloudinary.com/dee7rlglp/image/upload/v1730189677/apple_zbncqv.jpg' // 사용자 아바타 이미지로 변경
               />
 
               {/* 아바타 모달창 */}
