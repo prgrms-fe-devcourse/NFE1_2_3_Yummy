@@ -16,10 +16,6 @@ export const SearchPageResultContainer = styled.div`
   width: 100%;
 `
 
-export const SearchPageResult = styled.div`
-  width: 80%;
-`
-
 export const SearchRadio = styled(Radio)`
   &:hover {
     outline: none !important;
