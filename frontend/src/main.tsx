@@ -6,9 +6,7 @@ import { queryClient } from './apis/api.ts'
 import './index.css'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </StrictMode>,
+  <QueryClientProvider client={queryClient}>
+    <App />
+  </QueryClientProvider>,
 )
