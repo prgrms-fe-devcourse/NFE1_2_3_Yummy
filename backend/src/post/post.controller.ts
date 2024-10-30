@@ -25,6 +25,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { PaginatedPostsDto } from './dto/paginated-post.dto';
+import { UserDocument } from 'src/users/schemas/user.schema';
 
 @ApiTags('post')
 @ApiBearerAuth() // JWT 토큰을 사용하는 API
@@ -39,6 +40,22 @@ export class PostController {
     const userId = req.user._id; // JWT 토큰에서 사용자 ID 추출
 
     return this.postService.create(createPostDto, userId);
+  }
+
+  @Post(':postId/like')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: '좋아요 기능',
+    description: '해당 포스트에 좋아요를 누르거나 취소합니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '좋아요 상태가 성공적으로 업데이트되었습니다.',
+  })
+  @ApiResponse({ status: 404, description: '포스트를 찾을 수 없습니다.' })
+  async likePost(@Param('postId') postId: string, @Req() req: any) {
+    const user: UserDocument = req.user;
+    return this.postService.likePost(postId, user);
   }
 
   @Get()
