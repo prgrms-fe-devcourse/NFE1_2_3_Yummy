@@ -49,9 +49,11 @@ const CenteredContainer = styled.div`
 
 const PostsContainer = styled.div`
   margin-top: 20px;
+  padding: 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `
 
 const CategoryButton: React.FC<CategoryButtonProps> = ({

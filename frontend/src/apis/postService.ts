@@ -24,8 +24,10 @@ interface SearchEvent {
 }
 
 const postApi = {
-  getPost: async () => {
-    const response = await api.get<Posts>('post').json()
+  getPost: async (pageSize: number, pageNumber: number) => {
+    const response = await api
+      .get<Posts>(`post?limit=${pageSize}&page=${pageNumber}`)
+      .json()
     return response
   },
 
