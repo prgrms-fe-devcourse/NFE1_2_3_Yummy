@@ -139,4 +139,27 @@ export class PostService {
 
     return { totalCount, posts };
   }
+
+  async likePost(postId: string, user: UserDocument): Promise<Post> {
+    const post = await this.postModel.findById(postId);
+
+    if (!post) {
+      throw new NotFoundException('포스트를 찾을 수 없습니다.');
+    }
+
+    const userId = user._id as Types.ObjectId; // 타입 단언으로 ObjectId 지정
+
+    // 사용자가 이미 좋아요를 눌렀는지 확인
+    if (!post.hearts.includes(userId)) {
+      // 좋아요 추가
+      post.hearts.push(userId);
+    } else {
+      // 이미 좋아요를 누른 경우, 좋아요 취소
+      post.hearts = post.hearts.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+    }
+
+    return await post.save();
+  }
 }
