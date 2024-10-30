@@ -9,6 +9,11 @@ export interface Post {
   _id: string
 }
 
+export interface Posts {
+  posts: Post[]
+  totalCount: number
+}
+
 export interface Comment {
   _id: string
   postId: string

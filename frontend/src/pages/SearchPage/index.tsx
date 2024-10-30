@@ -10,21 +10,63 @@ import { useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
 import { Post } from '@/typings/db'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
+import { RadioChangeEvent } from 'antd'
+import { useDebounce } from '@/hooks/useDebounce'
+
+interface SearchParam {
+  type: 'title' | 'content' | 'nickname'
+  keyword: string
+}
 
 const SearchPage = () => {
-  const [search, setSearch] = useState('')
-
   const [searchParams] = useSearchParams()
-  const category = searchParams.get('search') || '전체'
+  const [searchParam, setSearchParam] = useState<SearchParam>({
+    type: 'title',
+    keyword: '',
+  })
+  const [pageNumber, setPageNumber] = useState(1)
 
+  // 디바운스 처리
+  const DEBOUNCE_DELAY = 300
+  const keyword = useDebounce(searchParam.keyword, DEBOUNCE_DELAY)
+
+  const STALE_TIME = 10000
+  const ITEMS_PER_PAGE = 10
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['posts'],
-    queryFn: async () => postApi.getPost(),
+    queryKey: ['posts', keyword, searchParam.type, pageNumber],
+    queryFn: async () => {
+      if (keyword.trim() !== '') {
+        const searchParams = {
+          ...searchParam,
+          length: ITEMS_PER_PAGE,
+          page: pageNumber,
+        }
+
+        return postApi.searchPost(searchParams)
+      }
+
+      return postApi.getPost()
+    },
+    staleTime: STALE_TIME,
   })
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
+  // API 호출 시 사용할 검색 타입
+  const handleSearchParam = (e: RadioChangeEvent) => {
+    const currentType = e.target.value
+    if (
+      currentType === 'title' ||
+      currentType === 'content' ||
+      currentType === 'nickname'
+    ) {
+      setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
+    }
+    return
+  }
+
+  // 검색어 입력 시 키워드 설정
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchParam((prevParam) => ({ ...prevParam, keyword: e.target.value }))
   }
 
   let content
@@ -38,19 +80,17 @@ const SearchPage = () => {
   }
 
   if (data) {
-    const filteredPosts: Post[] =
-      category === '전체'
-        ? data
-        : data.filter((post: Post) => post.category === category)
+    const { posts } = data
+    const category = searchParams.get('search') || '전체'
+    const totalCount = data.totalCount
 
-    const searchPredicate = ({ title, content }: Post) =>
-      title.includes(search) || content.includes(search)
+    const filterPostsIndicate = (post: Post) => post.category === category
+    const filteredPosts =
+      category === '전체' ? posts : posts.filter(filterPostsIndicate)
 
-    const filteredPostsBySearch = filteredPosts.filter(searchPredicate)
-
-    content = filteredPostsBySearch.map((post, index) => (
+    content = filteredPosts.map((post) => (
       <PostCard
-        key={index}
+        key={post._id}
         {...post}
       />
     ))
@@ -58,7 +98,10 @@ const SearchPage = () => {
 
   return (
     <SearchPageContainer>
-      <SearchPageInput onHandleSearch={handleSearch} />
+      <SearchPageInput
+        onHandleSearch={handleSearch}
+        handleSearchParam={handleSearchParam}
+      />
       <SearchPageResultContainer>
         <SearchPageNav />
         <SearchPageResult>{content}</SearchPageResult>

@@ -32,7 +32,7 @@ const PostContainer = () => {
     const { user } = data
     content = (
       <>
-        <PostImage src='https://img.freepik.com/free-photo/tofu-yolk-boiled-spicy-soup_1150-42896.jpg?t=st=1729664573~exp=1729668173~hmac=8f7746c1984bd6b33e717938f2338678ea050f458235f370e94d836ae8760181&w=1380' />
+        <PostImage src={data.image_url} />
         <PostPagePostCard {...data} />
         <UserProfileCard
           {...user}
