@@ -25,13 +25,12 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ email }).exec(); // exec()를 사용하여 쿼리 실행
+    return this.userModel.findOne({ email }).exec();
   }
 
   async findById(userId: string): Promise<UserDocument | null> {
-    // userId를 Types.ObjectId로 변환
     const id = new Types.ObjectId(userId);
-    return this.userModel.findById(id).exec(); // exec()를 사용하여 쿼리 실행
+    return this.userModel.findById(id).populate('posts').exec();
   }
 
   async updateProfile(

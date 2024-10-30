@@ -1,4 +1,12 @@
-import { Controller, Body, UseGuards, Put, Req } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  UseGuards,
+  Put,
+  Req,
+  Get,
+  Param,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
   ApiTags,
@@ -9,12 +17,25 @@ import {
 } from '@nestjs/swagger';
 import { UpdateProfileDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from './schemas/user.schema';
 
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('user')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
+
+  @Get('/:userId')
+  @ApiOperation({ summary: '사용자 ID로 사용자 정보 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '사용자 정보가 성공적으로 조회되었습니다.',
+    type: User,
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getUserById(@Param('userId') userId: string): Promise<User> {
+    return this.userService.findById(userId);
+  }
 
   @Put('/profile')
   @UseGuards(JwtAuthGuard)
