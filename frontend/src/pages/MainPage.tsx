@@ -1,11 +1,18 @@
 import CategoryButtons from '@/components/CategoryButton'
 import PostCard from '@/components/PostCard'
 import TopPost from '@/components/TopPost'
-import { Post, Posts } from '@/typings/db'
+import { Posts } from '@/typings/db'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import styled from 'styled-components'
 
+const Top = styled.div`
+  width: 100vw;
+`
+const Main = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 const Header = styled.h1`
   font-family: 'Libre Baskerville';
   font-size: 42px;
@@ -21,9 +28,11 @@ const Hr = styled.hr`
 `
 const PostsContainer = styled.div`
   margin-top: 20px;
+  padding: 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `
 
 const MainPage = () => {
@@ -54,20 +63,24 @@ const MainPage = () => {
     console.log(sortedPosts)
     return (
       <div>
-        <TopPost {...topPost} />
-        <Header>Trending Now</Header>
-        <Hr />
-        <PostsContainer>
-          {sortedPosts.map((post) => (
-            <PostCard
-              key={post._id}
-              {...post}
-            />
-          ))}
-        </PostsContainer>
-        <Header>Category</Header>
-        <Hr />
-        <CategoryButtons />
+        <Top>
+          <TopPost {...topPost} />
+        </Top>
+        <Main>
+          <Header>Trending Now</Header>
+          <Hr />
+          <PostsContainer>
+            {sortedPosts.map((post) => (
+              <PostCard
+                key={post._id}
+                {...post}
+              />
+            ))}
+          </PostsContainer>
+          <Header>Category</Header>
+          <Hr />
+          <CategoryButtons />
+        </Main>
       </div>
     )
   }
