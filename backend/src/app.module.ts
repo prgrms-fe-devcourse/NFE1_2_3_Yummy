@@ -11,6 +11,9 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost:27017/3prjYummy'),
+    // MongooseModule.forRoot(
+    //   `mongodb+srv://${process.env.MongDB_name}:${process.env.MongDB_password}@yummy-cluster.otyaq.mongodb.net/yummy`,
+    // ),
     PostModule,
     CommentModule,
     UsersModule,
