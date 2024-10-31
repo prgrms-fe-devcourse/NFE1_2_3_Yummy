@@ -5,6 +5,7 @@ import { Posts } from '@/typings/db'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import styled from 'styled-components'
+import DOMPurify from 'dompurify'
 
 const Top = styled.div`
   width: 100vw;
@@ -58,9 +59,16 @@ const MainPage = () => {
   // 추후에 좋아요 데이터 넘어오면 확인해야할듯
 
   if (posts) {
-    const sortedPosts = posts.posts.sort((a, b) => b.heartCount - a.heartCount)
+    const sanitizedData = posts.posts.map((post) => ({
+      ...post,
+      content: DOMPurify.sanitize(post.content), //content 정화
+    }))
+
+    const sortedPosts = sanitizedData.sort(
+      (a, b) => b.heartCount - a.heartCount,
+    )
     const topPost = sortedPosts[0]
-    console.log(sortedPosts)
+
     return (
       <div>
         <Top>
