@@ -42,7 +42,7 @@ const PostAuthor = styled.p`
   color: #7d7d7d;
   margin: 0;
 `
-const PostText = styled.p`
+const Content = styled.p`
   font-size: 16px;
   color: #1c1c1c;
   margin-top: 8px;
@@ -57,7 +57,7 @@ const TopPost: React.FC<Post> = ({
   image_url,
   category,
   title,
-  userId,
+  user,
   createdAt,
   content,
 }) => {
@@ -67,9 +67,9 @@ const TopPost: React.FC<Post> = ({
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
         <PostAuthor>
-          {userId} | {formatDate(createdAt)}
+          {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
         </PostAuthor>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        <Content dangerouslySetInnerHTML={{ __html: content }} />
       </ContentContainer>
     </TopPostContainer>
   )

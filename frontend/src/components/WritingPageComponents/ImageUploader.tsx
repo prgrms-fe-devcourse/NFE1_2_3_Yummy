@@ -6,9 +6,13 @@ import axios from 'axios'
 
 interface ImageUploaderProps {
   onUploadSuccess: (url: string) => void
+  onLoadingChange: (isLoading: boolean) => void
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess }) => {
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  onUploadSuccess,
+  onLoadingChange,
+}) => {
   const [loading, setLoading] = useState(false)
 
   // 이미지 확장자를 체크하는 함수
@@ -27,6 +31,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess }) => {
   const handleCustomRequest = async (options: any) => {
     const { file, onSuccess, onError } = options
     setLoading(true)
+    onLoadingChange(true)
     const formData = new FormData()
     formData.append('file', file)
     formData.append('upload_preset', 'ml_default') // Cloudinary 업로드 프리셋
@@ -44,6 +49,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess }) => {
       onError({ error }) // 실패 처리
     } finally {
       setLoading(false)
+      onLoadingChange(false)
     }
   }
 
@@ -76,7 +82,8 @@ const StyledButton = styled(Button)`
   border: 1px solid black;
   color: #000000;
   &:hover {
-    background-color: #40a9ff;
+    border-color: #333 !important;
+    color: #333 !important;
   }
 `
 

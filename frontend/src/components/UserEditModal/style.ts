@@ -1,3 +1,4 @@
+import { Avatar } from 'antd'
 import styled from 'styled-components'
 
 export const UserProfileModalContainer = styled.div`
@@ -8,6 +9,7 @@ export const UserProfileModalContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 `
 export const PopupCard = styled.div`
   width: 100%;
@@ -24,7 +26,6 @@ export const ProfileSection = styled.form`
   justify-content: center;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 `
 
 export const ImageContainer = styled.div`
@@ -121,4 +122,12 @@ export const ConfirmButton = styled(Button)`
   background: black;
   color: white;
   font-weight: 500;
+`
+export const UserAvatar = styled(Avatar)`
+  width: 100%;
+  height: 100%;
+
+  .anticon {
+    font-size: 3.5rem;
+  }
 `
