@@ -5,6 +5,7 @@ import PostSideButton from '@/components/PostSideButton'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
+import { useEffect } from 'react'
 
 const PostPage = () => {
   const { id: postId } = useParams()
@@ -18,6 +19,10 @@ const PostPage = () => {
     },
     enabled: !!postId,
   })
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   let content
 
