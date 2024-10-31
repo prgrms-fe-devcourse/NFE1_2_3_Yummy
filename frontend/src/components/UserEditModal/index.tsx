@@ -1,4 +1,8 @@
-import { SettingOutlined } from '@ant-design/icons'
+import {
+  LoadingOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import {
   ButtonGroup,
   CancelButton,
@@ -13,39 +17,45 @@ import {
   ProfileImage,
   ProfileSection,
   TextArea,
+  UserAvatar,
   UserProfileModalContainer,
 } from './style'
 
 import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { ChangeEvent, useState } from 'react'
-import { User } from '@/typings/db'
+import { User, UserForm } from '@/typings/db'
 import { useMutation } from '@tanstack/react-query'
 import userApi from '@/apis/userService'
+import { useOutletContext } from 'react-router-dom'
+import uploadImage from '@/apis/cloudianry'
+import { queryClient } from '@/apis/api'
 
 const UserEditModal = () => {
-  const [userImage, setUserImage] = useState(
-    'https://static.inews24.com/v1/0ea0b53518da00.jpg',
+  const userData = useOutletContext<User>()
+  const handleNavigateTo = useNavigateTo()
+
+  const [userImage, setUserImage] = useState<string | File | undefined>(
+    userData.profileImageUrl,
   )
 
+  // 추후 에러처리 진행 및 옵티미스틱 업데이트 진행 예정
   const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: async (userForm: User) =>
-      await userApi.updateUserData(userForm),
+    mutationFn: (userForm: UserForm) => userApi.updateUserData(userForm),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userData', userData._id] })
+      handleNavigateTo('../')
+    },
   })
 
-  const handleNavigateTo = useNavigateTo()
-  const handleClickCancel = () => {
-    handleNavigateTo('../')
-  }
-
+  // 선택한 파일 출력을 위한 핸들러
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // 선택한 파일 출력을 위한 로직
     const file = e.target.files?.[0]
-
     if (file) {
       const reader = new FileReader()
       reader.onload = (e) => {
         if (typeof e.target?.result === 'string') {
           const result = e.target?.result
+          console.log(result)
           setUserImage(result)
         }
       }
@@ -53,31 +63,61 @@ const UserEditModal = () => {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // 유저 데이터 수정 핸들러
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const formData = new FormData(e.target as HTMLFormElement)
     const requestBody = Object.fromEntries(formData)
 
-    mutate(requestBody as unknown as User)
+    // 최초의 유저 이미지와 선택한 이미지가 다르면 이미지 업로드
+    if (userData.profileImageUrl !== userImage) {
+      const imageUrl = await uploadImage(userImage as File)
+      requestBody.profileImageUrl = imageUrl.secure_url
+    }
+
+    // 유저 데이터가 변경되었으면 업데이트
+    if (
+      userData.bio !== requestBody.bio ||
+      userData.nickname !== requestBody.nickname
+    ) {
+      mutate(requestBody as unknown as UserForm)
+
+      return
+    }
+
+    handleNavigateTo('../')
   }
+
+  // 취소 버튼 클릭 핸들러
+  const handleClickCancel = () => {
+    handleNavigateTo('../')
+  }
+
+  // 유저 데이터
+  const { nickname, bio } = userData
+  const userProfileImage =
+    typeof userImage === 'string' ? (
+      <ProfileImage
+        src={userImage}
+        alt='User Profile'
+      />
+    ) : (
+      <UserAvatar icon={<UserOutlined />} />
+    )
 
   return (
     <UserProfileModalContainer>
       <PopupCard>
         <ProfileSection onSubmit={handleSubmit}>
           <ImageContainer>
-            <ProfileImage
-              src={userImage}
-              alt='User Profile'
-            />
+            {userProfileImage}
             <ImageInputLabel htmlFor='image-input'>
               <SettingOutlined style={{ color: '#7d7d7d' }} />
             </ImageInputLabel>
             <input
               id='image-input'
               type='file'
-              name='profileImageUrl'
               accept='.jpg, .png, .gif'
               style={{ display: 'none' }}
               onChange={handleImageChange}
@@ -91,7 +131,7 @@ const UserEditModal = () => {
                 id='nickname-input'
                 type='text'
                 placeholder='닉네임을 입력하세요'
-                defaultValue='에드워드 리'
+                defaultValue={nickname}
                 name='nickname'
               />
             </InputGroup>
@@ -101,14 +141,19 @@ const UserEditModal = () => {
               <TextArea
                 id='introduction-input'
                 placeholder='소개글을 입력하세요'
-                defaultValue="심사위원에게 가는 길은 길었어요. 가끔은 '잠깐만, 돌아가서 뭔가 고치고 싶다'라는 생각이 들기도 해요. 하지만 한 번 걷기 시작하면 끝까지 가봐야 하는 겁니다. 해봅시다."
+                defaultValue={bio || ''}
                 name='bio'
               />
             </InputGroup>
           </InputSection>
           <ButtonGroup>
             <CancelButton onClick={handleClickCancel}>취소</CancelButton>
-            <ConfirmButton type='submit'>확인</ConfirmButton>
+            <ConfirmButton
+              type='submit'
+              disabled={isPending}
+            >
+              {isPending ? <LoadingOutlined /> : '확인'}
+            </ConfirmButton>
           </ButtonGroup>
         </ProfileSection>
       </PopupCard>

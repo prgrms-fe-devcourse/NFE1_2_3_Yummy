@@ -28,8 +28,8 @@ export interface Comment {
 export interface User {
   _id: string
   profileImageUrl?: string
+  posts?: Post[]
   nickname: string
-  bio: string
 }
 
 export interface PostForm {
@@ -37,4 +37,10 @@ export interface PostForm {
   image_url: string
   content: string
   category: string
+}
+
+export interface UserForm {
+  nickname: string
+  bio?: string
+  profileImageUrl?: string
 }

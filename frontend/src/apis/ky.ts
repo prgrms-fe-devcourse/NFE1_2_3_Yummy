@@ -3,8 +3,7 @@ import ky from 'ky'
 const END_POINT = '/api'
 
 const prepareRequestsWithAuth = (request: Request) => {
-  const authToken =
-    localStorage.getItem('authToken') || import.meta.env.VITE_TOKEN
+  const authToken = localStorage.getItem('token') || import.meta.env.VITE_TOKEN
 
   request.headers.set('Authorization', `Bearer ${authToken}`)
 }
