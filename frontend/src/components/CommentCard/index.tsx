@@ -12,6 +12,7 @@ import { useState } from 'react'
 import CommentInput from '../CommentInput'
 import DeleteModal from '../DeleteModal'
 import usePostModal from '@/store/usePostModal'
+import { checkAuthor } from '@/utils/user'
 
 const CommentCard = ({ content, createdAt, _id, user }: Comment) => {
   const [isEdit, setIsEdit] = useState(false)
@@ -35,6 +36,8 @@ const CommentCard = ({ content, createdAt, _id, user }: Comment) => {
     <Avatar icon={<UserOutlined />} />
   )
 
+  const isAuthor = checkAuthor(user._id)
+
   return (
     <CommentCardContainer>
       <DeleteModal comment_id={_id} />
@@ -46,14 +49,16 @@ const CommentCard = ({ content, createdAt, _id, user }: Comment) => {
         </div>
       </CommentCardInfo>
       <CommentCardContent>{content}</CommentCardContent>
-      <CommentCardButtonContainer>
-        <button onClick={handleEdit}>
-          <p>수정</p>
-        </button>
-        <button onClick={handleOpenDeleteModal}>
-          <p>삭제</p>
-        </button>
-      </CommentCardButtonContainer>
+      {isAuthor && (
+        <CommentCardButtonContainer>
+          <button onClick={handleEdit}>
+            <p>수정</p>
+          </button>
+          <button onClick={handleOpenDeleteModal}>
+            <p>삭제</p>
+          </button>
+        </CommentCardButtonContainer>
+      )}
       {isEdit && (
         <CommentInput
           $isEdit={true}
