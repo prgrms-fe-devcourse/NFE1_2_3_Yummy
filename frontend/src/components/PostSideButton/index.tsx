@@ -11,6 +11,7 @@ import { Post } from '@/typings/db'
 import { useMutation } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
 import { queryClient } from '@/apis/api'
+import { USER_ID } from '@/utils/constants'
 
 const PostSideButton = ({ post }: { post: Post }) => {
   const { pathname } = useLocation()
@@ -19,10 +20,9 @@ const PostSideButton = ({ post }: { post: Post }) => {
   const { openModal } = usePostModal()
 
   // 포스트 정보
-  const { user, hearts, _id: postId } = post
-  const isLiked = hearts.includes(user._id)
+  const { hearts, _id: postId } = post
+  const isLiked = USER_ID && hearts.includes(USER_ID)
 
-  // 포스트 좋아요 뮤테이션
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: () => postApi.updatePostLike(postId),
     onSuccess: () => {
@@ -45,7 +45,7 @@ const PostSideButton = ({ post }: { post: Post }) => {
         icon={<HeartFilled />}
         shape='square'
         description={hearts.length.toString()}
-        $isLiked={isLiked}
+        $isLiked={!!isLiked}
         onClick={handleLike}
       />
       <PostSideButtonItem icon={<MergeFilled />} />
@@ -55,7 +55,7 @@ const PostSideButton = ({ post }: { post: Post }) => {
       />
       <PostSideButtonItem
         icon={<DeleteOutlined />}
-        onClick={openModal}
+        onClick={() => openModal('post')}
       />
     </PostSideButtonContainer>
   )
