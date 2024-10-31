@@ -7,7 +7,7 @@ interface UserCardProps {
 
 export const UserCard = styled.div<UserCardProps>`
   display: flex;
-  width: 70%;
+  width: 60%;
   justify-content: center;
   padding-block: 1.5rem;
   align-items: center;
@@ -76,5 +76,6 @@ export const EditButton = styled.button<EditButtonProps>`
   display: ${({ $isDisplay }) => ($isDisplay ? 'block' : 'none')};
   border: none;
   background: none;
+  z-index: 999;
   cursor: pointer;
 `

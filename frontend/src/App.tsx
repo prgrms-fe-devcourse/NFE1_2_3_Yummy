@@ -26,7 +26,7 @@ function App() {
             element={<LogInPage />}
           />
           <Route
-            path='/profile'
+            path='/profile/:id'
             element={<MyPage />}
           >
             <Route
