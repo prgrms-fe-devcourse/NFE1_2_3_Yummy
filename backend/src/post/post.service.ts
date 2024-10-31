@@ -11,12 +11,14 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { UserDocument } from 'src/users/schemas/user.schema';
 import { User } from 'src/users/schemas/user.schema';
 import { PaginatedPostsDto } from './dto/paginated-post.dto';
+import { Comment } from 'src/comment/entities/comment.schema';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Comment.name) private commentModel: Model<Comment>,
   ) {}
 
   async create(
@@ -84,6 +86,8 @@ export class PostService {
       // 권한 체크
       throw new ForbiddenException('본인의 게시글만 삭제할 수 있습니다.');
     }
+    await this.commentModel.deleteMany({ postId: post._id }).exec();
+
     return await this.postModel.findByIdAndDelete(id).exec();
   }
 
