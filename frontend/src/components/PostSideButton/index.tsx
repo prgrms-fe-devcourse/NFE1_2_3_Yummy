@@ -21,7 +21,8 @@ const PostSideButton = ({ post }: { post: Post }) => {
 
   // 포스트 정보
   const { hearts, _id: postId } = post
-  const isLiked = USER_ID && hearts.includes(USER_ID)
+  const userId = USER_ID()
+  const isLiked = userId && hearts.includes(userId)
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: () => postApi.updatePostLike(postId),
