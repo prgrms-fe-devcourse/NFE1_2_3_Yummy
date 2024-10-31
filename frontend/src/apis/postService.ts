@@ -13,7 +13,7 @@ export const fetchPosts = async () => {
 }
 
 import { Post, Comment, PostForm, Posts } from '@/typings/db'
-import { CommentForm } from '@/utils/Model/commentModel'
+import { CommentForm, CommentUpdateForm } from '@/utils/Model/commentModel'
 import api from './ky'
 
 interface SearchEvent {
@@ -60,9 +60,10 @@ const postApi = {
     return response
   },
 
-  updateComment: async (id: string, commentData: CommentForm) => {
-    const response = await api.post(`post/${id}/comment`, {
-      json: commentData,
+  updateComment: async (commentData: CommentUpdateForm) => {
+    const { postId, commentId, content } = commentData
+    const response = await api.put(`post/${postId}/comment/${commentId}`, {
+      json: { content },
     })
     return response
   },
@@ -79,6 +80,11 @@ const postApi = {
         `post/search/${type}?keyword=${keyword}&limit=${length}&page=${page}`,
       )
       .json()
+    return response
+  },
+
+  updatePostLike: async (id: string) => {
+    const response = await api.post(`post/${id}/like`)
     return response
   },
 }

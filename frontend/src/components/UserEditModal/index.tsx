@@ -22,7 +22,7 @@ import {
 } from './style'
 
 import { useNavigateTo } from '@/hooks/useNavigateTo'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { User, UserForm } from '@/typings/db'
 import { useMutation } from '@tanstack/react-query'
 import userApi from '@/apis/userService'
@@ -34,9 +34,13 @@ const UserEditModal = () => {
   const userData = useOutletContext<User>()
   const handleNavigateTo = useNavigateTo()
 
-  const [userImage, setUserImage] = useState<string | File | undefined>(
-    userData.profileImageUrl,
-  )
+  const [userImage, setUserImage] = useState<string | File | null>(null)
+
+  useEffect(() => {
+    if (userData.profileImageUrl) {
+      setUserImage(userData.profileImageUrl)
+    }
+  }, [userData.profileImageUrl])
 
   // 추후 에러처리 진행 및 옵티미스틱 업데이트 진행 예정
   const { mutate, isPending, isError, error } = useMutation({
@@ -55,7 +59,6 @@ const UserEditModal = () => {
       reader.onload = (e) => {
         if (typeof e.target?.result === 'string') {
           const result = e.target?.result
-          console.log(result)
           setUserImage(result)
         }
       }
@@ -79,7 +82,8 @@ const UserEditModal = () => {
     // 유저 데이터가 변경되었으면 업데이트
     if (
       userData.bio !== requestBody.bio ||
-      userData.nickname !== requestBody.nickname
+      userData.nickname !== requestBody.nickname ||
+      userData.profileImageUrl !== requestBody.profileImageUrl
     ) {
       mutate(requestBody as unknown as UserForm)
 

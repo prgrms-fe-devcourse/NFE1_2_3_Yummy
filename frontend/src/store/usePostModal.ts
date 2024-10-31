@@ -1,15 +1,15 @@
 import { create } from 'zustand'
 
 interface PostModalState {
-  isModalOpen: boolean
-  openModal: () => void
+  isModalOpen: { open: boolean; type: 'post' | 'comment' | null }
+  openModal: (type: 'post' | 'comment') => void
   closeModal: () => void
 }
 
 export const usePostModal = create<PostModalState>((set) => ({
-  isModalOpen: false,
-  openModal: () => set({ isModalOpen: true }),
-  closeModal: () => set({ isModalOpen: false }),
+  isModalOpen: { open: false, type: null },
+  openModal: (type) => set({ isModalOpen: { open: true, type } }),
+  closeModal: () => set({ isModalOpen: { open: false, type: null } }),
 }))
 
 export default usePostModal

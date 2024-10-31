@@ -6,6 +6,7 @@ export interface Post {
   image_url: string
   createdAt: string
   updatedAt: string
+  hearts: string[]
   _id: string
 }
 
@@ -26,8 +27,8 @@ export interface Comment {
 
 export interface User {
   _id: string
-  bio?: string
   profileImageUrl?: string
+  bio?: string
   posts?: Post[]
   nickname: string
 }
