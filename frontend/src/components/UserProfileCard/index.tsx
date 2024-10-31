@@ -11,6 +11,7 @@ import {
 } from './style'
 import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { User } from '@typings/db'
+import { checkAuthor } from '@/utils/user'
 
 interface UserProfileCardProps extends User {
   isDisplay: boolean
@@ -43,18 +44,24 @@ const UserProfileCard = ({
     <AuthorProfileIcon icon={<UserOutlined />} />
   )
 
+  const isAuthor = checkAuthor(userId)
+
   return (
     <UserCard>
       {profileImage}
       <ProfileIntroduce>
         <ProfileNameContainer>
           <Name>{nickname}</Name>
-          <EditButton
-            $isDisplay={isDisplay}
-            onClick={handleEditProfile}
-          >
-            <SettingOutlined style={{ color: '#7d7d7d', fontSize: '1.2rem' }} />
-          </EditButton>
+          {isAuthor && (
+            <EditButton
+              $isDisplay={isDisplay}
+              onClick={handleEditProfile}
+            >
+              <SettingOutlined
+                style={{ color: '#7d7d7d', fontSize: '1.2rem' }}
+              />
+            </EditButton>
+          )}
         </ProfileNameContainer>
         <Description>{bio || `${nickname}님입니다.`}</Description>
       </ProfileIntroduce>
