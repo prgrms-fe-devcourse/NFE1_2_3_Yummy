@@ -8,7 +8,7 @@ import axios from 'axios'
 const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
+  const [profileImageUrl, setProfileImageUrl] = useState('')
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -21,15 +21,17 @@ const NavigationBar: React.FC = () => {
       const userId = localStorage.getItem('userId')
       if (userId) {
         try {
-          const response = await axios.get(`/user/${userId}`)
+          const response = await axios.get(`/api/user/${userId}`)
           setProfileImageUrl(response.data.profileImageUrl)
         } catch (error) {
-          console.error('Error fetching profile image URL:', error)
+          console.error('프로필이미지url fetch 실패:', error)
         }
       }
     }
     if (loggedIn) {
       fetchProfileImageUrl()
+    } else {
+      console.log('비로그인 상태임')
     }
   }, [loggedIn])
 
@@ -52,6 +54,12 @@ const NavigationBar: React.FC = () => {
     setIsModalVisible(false)
     message.success('로그아웃이 완료되었습니다.')
     navigate('/')
+  }
+
+  // 내 정보 네비게이터
+  const handleProfile = () => {
+    const userId = localStorage.getItem('userId')
+    navigate(`/profile/${userId}`)
   }
 
   // 카테고리 배열
@@ -110,7 +118,9 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src={
-                  profileImageUrl || 'https://example.com/default-avatar.jpg'
+                  profileImageUrl
+                    ? profileImageUrl
+                    : 'https://example.com/default-avatar.jpg'
                 }
               />
 
@@ -118,9 +128,7 @@ const NavigationBar: React.FC = () => {
               {isModalVisible && (
                 <AvatorModal>
                   <ModalContent>
-                    <ModalButton onClick={() => navigate('/profile')}>
-                      내 정보
-                    </ModalButton>
+                    <ModalButton onClick={handleProfile}>내 정보</ModalButton>
                     <ModalDivider />
                     <ModalButton onClick={() => navigate('/write')}>
                       게시물 작성

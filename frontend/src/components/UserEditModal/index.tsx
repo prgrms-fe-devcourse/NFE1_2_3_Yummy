@@ -79,7 +79,8 @@ const UserEditModal = () => {
     // 유저 데이터가 변경되었으면 업데이트
     if (
       userData.bio !== requestBody.bio ||
-      userData.nickname !== requestBody.nickname
+      userData.nickname !== requestBody.nickname ||
+      userData.profileImageUrl !== requestBody.profileImageUrl
     ) {
       mutate(requestBody as unknown as UserForm)
 
