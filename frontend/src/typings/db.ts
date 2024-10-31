@@ -28,6 +28,7 @@ export interface Comment {
 export interface User {
   _id: string
   profileImageUrl?: string
+  bio?: string
   posts?: Post[]
   nickname: string
 }
