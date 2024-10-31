@@ -3,55 +3,55 @@ import styled from 'styled-components'
 import { Avatar, message } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // 로그인 여부 확인
-  const isLoggedIn = () => {
-    return !!localStorage.getItem('token') // JWT 토큰이 있으면 true 반환
-  }
-  // 로그인 상태 체크
-  const loggedIn = isLoggedIn()
+  const loggedIn = Boolean(localStorage.getItem('token'))
 
-  // 프로필 모달 토글
-  const toggleModal = () => {
-    setIsModalVisible((prev) => !prev)
-  }
-
-  // 카테고리 모달 토글
-  const handleCategoryMouseEnter = () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current)
-      closeTimeoutRef.current = null
+  // userId로 프로필 이미지 URL 가져오기
+  useEffect(() => {
+    const fetchProfileImageUrl = async () => {
+      const userId = localStorage.getItem('userId')
+      if (userId) {
+        try {
+          const response = await axios.get(`/user/${userId}`)
+          setProfileImageUrl(response.data.profileImageUrl)
+        } catch (error) {
+          console.error('Error fetching profile image URL:', error)
+        }
+      }
     }
-    setIsCategoryVisible(true)
+    if (loggedIn) {
+      fetchProfileImageUrl()
+    }
+  }, [loggedIn])
+
+  // 타이머 설정 함수
+  const toggleVisibility = (
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>,
+    visible: boolean,
+  ) => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+    if (visible) {
+      setVisible(true)
+    } else {
+      closeTimeoutRef.current = setTimeout(() => setVisible(false), 200)
+    }
   }
 
-  const handleCategoryMouseLeave = () => {
-    closeTimeoutRef.current = setTimeout(() => {
-      setIsCategoryVisible(false)
-    }, 100)
-  }
   // 로그아웃 함수
   const handleLogout = () => {
     localStorage.removeItem('token')
     setIsModalVisible(false)
     message.success('로그아웃이 완료되었습니다.')
     navigate('/')
-  }
-
-  // 내 정보 페이지 이동
-  const handleProfile = () => {
-    navigate('/profile')
-  }
-
-  // 게시물 작성 네비게이션
-  const handleWriting = () => {
-    navigate('/write')
   }
 
   // 카테고리 배열
@@ -80,17 +80,13 @@ const NavigationBar: React.FC = () => {
         />
         <NavLinks>
           <StyledLink to='/'>Home</StyledLink>
-
           <CategoryContainer
-            onMouseEnter={handleCategoryMouseEnter}
-            onMouseLeave={handleCategoryMouseLeave}
+            onMouseEnter={() => toggleVisibility(setIsCategoryVisible, true)}
+            onMouseLeave={() => toggleVisibility(setIsCategoryVisible, false)}
           >
             <Category>Category</Category>
             {isCategoryVisible && (
-              <CategoryModal
-                onMouseEnter={handleCategoryMouseEnter}
-                onMouseLeave={handleCategoryMouseLeave}
-              >
+              <CategoryModal>
                 {categories.map((category, index) => (
                   <CategoryItem key={index}>{category}</CategoryItem>
                 ))}
@@ -106,27 +102,33 @@ const NavigationBar: React.FC = () => {
         />
         <LogInBtnContainer>
           {loggedIn ? (
-            <AvatarContainer>
+            <AvatarContainer
+              onMouseEnter={() => toggleVisibility(setIsModalVisible, true)}
+              onMouseLeave={() => toggleVisibility(setIsModalVisible, false)}
+            >
               <StyledAvatar
                 size={64}
                 icon={<UserOutlined />}
-                src='https://your-avatar-image-url' // 사용자 아바타 이미지로 변경 가능
-                onClick={toggleModal}
+                src={
+                  profileImageUrl || 'https://example.com/default-avatar.jpg'
+                }
               />
 
               {/* 아바타 모달창 */}
               {isModalVisible && (
-                <CustomModal>
+                <AvatorModal>
                   <ModalContent>
-                    <ModalButton onClick={handleProfile}>내 정보</ModalButton>
+                    <ModalButton onClick={() => navigate('/profile')}>
+                      내 정보
+                    </ModalButton>
                     <ModalDivider />
-                    <ModalButton onClick={handleWriting}>
+                    <ModalButton onClick={() => navigate('/write')}>
                       게시물 작성
                     </ModalButton>
                     <ModalDivider />
                     <ModalButton onClick={handleLogout}>로그아웃</ModalButton>
                   </ModalContent>
-                </CustomModal>
+                </AvatorModal>
               )}
             </AvatarContainer>
           ) : (
@@ -212,7 +214,7 @@ const StyledAvatar = styled(Avatar)`
   border: 2px solid #ddd;
 `
 
-//카테고리 컨테이너
+// 카테고리 컨테이너
 const CategoryContainer = styled.div``
 
 const Category = styled.div`
@@ -227,43 +229,44 @@ const Category = styled.div`
   }
 `
 
-const CategoryModal = styled.div`
-  position: absolute;
-  top: 75px;
-  left: 300px;
+// 모달 공통 스타일
+const modalStyles = `
   width: 170px;
   background-color: black;
   color: white;
-  padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
+`
+
+// 카테고리 모달
+const CategoryModal = styled.div`
+  ${modalStyles}
+  position: absolute;
+  top: 75px;
+  left: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  font-size: 20px;
+  font-size: 16px;
   font-family: 'Libre Baskerville';
 `
 
 const CategoryItem = styled.div`
   cursor: pointer;
   &:hover {
-    color: #ccc; // 호버 시 약간 밝은 회색으로 변경
+    color: #ccc;
   }
 `
 
-// 아바타 모달창
-const CustomModal = styled.div`
+// 아바타 모달
+const AvatorModal = styled.div`
+  ${modalStyles}
   position: absolute;
   top: 75px;
-  left: -125px;
-  width: 170px;
-  background-color: black;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  left: -103px;
 `
 
 const ModalContent = styled.div`

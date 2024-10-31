@@ -83,9 +83,11 @@ const SignUpPage = () => {
         })
 
         if (response.status === 201) {
-          // JWT 토큰을 로컬 스토리지에 저장
-          const { access_token } = response.data // 응답에서 토큰 추출
+          // token, userId를 로컬 스토리지에 저장
+          const { access_token } = response.data
           localStorage.setItem('token', access_token)
+          const userId = response.data.user.id
+          localStorage.setItem('userId', userId)
 
           message.success('회원가입이 완료되었습니다.')
           navigate('/') // 홈으로 이동
