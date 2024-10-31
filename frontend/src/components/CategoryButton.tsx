@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useQuery } from '@tanstack/react-query'
 import PostCard from '@/components/PostCard'
-import axios from 'axios'
 import { Post, Posts } from '@/typings/db'
+import postApi from '@/apis/postService'
+import { Pagination } from "antd";
 
 interface CategoryButtonProps {
   label: string
@@ -31,7 +32,6 @@ const Button = styled.button<{ $isSelected: boolean }>`
     margin-bottom: -1px;
   }
 `
-
 const ButtonGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -39,14 +39,12 @@ const ButtonGrid = styled.div`
   margin-top: 0.5rem;
   padding: 16px;
 `
-
 const CenteredContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 16px 0;
 `
-
 const PostsContainer = styled.div`
   margin-top: 20px;
   padding: 20px;
@@ -54,6 +52,23 @@ const PostsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+const PageNav = styled(Pagination)`
+  color: #1c1c1c !important;
+
+  &.ant-pagination .ant-pagination-item-active,
+  :where(.css-dev-only-do-not-override-1hpnbz2).ant-pagination
+    .ant-pagination-item-active {
+    background-color: white !important;
+    border-color: #1c1c1c !important;
+    border-width: 2px !important;
+  }
+
+  :where(.css-dev-only-do-not-override-1hpnbz2).ant-pagination
+    .ant-pagination-item-active:hover
+    a {
+    color: #1c1c1c !important;
+  }
 `
 
 const CategoryButton: React.FC<CategoryButtonProps> = ({
@@ -88,31 +103,31 @@ const categories = [
 
 const CategoryButtons: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [pageNumber, setPageNumber] = useState(1)
+  const pageSize = 10
 
   const {
-    data: posts = [],
+    data: posts = {posts: [], totalCount: 0},
     isLoading,
     error,
   } = useQuery<Posts>({
-    queryKey: ['posts'],
-    queryFn: async () => {
-      const response = await axios.get('/api/post')
-      console.log('ADD ', response.data)
-      return response.data
-    },
+    queryKey: ['posts', selectedCategory, pageNumber],
+    queryFn: () => postApi.getPost(pageSize, pageNumber),
   })
 
   const handleClick = (category: string) => {
     setSelectedCategory(category)
+    setPageNumber(1)
   }
 
-  // 선택된 카테고리에 따라 포스트 필터링
-  const filteredPosts = selectedCategory
-    ? posts.posts.filter((post: Post) => post.category === selectedCategory)
-    : [...posts.posts].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      ) // 최신순 정렬
+  const handlePageChange = (page: number) => {
+    setPageNumber(page)
+  }
+
+
+  const filteredPosts = posts.posts.filter((post: Post) =>
+    selectedCategory ? post.category === selectedCategory : true
+  )
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Something went wrong!</div>
@@ -137,8 +152,14 @@ const CategoryButtons: React.FC = () => {
           />
         ))}
       </PostsContainer>
+      <PageNav 
+      current={pageNumber}
+      pageSize={pageSize}
+      total={posts.totalCount}
+      onChange={handlePageChange}/>
     </CenteredContainer>
   )
 }
 
 export default CategoryButtons
+

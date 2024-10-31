@@ -25,16 +25,15 @@ export class PostService {
   ): Promise<Post> {
     const createdPost = new this.postModel({
       ...createPostDto,
-      user, // 게시글 작성자 ID 설정
+      user,
     });
     await createdPost.save();
 
-    // 유저의 posts 배열에 새 포스트 ObjectId 추가
     await this.userModel.findByIdAndUpdate(user._id, {
       $push: { posts: createdPost._id },
     });
 
-    return await createdPost.populate('user'); // userId를 User 객체로 채워 반환
+    return await createdPost.populate('user');
   }
 
   async findAll(
@@ -139,5 +138,28 @@ export class PostService {
       .exec();
 
     return { totalCount, posts };
+  }
+
+  async likePost(postId: string, user: UserDocument): Promise<Post> {
+    const post = await this.postModel.findById(postId);
+
+    if (!post) {
+      throw new NotFoundException('포스트를 찾을 수 없습니다.');
+    }
+
+    const userId = user._id as Types.ObjectId; // 타입 단언으로 ObjectId 지정
+
+    // 사용자가 이미 좋아요를 눌렀는지 확인
+    if (!post.hearts.includes(userId)) {
+      // 좋아요 추가
+      post.hearts.push(userId);
+    } else {
+      // 이미 좋아요를 누른 경우, 좋아요 취소
+      post.hearts = post.hearts.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+    }
+
+    return await post.save();
   }
 }

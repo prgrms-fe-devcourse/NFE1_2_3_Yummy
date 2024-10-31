@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { SearchPageInputContainer } from './style'
+import { SearchPageInputContainer, SearchPageRadio } from './style'
 import { Radio, RadioChangeEvent } from 'antd'
 
 interface SearchPageInputProps {
@@ -32,9 +32,9 @@ const SearchPageInput = ({
         defaultValue='title'
         onChange={handleSearchParam}
       >
-        <Radio value='title'>제목</Radio>
-        <Radio value='content'>내용</Radio>
-        <Radio value='nickname'>작성자</Radio>
+        <SearchPageRadio value='title'>제목</SearchPageRadio>
+        <SearchPageRadio value='content'>내용</SearchPageRadio>
+        <SearchPageRadio value='nickname'>작성자</SearchPageRadio>
       </Radio.Group>
     </>
   )

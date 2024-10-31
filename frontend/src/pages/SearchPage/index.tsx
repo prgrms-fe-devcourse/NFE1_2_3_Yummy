@@ -1,9 +1,5 @@
 import SearchPageInput from '@/components/SearchPageInput'
-import {
-  SearchPageContainer,
-  SearchPageResult,
-  SearchPageResultContainer,
-} from './style'
+import { SearchPageContainer, SearchPageResultContainer } from './style'
 import SearchPageNav from '@/components/SearchPageNav'
 import PostCard from '@/components/PostCard'
 import { useSearchParams } from 'react-router-dom'
@@ -13,6 +9,7 @@ import { Post } from '@/typings/db'
 import { ChangeEvent, useState } from 'react'
 import { RadioChangeEvent } from 'antd'
 import { useDebounce } from '@/hooks/useDebounce'
+import SearchResult from '@/components/SearchResultContainer'
 
 interface SearchParam {
   type: 'title' | 'content' | 'nickname'
@@ -42,11 +39,10 @@ const SearchPage = () => {
           length: ITEMS_PER_PAGE,
           page: pageNumber,
         }
-
         return postApi.searchPost(searchParams)
       }
 
-      return postApi.getPost()
+      return postApi.getPost(ITEMS_PER_PAGE, pageNumber)
     },
     staleTime: STALE_TIME,
   })
@@ -54,6 +50,9 @@ const SearchPage = () => {
   // API 호출 시 사용할 검색 타입
   const handleSearchParam = (e: RadioChangeEvent) => {
     const currentType = e.target.value
+    if (searchParam.keyword.trim() === '') {
+      return
+    }
     if (
       currentType === 'title' ||
       currentType === 'content' ||
@@ -61,12 +60,15 @@ const SearchPage = () => {
     ) {
       setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
     }
-    return
   }
 
   // 검색어 입력 시 키워드 설정
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchParam((prevParam) => ({ ...prevParam, keyword: e.target.value }))
+  }
+
+  const handlePageChange = (pageNumber: number) => {
+    setPageNumber(pageNumber)
   }
 
   let content
@@ -82,7 +84,6 @@ const SearchPage = () => {
   if (data) {
     const { posts } = data
     const category = searchParams.get('search') || '전체'
-    const totalCount = data.totalCount
 
     const filterPostsIndicate = (post: Post) => post.category === category
     const filteredPosts =
@@ -104,7 +105,15 @@ const SearchPage = () => {
       />
       <SearchPageResultContainer>
         <SearchPageNav />
-        <SearchPageResult>{content}</SearchPageResult>
+        <SearchResult
+          handlePageChange={handlePageChange}
+          totalCount={data?.totalCount || 0}
+          isLoading={isLoading}
+          pageSize={ITEMS_PER_PAGE}
+          currentPage={pageNumber}
+        >
+          {content}
+        </SearchResult>
       </SearchPageResultContainer>
     </SearchPageContainer>
   )

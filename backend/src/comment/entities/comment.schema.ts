@@ -16,3 +16,4 @@ export class Comment extends Document {
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
+CommentSchema.set('versionKey', false);
