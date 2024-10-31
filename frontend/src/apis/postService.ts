@@ -81,6 +81,11 @@ const postApi = {
       .json()
     return response
   },
+
+  updatePostLike: async (id: string) => {
+    const response = await api.post(`post/${id}/like`)
+    return response
+  },
 }
 
 export default postApi
