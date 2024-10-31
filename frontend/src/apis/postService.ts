@@ -82,9 +82,14 @@ const postApi = {
     return response
   },
 
-  getTopLikedPosts: async (limit: number = 4) => {
-    const response = await api.get(`post?sort=likes&limit=${limit}`).json()
-    return response
+  getTopPosts: async (): Promise<Posts> => {
+    const response = await api.get<Posts>('post').json()
+    const posts = Array.isArray(response) ? response : response.posts || []
+    const sortedPosts = posts.sort((a, b) => b.hearts.length - a.hearts.length)
+    return {
+      posts: sortedPosts.slice(0, 4),
+      totalCount: sortedPosts.length,
+    }
   },
 }
 

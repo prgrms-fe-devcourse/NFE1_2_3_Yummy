@@ -42,7 +42,7 @@ const MainPage = () => {
     error,
   } = useQuery<Posts>({
     queryKey: ['topPosts'],
-    queryFn: () => postApi.getTopLikedPosts(4) as Promise<Posts>,
+    queryFn: postApi.getTopPosts,
   })
 
   if (isLoading) return <p>Loading...</p>
