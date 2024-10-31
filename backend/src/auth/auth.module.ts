@@ -12,7 +12,7 @@ import { PassportModule } from '@nestjs/passport';
     UsersModule,
     JwtModule.register({
       secret: 'SECRET_KEY', // 비밀 키를 안전하게 보관하세요
-      signOptions: {}, // 토큰 만료 시간
+      signOptions: { expiresIn: '1d' }, // 토큰 만료 시간
     }),
   ],
   providers: [AuthService, JwtStrategy],
