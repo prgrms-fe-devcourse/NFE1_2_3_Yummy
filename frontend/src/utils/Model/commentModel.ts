@@ -1,11 +1,21 @@
 export class CommentForm {
   content: string
-  author: string
   postId: string
 
-  constructor(content: string, author: string, postId: string) {
+  constructor(content: string, postId: string) {
     this.content = content
-    this.author = author
     this.postId = postId
+  }
+}
+
+export class CommentUpdateForm {
+  content: string
+  postId: string
+  commentId: string
+
+  constructor(content: string, postId: string, commentId: string) {
+    this.content = content
+    this.postId = postId
+    this.commentId = commentId
   }
 }

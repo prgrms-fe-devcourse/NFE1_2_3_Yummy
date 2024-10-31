@@ -13,7 +13,7 @@ const PostContainer = ({ post }: { post: Post }) => {
         {...post.user}
         isDisplay={false}
       />
-      <DeleteModal type='post' />
+      <DeleteModal />
     </>
   )
 }
