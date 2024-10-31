@@ -72,6 +72,7 @@ function PostCard({
   _id,
 }: Post) {
   const handleNavigateTo = useNavigateTo()
+
   const handleOpenPost = () => {
     handleNavigateTo(`/post/${_id}`)
   }
