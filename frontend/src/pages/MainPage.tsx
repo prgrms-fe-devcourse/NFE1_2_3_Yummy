@@ -3,8 +3,8 @@ import PostCard from '@/components/PostCard'
 import TopPost from '@/components/TopPost'
 import { Posts } from '@/typings/db'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import styled from 'styled-components'
+import postApi from '@/apis/postService'
 
 const Top = styled.div`
   width: 100vw;
@@ -37,30 +37,21 @@ const PostsContainer = styled.div`
 
 const MainPage = () => {
   const {
-    data: posts,
+    data: postsData,
     isLoading,
     error,
   } = useQuery<Posts>({
-    queryKey: ['posts'],
-    queryFn: async () => {
-      const response = await axios.get('/api/post')
-      console.log('ADD ', response.data)
-      return response.data
-    },
+    queryKey: ['topPosts'],
+    queryFn: () => postApi.getTopLikedPosts(4) as Promise<Posts>,
   })
 
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>오류 발생: {error.message}</p>
-  // if (!Array.isArray(posts)) {
-  //   return <p>포스트 데이터가 올바르지 않습니다.</p>
-  // }
 
-  // 추후에 좋아요 데이터 넘어오면 확인해야할듯
+  if (postsData && postsData.posts.length > 0) {
+    const topPost = postsData.posts[0]
+    const sortedPosts = postsData.posts.slice(1)
 
-  if (posts) {
-    const sortedPosts = posts.posts.sort((a, b) => b.heartCount - a.heartCount)
-    const topPost = sortedPosts[0]
-    console.log(sortedPosts)
     return (
       <div>
         <Top>

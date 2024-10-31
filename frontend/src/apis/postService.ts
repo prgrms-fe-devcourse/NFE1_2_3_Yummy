@@ -81,6 +81,11 @@ const postApi = {
       .json()
     return response
   },
+
+  getTopLikedPosts: async (limit: number = 4) => {
+    const response = await api.get(`post?sort=likes&limit=${limit}`).json()
+    return response
+  },
 }
 
 export default postApi
