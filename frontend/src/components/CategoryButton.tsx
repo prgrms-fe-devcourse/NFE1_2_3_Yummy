@@ -107,7 +107,7 @@ const CategoryButtons: React.FC = () => {
   const pageSize = 10
 
   const {
-    data: posts = {posts: [], totalCount: 0},
+    data: posts = { posts: [], totalCount: 0 },
     isLoading,
     error,
   } = useQuery<Posts>({
@@ -126,7 +126,7 @@ const CategoryButtons: React.FC = () => {
 
 
   const filteredPosts = posts.posts.filter((post: Post) =>
-    selectedCategory ? post.category === selectedCategory : true
+    selectedCategory ? post.category === selectedCategory : true,
   )
 
   if (isLoading) return <div>Loading...</div>
@@ -152,14 +152,14 @@ const CategoryButtons: React.FC = () => {
           />
         ))}
       </PostsContainer>
-      <PageNav 
-      current={pageNumber}
-      pageSize={pageSize}
-      total={posts.totalCount}
-      onChange={handlePageChange}/>
+      <PageNav
+        current={pageNumber}
+        pageSize={pageSize}
+        total={posts.totalCount}
+        onChange={handlePageChange}
+      />
     </CenteredContainer>
   )
 }
 
 export default CategoryButtons
-
