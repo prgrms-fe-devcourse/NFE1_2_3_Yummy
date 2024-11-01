@@ -1,39 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Avatar, message } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { useProfileImage } from '@/hooks/useProfileImage'
 
 const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
-  const [profileImageUrl, setProfileImageUrl] = useState('')
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const { profileImageQuery } = useProfileImage()
 
   // 로그인 여부 확인
   const loggedIn = Boolean(localStorage.getItem('token'))
-
-  // userId로 프로필 이미지 URL 가져오기
-  useEffect(() => {
-    const fetchProfileImageUrl = async () => {
-      const userId = localStorage.getItem('userId')
-      if (userId) {
-        try {
-          const response = await axios.get(`/api/user/${userId}`)
-          setProfileImageUrl(response.data.profileImageUrl)
-        } catch (error) {
-          console.error('프로필이미지url fetch 실패:', error)
-        }
-      }
-    }
-    if (loggedIn) {
-      fetchProfileImageUrl()
-    } else {
-      console.log('비로그인 상태임')
-    }
-  }, [loggedIn])
 
   // 타이머 설정 함수
   const toggleVisibility = (
@@ -118,9 +98,8 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src={
-                  profileImageUrl
-                    ? profileImageUrl
-                    : 'https://example.com/default-avatar.jpg'
+                  profileImageQuery.data ||
+                  'https://example.com/default-avatar.jpg'
                 }
               />
 

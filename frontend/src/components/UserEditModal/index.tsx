@@ -43,6 +43,7 @@ const UserEditModal = () => {
     mutationFn: (userForm: UserForm) => userApi.updateUserData(userForm),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userData', userData._id] })
+      queryClient.invalidateQueries({ queryKey: ['profileImage'] }) //쿼리키 추가
       handleNavigateTo('../')
     },
   })
@@ -74,6 +75,7 @@ const UserEditModal = () => {
     if (userData.profileImageUrl !== userImage) {
       const imageUrl = await uploadImage(userImage as File)
       requestBody.profileImageUrl = imageUrl.secure_url
+      queryClient.invalidateQueries({ queryKey: ['profileImage'] }) //쿼리키 추가
     }
 
     // 유저 데이터가 변경되었으면 업데이트
