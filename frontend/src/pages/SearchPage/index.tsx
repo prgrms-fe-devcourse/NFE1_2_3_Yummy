@@ -49,22 +49,16 @@ const SearchPage = () => {
 
   // API 호출 시 사용할 검색 타입
   const handleSearchParam = (e: RadioChangeEvent) => {
-    const currentType = e.target.value
-    if (searchParam.keyword.trim() === '') {
-      return
-    }
-    if (
-      currentType === 'title' ||
-      currentType === 'content' ||
-      currentType === 'nickname'
-    ) {
-      setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
-    }
+    const currentType: SearchParam['type'] = e.target.value
+
+    if (searchParam.keyword.trim() === '') return
+    setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
   }
 
   // 검색어 입력 시 키워드 설정
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchParam((prevParam) => ({ ...prevParam, keyword: e.target.value }))
+    setPageNumber(1)
   }
 
   const handlePageChange = (pageNumber: number) => {
