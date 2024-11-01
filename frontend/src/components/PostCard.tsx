@@ -79,9 +79,10 @@ function PostCard({
       <PostContent onClick={handleOpenPost}>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
-        <PostAuthor>{userId}</PostAuthor>
-        <PostDate>{formatDate(createdAt)}</PostDate>
-        <PostText dangerouslySetInnerHTML={{ __html: content }}></PostText>
+        <PostAuthor>
+          {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
+          </PostAuthor>
+        <Content dangerouslySetInnerHTML={{ __html: content }} />
       </PostContent>
     </Card>
   )

@@ -21,7 +21,7 @@ const ContentContainer = styled.div`
   background-color: rgba(255, 255, 255, 1);
   padding: 16px;
   margin: 0 30px;
-  max-width: 500px;
+  width: 500px;
   height: 500px;
 `
 
@@ -42,7 +42,7 @@ const PostAuthor = styled.p`
   color: #7d7d7d;
   margin: 0;
 `
-const Content = styled.p`
+const PostText = styled.p`
   font-size: 16px;
   color: #1c1c1c;
   margin-top: 8px;
