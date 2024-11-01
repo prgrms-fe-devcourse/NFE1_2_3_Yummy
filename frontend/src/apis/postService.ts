@@ -75,11 +75,13 @@ const postApi = {
 
   searchPost: async (searchEvent: SearchEvent) => {
     const { type, keyword, length, page } = searchEvent
-    const response = await api
-      .get<Posts>(
-        `post/search/${type}?keyword=${keyword}&limit=${length}&page=${page}`,
-      )
-      .json()
+
+    const queryParam =
+      type === 'nickname' ? `nickname=${keyword}` : `keyword=${keyword}`
+
+    const END_POINT = `post/search/${type}?${queryParam}&limit=${length}&page=${page}`
+
+    const response = await api.get<Posts>(END_POINT).json()
     return response
   },
 

@@ -39,6 +39,7 @@ const SearchPage = () => {
           length: ITEMS_PER_PAGE,
           page: pageNumber,
         }
+        console.log(searchParams)
         return postApi.searchPost(searchParams)
       }
 
