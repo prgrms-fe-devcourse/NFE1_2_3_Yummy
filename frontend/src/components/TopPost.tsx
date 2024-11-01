@@ -1,3 +1,4 @@
+import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { Post } from '@/typings/db'
 import { formatDate } from '@/utils/formatDate'
 import React from 'react'
@@ -60,10 +61,16 @@ const TopPost: React.FC<Post> = ({
   user,
   createdAt,
   content,
+  _id
 }) => {
+  const handleNavigateTo = useNavigateTo()
+  
+  const handleOpenPost = () => {
+    handleNavigateTo(`/post/${_id}`)
+  }
   return (
     <TopPostContainer $imgUrl={image_url}>
-      <ContentContainer>
+      <ContentContainer onClick={handleOpenPost}>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
         <PostAuthor>
