@@ -33,7 +33,7 @@ const SearchPage = () => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['posts', keyword, searchParam.type, pageNumber],
     queryFn: async () => {
-      if (keyword.trim() !== '') {
+      if (typeof keyword === 'string' && keyword.trim() !== '') {
         const searchParams = {
           ...searchParam,
           length: ITEMS_PER_PAGE,

@@ -19,8 +19,16 @@ export const SearchPageNav = styled(Pagination)`
     border-width: 2px !important;
   }
 
+  &.ant-pagination .ant-pagination-item-active:hover a,
   :where(.css-dev-only-do-not-override-1hpnbz2).ant-pagination
     .ant-pagination-item-active:hover
+    a {
+    color: #1c1c1c !important;
+  }
+
+  &.ant-pagination .ant-pagination-item-active a,
+  :where(.css-dev-only-do-not-override-1hpnbz2).ant-pagination
+    .ant-pagination-item-active
     a {
     color: #1c1c1c !important;
   }
@@ -28,5 +36,5 @@ export const SearchPageNav = styled(Pagination)`
 
 export const SearchPageResult = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: 116.2vh;
 `
