@@ -11,7 +11,7 @@ export const MyPostTitle = styled.div`
   font-family: 'Libre Baskerville', sans-serif;
   font-size: 2rem;
   text-align: center;
-  width: 10rem;
+  width: fit-content;
   margin-block: 4rem 6rem;
 
   & h3 {

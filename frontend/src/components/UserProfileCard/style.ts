@@ -41,8 +41,13 @@ export const AuthorProfileIcon = styled(Avatar)`
   }
 `
 
-export const ProfileIntroduce = styled.div`
+interface ProfileIntroduceProps {
+  $isProfilePage?: boolean
+}
+
+export const ProfileIntroduce = styled.div<ProfileIntroduceProps>`
   width: 50%;
+  cursor: ${({ $isProfilePage }) => ($isProfilePage ? 'default' : 'pointer')};
 `
 
 export const Name = styled.h3`
@@ -78,4 +83,13 @@ export const EditButton = styled.button<EditButtonProps>`
   background: none;
   z-index: 999;
   cursor: pointer;
+
+  & span {
+    margin-top: 0.2rem;
+  }
+
+  & svg {
+    color: #7d7d7d;
+    font-size: 1.2rem;
+  }
 `
