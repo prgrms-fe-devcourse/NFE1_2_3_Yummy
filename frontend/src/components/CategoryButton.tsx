@@ -98,7 +98,7 @@ const categories = [
   '채식 요리',
   '해산물 요리',
   '바베큐 요리',
-  '디저트',
+  '디저트 요리',
 ]
 
 const CategoryButtons: React.FC = () => {

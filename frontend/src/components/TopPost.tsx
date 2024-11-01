@@ -8,11 +8,13 @@ const TopPostContainer = styled.div<{ $imgUrl: string }>`
   position: relative;
   background-image: url(${(props) => props.$imgUrl});
   background-size: cover;
+  background-repeat: no-repeat;
   background-position: center;
-  width: 100%;
+  width: 100vw;
   height: 600px;
   display: flex;
   align-items: flex-start;
+  overflow: hidden;
 `
 
 const ContentContainer = styled.div`
@@ -24,6 +26,7 @@ const ContentContainer = styled.div`
   margin: 0 30px;
   width: 500px;
   height: 500px;
+  cursor: pointer;
 `
 
 const PostCategory = styled.p`
@@ -76,7 +79,7 @@ const TopPost: React.FC<Post> = ({
         <PostAuthor>
           {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
         </PostAuthor>
-        <PostText dangerouslySetInnerHTML={{ __html: content }}></PostText>
+        <PostText dangerouslySetInnerHTML={{ __html: content }}/>
       </ContentContainer>
     </TopPostContainer>
   )
