@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
@@ -17,7 +17,7 @@ const SignUpPage = () => {
     confirmPassword: '',
   })
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false) // 버튼 클릭 여부 상태 추가
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const navigate = useNavigate()
 
   // 유효성 검사 함수
@@ -28,19 +28,16 @@ const SignUpPage = () => {
       password: '',
       confirmPassword: '',
     }
-
     // 이메일 유효성 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!email || !emailRegex.test(email)) {
       newErrors.email = '유효한 이메일을 입력해주세요.'
     }
-
     // 닉네임 유효성 검사
     const nicknameRegex = /^\S+$/ // 공백이 없는 문자열
     if (!nickname || !nicknameRegex.test(nickname)) {
       newErrors.nickname = '유효한 닉네임을 입력해주세요.'
     }
-
     // 비밀번호 유효성 검사
     const passwordRegex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/
@@ -48,14 +45,11 @@ const SignUpPage = () => {
       newErrors.password =
         '비밀번호는 영문, 숫자, 특수문자를 포함하여 8~16자여야 합니다.'
     }
-
     // 비밀번호 확인 유효성 검사
     if (password !== confirmPassword) {
       newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.'
     }
-
     setErrors(newErrors)
-
     // 모든 폼이 유효한지 체크
     return !Object.values(newErrors).some((error) => error !== '')
   }
@@ -73,24 +67,32 @@ const SignUpPage = () => {
   // 버튼 클릭 이벤트
   const handleSignUp = async () => {
     setIsSubmitted(true) // 버튼이 클릭되었음을 저장
+
     if (validateForm()) {
       try {
-        // 회원가입 POST 요청 보내기
-        const response = await axios.post('api/auth/register', {
+        // 회원가입 요청 보내기
+        const signUpResponse = await axios.post('api/auth/register', {
           email,
           nickname,
           password,
         })
 
-        if (response.status === 201) {
-          // token, userId를 로컬 스토리지에 저장
-          const { access_token } = response.data
-          localStorage.setItem('token', access_token)
-          const userId = response.data.user.id
-          localStorage.setItem('userId', userId)
+        if (signUpResponse.status === 201) {
+          // 회원가입 후 로그인 요청
+          const loginResponse = await axios.post('api/auth/login', {
+            email,
+            password,
+          })
 
-          message.success('회원가입이 완료되었습니다.')
-          navigate('/') // 홈으로 이동
+          if (loginResponse.status === 201) {
+            // token, userID 저장
+            const { access_token } = loginResponse.data
+            localStorage.setItem('token', access_token)
+            const userId = loginResponse.data.user.id
+            localStorage.setItem('userId', userId)
+            message.success('회원가입이 완료되었습니다.')
+            navigate('/') // 홈으로 이동
+          }
         }
       } catch (error) {
         message.error('회원가입 중 문제가 발생했습니다.')
