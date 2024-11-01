@@ -86,13 +86,14 @@ const SignUpPage = () => {
           // token, userId를 로컬 스토리지에 저장
           const { access_token } = response.data
           localStorage.setItem('token', access_token)
-          const userId = response.data.user.id
+          const userId = response.data?.user?.id
           localStorage.setItem('userId', userId)
 
           message.success('회원가입이 완료되었습니다.')
           navigate('/') // 홈으로 이동
         }
       } catch (error) {
+        console.log(error)
         message.error('회원가입 중 문제가 발생했습니다.')
       }
     } else {
