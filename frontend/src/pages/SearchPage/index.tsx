@@ -3,15 +3,14 @@ import { SearchPageContainer, SearchPageResultContainer } from './style'
 import SearchPageNav from '@/components/SearchPageNav'
 import PostCard from '@/components/PostCard'
 import { useSearchParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import postApi from '@/apis/postService'
+import { useSearchQuery } from '@/hooks/useSearchQuery'
 import { Post } from '@/typings/db'
 import { ChangeEvent, useState } from 'react'
 import { RadioChangeEvent } from 'antd'
 import { useDebounce } from '@/hooks/useDebounce'
 import SearchResult from '@/components/SearchResultContainer'
 
-interface SearchParam {
+export interface SearchParam {
   type: 'title' | 'content' | 'nickname'
   keyword: string
 }
@@ -28,25 +27,8 @@ const SearchPage = () => {
   const DEBOUNCE_DELAY = 300
   const keyword = useDebounce(searchParam.keyword, DEBOUNCE_DELAY)
 
-  const STALE_TIME = 10000
-  const ITEMS_PER_PAGE = 10
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['posts', keyword, searchParam.type, pageNumber],
-    queryFn: async () => {
-      if (typeof keyword === 'string' && keyword.trim() !== '') {
-        const searchParams = {
-          ...searchParam,
-          length: ITEMS_PER_PAGE,
-          page: pageNumber,
-        }
-        console.log(searchParams)
-        return postApi.searchPost(searchParams)
-      }
-
-      return postApi.getPost(ITEMS_PER_PAGE, pageNumber)
-    },
-    staleTime: STALE_TIME,
-  })
+  const { searchData, isSearchLoading, isSearchError, searchError } =
+    useSearchQuery(keyword, searchParam, pageNumber)
 
   // API 호출 시 사용할 검색 타입
   const handleSearchParam = (e: RadioChangeEvent) => {
@@ -68,16 +50,16 @@ const SearchPage = () => {
 
   let content
 
-  if (isLoading) {
+  if (isSearchLoading) {
     content = <div>Loading...</div>
   }
 
-  if (isError) {
-    content = <div>{error.message}</div>
+  if (isSearchError) {
+    content = <div>{searchError?.message}</div>
   }
 
-  if (data) {
-    const { posts } = data
+  if (searchData) {
+    const { posts } = searchData
     const category = searchParams.get('search') || '전체'
 
     const filterPostsIndicate = (post: Post) => post.category === category
@@ -92,6 +74,8 @@ const SearchPage = () => {
     ))
   }
 
+  const ITEMS_PER_PAGE = 10
+
   return (
     <SearchPageContainer>
       <SearchPageInput
@@ -102,8 +86,8 @@ const SearchPage = () => {
         <SearchPageNav />
         <SearchResult
           handlePageChange={handlePageChange}
-          totalCount={data?.totalCount || 0}
-          isLoading={isLoading}
+          totalCount={searchData?.totalCount || 0}
+          isLoading={isSearchLoading}
           pageSize={ITEMS_PER_PAGE}
           currentPage={pageNumber}
         >
