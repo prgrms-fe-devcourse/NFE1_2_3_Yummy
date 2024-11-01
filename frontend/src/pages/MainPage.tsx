@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import styled from 'styled-components'
 import DOMPurify from 'dompurify'
 import postApi from '@/apis/postService'
+import { FloatButton } from "antd";
 
 const Top = styled.div`
   width: 100vw;
@@ -79,6 +80,7 @@ const MainPage = () => {
           <Hr />
           <CategoryButtons />
         </Main>
+        <FloatButton.BackTop/>
       </div>
     )
   }
