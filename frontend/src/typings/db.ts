@@ -1,3 +1,8 @@
+export interface UserInfo {
+  user: User
+  token: string
+}
+
 export interface Post {
   category: string
   title: string
