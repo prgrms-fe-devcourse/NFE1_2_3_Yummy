@@ -6,7 +6,7 @@ export const CommentCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 1.5rem 1rem;
+  padding: 1rem;
   border-bottom: 1px solid #eee;
 `
 export const CommentCardInfo = styled.div`
@@ -33,7 +33,7 @@ export const CommentCardContent = styled.pre`
   font-family: 'Noto Sans KR', sans-serif;
   width: 100%;
   line-height: 1.5;
-  padding-block: 1.5rem;
+  padding-block: 1rem;
   white-space: pre-wrap;
   word-break: break-all;
   font-size: 1rem;

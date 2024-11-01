@@ -11,7 +11,7 @@ import { Post } from '@/typings/db'
 import { useMutation } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
 import { queryClient } from '@/apis/api'
-import { USER_ID } from '@/utils/constants'
+import { checkAuthor, USER_ID } from '@/utils/user'
 
 const PostSideButton = ({ post }: { post: Post }) => {
   const { pathname } = useLocation()
@@ -21,7 +21,8 @@ const PostSideButton = ({ post }: { post: Post }) => {
 
   // 포스트 정보
   const { hearts, _id: postId } = post
-  const isLiked = USER_ID && hearts.includes(USER_ID)
+  const userId = USER_ID()
+  const isLiked = userId && hearts.includes(userId)
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: () => postApi.updatePostLike(postId),
@@ -39,6 +40,7 @@ const PostSideButton = ({ post }: { post: Post }) => {
     navigate(`${pathname}/edit`)
   }
 
+  const isAuthor = checkAuthor(post.user._id)
   return (
     <PostSideButtonContainer shape='square'>
       <PostSideButtonItem
@@ -49,14 +51,18 @@ const PostSideButton = ({ post }: { post: Post }) => {
         onClick={handleLike}
       />
       <PostSideButtonItem icon={<MergeFilled />} />
-      <PostSideButtonItem
-        icon={<EditOutlined />}
-        onClick={handleEdit}
-      />
-      <PostSideButtonItem
-        icon={<DeleteOutlined />}
-        onClick={() => openModal('post')}
-      />
+      {isAuthor && (
+        <>
+          <PostSideButtonItem
+            icon={<EditOutlined />}
+            onClick={handleEdit}
+          />
+          <PostSideButtonItem
+            icon={<DeleteOutlined />}
+            onClick={() => openModal('post')}
+          />
+        </>
+      )}
     </PostSideButtonContainer>
   )
 }
