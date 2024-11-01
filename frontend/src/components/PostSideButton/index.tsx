@@ -6,20 +6,33 @@ import {
 } from '@ant-design/icons'
 import { PostSideButtonContainer, PostSideButtonItem } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 import usePostModal from '@/store/usePostModal'
+import { Post } from '@/typings/db'
+import { useMutation } from '@tanstack/react-query'
+import postApi from '@/apis/postService'
+import { queryClient } from '@/apis/api'
+import { USER_ID } from '@/utils/constants'
 
-const PostSideButton = () => {
+const PostSideButton = ({ post }: { post: Post }) => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
   const { openModal } = usePostModal()
-  const [postLiked, setPostLiked] = useState(false)
-  const [postLikeCount, setPostLikeCount] = useState(0)
+
+  // 포스트 정보
+  const { hearts, _id: postId } = post
+  const isLiked = USER_ID && hearts.includes(USER_ID)
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: () => postApi.updatePostLike(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['post', postId] })
+    },
+  })
 
   const handleLike = () => {
-    setPostLiked(!postLiked)
-    setPostLikeCount(postLiked ? postLikeCount - 1 : postLikeCount + 1)
+    if (isPending) return
+    mutate()
   }
 
   const handleEdit = () => {
@@ -31,8 +44,8 @@ const PostSideButton = () => {
       <PostSideButtonItem
         icon={<HeartFilled />}
         shape='square'
-        description={postLikeCount.toString()}
-        $isLiked={postLiked}
+        description={hearts.length.toString()}
+        $isLiked={!!isLiked}
         onClick={handleLike}
       />
       <PostSideButtonItem icon={<MergeFilled />} />
@@ -42,7 +55,7 @@ const PostSideButton = () => {
       />
       <PostSideButtonItem
         icon={<DeleteOutlined />}
-        onClick={openModal}
+        onClick={() => openModal('post')}
       />
     </PostSideButtonContainer>
   )

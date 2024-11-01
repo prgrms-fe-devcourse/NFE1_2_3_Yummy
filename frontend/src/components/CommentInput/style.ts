@@ -1,7 +1,14 @@
 import styled from 'styled-components'
 
-export const CommentInputContainer = styled.div`
+interface CommentInputContainerProps {
+  $isEdit: boolean
+}
+
+export const CommentInputContainer = styled.div<CommentInputContainerProps>`
   width: 100%;
+  padding: ${({ $isEdit }) => ($isEdit ? '1rem' : '0')};
+  margin-top: ${({ $isEdit }) => ($isEdit ? '1rem' : '0')};
+  background-color: ${({ $isEdit }) => ($isEdit ? '#eee' : 'transparent')};
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -9,7 +16,7 @@ export const CommentInputContainer = styled.div`
 `
 export const CommentTextArea = styled.textarea`
   width: 100% !important;
-  height: 10rem;
+  height: 8rem;
   padding: 1rem;
   margin-block: 1rem;
   resize: none;
@@ -35,7 +42,6 @@ export const CommentButton = styled.button<CommentButtonProps>`
   width: ${(props) => (props.$isCancel ? '5rem' : '8.5rem')};
   height: 3rem;
   border: none;
-  padding-block: 1.6rem;
   border-radius: 1rem;
   background-color: ${({ $isCancel }) =>
     $isCancel ? 'transparent' : '#1c1c1c'};

@@ -4,7 +4,7 @@ import TopPost from '@/components/TopPost'
 import { Posts } from '@/typings/db'
 import { useQuery } from '@tanstack/react-query'
 import styled from 'styled-components'
-import postApi from '@/apis/postService'
+import DOMPurify from 'dompurify'
 
 const Top = styled.div`
   width: 100vw;
@@ -51,6 +51,17 @@ const MainPage = () => {
   if (postsData && postsData.posts.length > 0) {
     const topPost = postsData.posts[0]
     const sortedPosts = postsData.posts.slice(1)
+
+  if (posts) {
+    const sanitizedData = posts.posts.map((post) => ({
+      ...post,
+      content: DOMPurify.sanitize(post.content), //content 정화
+    }))
+
+    const sortedPosts = sanitizedData.sort(
+      (a, b) => b.heartCount - a.heartCount,
+    )
+    const topPost = sortedPosts[0]
 
     return (
       <div>

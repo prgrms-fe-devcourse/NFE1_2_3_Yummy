@@ -12,6 +12,7 @@ import {
 import { UserOutlined } from '@ant-design/icons'
 import { Post } from '@typings/db'
 import { Avatar } from 'antd'
+import DOMPurify from 'dompurify'
 
 const PostPagePostCard = ({
   user,
@@ -21,6 +22,7 @@ const PostPagePostCard = ({
   content,
 }: Post) => {
   const { profileImageUrl, nickname } = user
+  const sanitizedData = DOMPurify.sanitize(content)
 
   const authorProfileImage = profileImageUrl ? (
     <AuthorProfileImage
@@ -46,7 +48,7 @@ const PostPagePostCard = ({
         </PostDetail>
       </PostInfo>
 
-      <PostContent dangerouslySetInnerHTML={{ __html: content }} />
+      <PostContent dangerouslySetInnerHTML={{ __html: sanitizedData }} />
     </PostPagePostCardContainer>
   )
 }

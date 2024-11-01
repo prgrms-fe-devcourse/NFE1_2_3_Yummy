@@ -6,32 +6,26 @@ import {
   CommentCardInfo,
 } from './style'
 import { Comment } from '@/typings/db'
-import { queryClient } from '@/apis/api'
-import { useParams } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
-import postApi from '@/apis/postService'
 import { Avatar } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
+import { useState } from 'react'
+import CommentInput from '../CommentInput'
+import DeleteModal from '../DeleteModal'
+import usePostModal from '@/store/usePostModal'
 
 const CommentCard = ({ content, createdAt, _id, user }: Comment) => {
-  const { id: postId } = useParams()
+  const [isEdit, setIsEdit] = useState(false)
 
-  const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: async (comment_id: string) => {
-      if (postId) {
-        await postApi.deleteComment(postId, comment_id)
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comment', postId] })
-    },
-  })
+  const { openModal } = usePostModal()
 
-  const handleDelete = () => {
-    mutate(_id)
+  const handleEdit = () => {
+    setIsEdit(true)
   }
 
-  const buttonDisabledPredicate = isPending || isError
+  const handleOpenDeleteModal = () => {
+    openModal('comment')
+  }
+
   const authorProfileImage = user.profileImageUrl ? (
     <img
       src={user.profileImageUrl}
@@ -43,6 +37,7 @@ const CommentCard = ({ content, createdAt, _id, user }: Comment) => {
 
   return (
     <CommentCardContainer>
+      <DeleteModal comment_id={_id} />
       <CommentCardInfo>
         {authorProfileImage}
         <div>
@@ -52,16 +47,21 @@ const CommentCard = ({ content, createdAt, _id, user }: Comment) => {
       </CommentCardInfo>
       <CommentCardContent>{content}</CommentCardContent>
       <CommentCardButtonContainer>
-        <button disabled={buttonDisabledPredicate}>
+        <button onClick={handleEdit}>
           <p>수정</p>
         </button>
-        <button
-          onClick={handleDelete}
-          disabled={buttonDisabledPredicate}
-        >
+        <button onClick={handleOpenDeleteModal}>
           <p>삭제</p>
         </button>
       </CommentCardButtonContainer>
+      {isEdit && (
+        <CommentInput
+          $isEdit={true}
+          commentContent={content}
+          commentId={_id}
+          inputState={setIsEdit}
+        />
+      )}
     </CommentCardContainer>
   )
 }
