@@ -23,5 +23,8 @@ export class Post extends Document {
   hearts: Types.ObjectId[];
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
+const PostSchema = SchemaFactory.createForClass(Post);
+
 PostSchema.set('versionKey', false);
+
+export { PostSchema };

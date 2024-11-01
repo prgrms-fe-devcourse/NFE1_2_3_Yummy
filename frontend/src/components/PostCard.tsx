@@ -45,13 +45,7 @@ const PostAuthor = styled.p`
   margin: 0;
 `
 
-const PostDate = styled.p`
-  font-size: 16px;
-  color: #7d7d7d;
-  margin: 4px 0;
-`
-
-const PostText = styled.p`
+const Content = styled.p`
   font-size: 1rem;
   color: #1c1c1c;
   margin-top: 8px;
@@ -64,7 +58,7 @@ const PostText = styled.p`
 
 function PostCard({
   title,
-  userId,
+  user,
   createdAt,
   content,
   category,
@@ -85,9 +79,10 @@ function PostCard({
       <PostContent onClick={handleOpenPost}>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
-        <PostAuthor>{userId}</PostAuthor>
-        <PostDate>{formatDate(createdAt)}</PostDate>
-        <PostText>{content}</PostText>
+        <PostAuthor>
+          {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
+          </PostAuthor>
+        <Content dangerouslySetInnerHTML={{ __html: content }} />
       </PostContent>
     </Card>
   )

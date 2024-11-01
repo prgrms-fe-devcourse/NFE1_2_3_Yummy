@@ -4,6 +4,7 @@ import PostCard from '@/components/PostCard'
 import { Outlet, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import userApi from '@/apis/userService'
+import { checkAuthor } from '@/utils/user'
 
 const MyPage = () => {
   const { id: userId } = useParams()
@@ -60,12 +61,14 @@ const MyPage = () => {
     }
   }
 
+  const isAuthor = userId && checkAuthor(userId)
+  const title = isAuthor ? 'My Post' : 'User Post'
   return (
     <Container>
       <Outlet context={data} />
       {renderUserContent()}
       <MyPostTitle>
-        <h3>My Post</h3>
+        <h3>{title}</h3>
         <hr />
       </MyPostTitle>
       {renderPostContent()}

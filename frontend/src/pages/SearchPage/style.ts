@@ -8,6 +8,7 @@ export const SearchPageContainer = styled.div`
   flex-direction: column;
   width: 60%;
   gap: 2rem;
+  min-height: 100vh;
 `
 
 export const SearchPageResultContainer = styled.div`

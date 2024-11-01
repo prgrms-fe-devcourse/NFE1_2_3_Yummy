@@ -3,8 +3,10 @@ import PostCard from '@/components/PostCard'
 import TopPost from '@/components/TopPost'
 import { Posts } from '@/typings/db'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import styled from 'styled-components'
+import DOMPurify from 'dompurify'
+import postApi from '@/apis/postService'
+import { FloatButton } from "antd";
 
 const Top = styled.div`
   width: 100vw;
@@ -37,30 +39,27 @@ const PostsContainer = styled.div`
 
 const MainPage = () => {
   const {
-    data: posts,
+    data: postsData,
     isLoading,
     error,
   } = useQuery<Posts>({
-    queryKey: ['posts'],
-    queryFn: async () => {
-      const response = await axios.get('/api/post')
-      console.log('ADD ', response.data)
-      return response.data
-    },
+    queryKey: ['topPosts'],
+    queryFn: postApi.getTopPosts,
   })
 
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>오류 발생: {error.message}</p>
-  // if (!Array.isArray(posts)) {
-  //   return <p>포스트 데이터가 올바르지 않습니다.</p>
-  // }
 
-  // 추후에 좋아요 데이터 넘어오면 확인해야할듯
+  if (postsData && postsData.posts.length > 0) {
+    // content를 정화
+    const sanitizedPosts = postsData.posts.map((post) => ({
+      ...post,
+      content: DOMPurify.sanitize(post.content),
+    }))
 
-  if (posts) {
-    const sortedPosts = posts.posts.sort((a, b) => b.heartCount - a.heartCount)
-    const topPost = sortedPosts[0]
-    console.log(sortedPosts)
+    const topPost = sanitizedPosts[0]
+    const sortedPosts = sanitizedPosts.slice(1)
+
     return (
       <div>
         <Top>
@@ -81,9 +80,12 @@ const MainPage = () => {
           <Hr />
           <CategoryButtons />
         </Main>
+        <FloatButton.BackTop/>
       </div>
     )
   }
+
+  return null
 }
 
 export default MainPage
