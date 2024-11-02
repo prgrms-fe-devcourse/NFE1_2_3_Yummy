@@ -1,12 +1,10 @@
-import { useMutation } from '@tanstack/react-query'
 import { DeleteModalContainer } from './style'
-import postApi from '@/apis/postService'
 import { useNavigate, useParams } from 'react-router-dom'
 import { LoadingOutlined } from '@ant-design/icons'
-import { queryClient } from '@/apis/api'
 import usePostModal from '@/store/usePostModal'
 import { useEffect } from 'react'
 import { useDeleteComment } from '@/hooks/useUpdateComment'
+import { useDeletePostQuery } from '@/hooks/usePostQuery'
 
 interface DeleteModalProps {
   comment_id?: string
@@ -20,26 +18,18 @@ const DeleteModal = ({ comment_id }: DeleteModalProps) => {
   const { isModalOpen, closeModal } = usePostModal()
   const { type: modalType } = isModalOpen
 
-  const {
-    mutate: deletePost,
-    isPending: isDeletingPost,
-    isError: isDeletingPostError,
-    error: deletingPostError,
-    reset: deletePostReset,
-  } = useMutation({
-    mutationFn: async () => {
-      if (postId) await postApi.deletePost(postId)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] })
-      navigate('/')
-      closeModal()
-    },
-  })
-
   const onMutateAction = () => {
     closeModal()
+    if (modalType === 'post') navigate('/')
   }
+
+  const {
+    deletePost,
+    isDeletingPost,
+    isDeletingPostError,
+    deletingPostError,
+    deletePostReset,
+  } = useDeletePostQuery(postId, onMutateAction)
 
   const {
     deleteComment,
