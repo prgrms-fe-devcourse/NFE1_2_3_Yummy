@@ -1,37 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Avatar, message } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { useProfileImage } from '@/hooks/useProfileImage'
 
 const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const { profileImageQuery } = useProfileImage()
 
   // 로그인 여부 확인
   const loggedIn = Boolean(localStorage.getItem('token'))
-
-  // userId로 프로필 이미지 URL 가져오기
-  useEffect(() => {
-    const fetchProfileImageUrl = async () => {
-      const userId = localStorage.getItem('userId')
-      if (userId) {
-        try {
-          const response = await axios.get(`/user/${userId}`)
-          setProfileImageUrl(response.data.profileImageUrl)
-        } catch (error) {
-          console.error('Error fetching profile image URL:', error)
-        }
-      }
-    }
-    if (loggedIn) {
-      fetchProfileImageUrl()
-    }
-  }, [loggedIn])
 
   // 타이머 설정 함수
   const toggleVisibility = (
@@ -53,6 +35,12 @@ const NavigationBar: React.FC = () => {
     setIsModalVisible(false)
     message.success('로그아웃이 완료되었습니다.')
     navigate('/')
+  }
+
+  // 내 정보 네비게이터
+  const handleProfile = () => {
+    const userId = localStorage.getItem('userId')
+    navigate(`/profile/${userId}`)
   }
 
   // 카테고리 배열
@@ -111,7 +99,8 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src={
-                  profileImageUrl || 'https://example.com/default-avatar.jpg'
+                  profileImageQuery.data ||
+                  'https://example.com/default-avatar.jpg'
                 }
               />
 
@@ -119,9 +108,7 @@ const NavigationBar: React.FC = () => {
               {isModalVisible && (
                 <AvatorModal>
                   <ModalContent>
-                    <ModalButton onClick={() => navigate('/profile')}>
-                      내 정보
-                    </ModalButton>
+                    <ModalButton onClick={handleProfile}>내 정보</ModalButton>
                     <ModalDivider />
                     <ModalButton onClick={() => navigate('/write')}>
                       게시물 작성
