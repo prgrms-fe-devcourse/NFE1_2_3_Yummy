@@ -48,5 +48,5 @@ export interface PostForm {
 export interface UserForm {
   nickname: string
   bio?: string
-  profileImageUrl?: string
+  profileImageUrl?: string | File
 }
