@@ -48,6 +48,7 @@ export const useUpdateUserInfoQuery = (
       )
 
       queryClient.cancelQueries({ queryKey: USER_INFO_QUERY(userId) })
+      queryClient.cancelQueries({ queryKey: ['profileImage'] })
 
       const optimisticData = { ...userData }
 
@@ -72,6 +73,8 @@ export const useUpdateUserInfoQuery = (
         ...prev,
         ...optimisticData,
       }))
+
+      queryClient.setQueryData(['profileImage'], optimisticData.profileImageUrl)
 
       onMutateAction()
 
