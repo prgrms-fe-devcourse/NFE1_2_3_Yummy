@@ -156,7 +156,7 @@ const StyledButton = styled(Button)`
     background-color: #333 !important;
     color: white !important;
   }
-`
+`  
 
 const ErrorText = styled.p`
   color: red;
