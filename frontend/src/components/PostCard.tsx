@@ -2,6 +2,7 @@ import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { Post } from '@/typings/db'
 import { formatDate } from '@/utils/formatDate'
 import styled from 'styled-components'
+import MokImage from '@/assets/defaultImg.png'
 
 const Card = styled.div`
   display: flex;
@@ -13,12 +14,13 @@ const Card = styled.div`
   background-color: #fff;
   font-family: sans-serif;
   cursor: pointer;
+  align-items: center;
 `
 
 const PostImage = styled.img`
   width: 150px;
   height: 150px;
-  height: auto;
+  object-fit: cover;
   margin-right: 20px;
 `
 
@@ -70,6 +72,7 @@ function PostCard({
   const handleOpenPost = () => {
     handleNavigateTo(`/post/${_id}`)
   }
+
   return (
     <Card>
       <PostImage
@@ -81,7 +84,7 @@ function PostCard({
         <PostTitle>{title}</PostTitle>
         <PostAuthor>
           {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
-          </PostAuthor>
+        </PostAuthor>
         <Content dangerouslySetInnerHTML={{ __html: content }} />
       </PostContent>
     </Card>

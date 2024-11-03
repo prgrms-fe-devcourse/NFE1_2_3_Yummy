@@ -135,6 +135,7 @@ const NavContainer = styled.nav`
   padding: 10px 20px;
   background-color: white;
   border-bottom: 1px solid #e5e5e5;
+  height: 10vh;
 `
 
 const LogoSection = styled.div`
