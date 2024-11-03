@@ -6,7 +6,7 @@ export const SearchResultContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 100%;
 `
 export const SearchPageNav = styled(Pagination)`
   color: #1c1c1c !important;

@@ -83,7 +83,7 @@ const SearchPage = () => {
         handleSearchParam={handleSearchParam}
       />
       <SearchPageResultContainer>
-        <SearchPageNav />
+        {/* <SearchPageNav /> */}
         <SearchResult
           handlePageChange={handlePageChange}
           totalCount={searchData?.totalCount || 0}

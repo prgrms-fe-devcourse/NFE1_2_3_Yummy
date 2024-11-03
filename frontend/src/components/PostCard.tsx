@@ -2,14 +2,11 @@ import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { Post } from '@/typings/db'
 import { formatDate } from '@/utils/formatDate'
 import styled from 'styled-components'
-import MokImage from '@/assets/defaultImg.png'
 
 const Card = styled.div`
   display: flex;
-  padding: 16px;
-  margin: 0 50px;
   margin-bottom: 16px;
-  width: 900px;
+  width: 100%;
   height: 200px;
   background-color: #fff;
   font-family: sans-serif;
