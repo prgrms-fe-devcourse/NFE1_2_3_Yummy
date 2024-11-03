@@ -34,8 +34,9 @@ const SearchPage = () => {
   const handleSearchParam = (e: RadioChangeEvent) => {
     const currentType: SearchParam['type'] = e.target.value
 
-    if (searchParam.keyword.trim() === '') return
-    setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
+    if (searchParam.keyword.trim() === '') {
+      setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
+    }
   }
 
   // 검색어 입력 시 키워드 설정
@@ -83,7 +84,7 @@ const SearchPage = () => {
         handleSearchParam={handleSearchParam}
       />
       <SearchPageResultContainer>
-        {/* <SearchPageNav /> */}
+        <SearchPageNav />
         <SearchResult
           handlePageChange={handlePageChange}
           totalCount={searchData?.totalCount || 0}
