@@ -8,6 +8,8 @@ import PostPage from './pages/PostPage'
 import MainPage from './pages/MainPage'
 import SearchPage from './pages/SearchPage'
 import UserEditModal from './components/UserEditModal'
+import ErrorPage from './pages/ErrorPage.jsx'
+
 function App() {
   return (
     <BrowserRouter>
@@ -46,8 +48,8 @@ function App() {
             path='/search'
             element={
               <Navigate
-                to='/search/category?search=전체'
-                replace
+              to='/search/category?search=전체'
+              replace
               />
             }
           />
@@ -58,6 +60,10 @@ function App() {
           <Route
             path='/'
             element={<MainPage />}
+          />
+          <Route
+            path='/error'
+            element={<ErrorPage />}
           />
         </Route>
       </Routes>
