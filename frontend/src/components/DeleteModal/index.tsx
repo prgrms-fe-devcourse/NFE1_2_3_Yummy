@@ -12,7 +12,10 @@ interface DeleteModalProps {
 
 const DeleteModal = ({ comment_id }: DeleteModalProps) => {
   const { id: postId } = useParams()
+
   if (!postId) return <div>포스트 아이디가 없습니다.</div>
+
+  console.log('postId', postId)
 
   const navigate = useNavigate()
   const { isModalOpen, closeModal } = usePostModal()

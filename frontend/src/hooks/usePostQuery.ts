@@ -32,12 +32,11 @@ export const useDeletePostQuery = (
     reset: deletePostReset,
   } = useMutation({
     mutationFn: async () => await postApi.deletePost(postId),
-
     onMutate: () => {
-      const previousPosts = queryClient.getQueryData<Posts>(['posts'])
+      const previousPosts = queryClient.getQueryData<Posts>(['topPosts'])
 
-      queryClient.cancelQueries({ queryKey: ['posts'] })
-      queryClient.setQueryData(['posts'], (prev: Posts) => ({
+      queryClient.cancelQueries({ queryKey: ['topPosts'] })
+      queryClient.setQueryData(['topPosts'], (prev: Posts) => ({
         ...prev,
         posts: prev.posts.filter((post) => post._id !== postId),
       }))
@@ -47,11 +46,11 @@ export const useDeletePostQuery = (
     },
 
     onError: (_, __, context) => {
-      queryClient.setQueryData(['posts'], context?.previousPosts)
+      queryClient.setQueryData(['topPosts'], context?.previousPosts)
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] })
+      queryClient.invalidateQueries({ queryKey: ['topPosts'] })
     },
   })
 
