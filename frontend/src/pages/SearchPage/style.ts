@@ -6,7 +6,7 @@ export const SearchPageContainer = styled.div`
   display: flex;
   padding-block: 2rem;
   flex-direction: column;
-  width: 60%;
+  width: 50%;
   gap: 2rem;
   min-height: 100vh;
 `

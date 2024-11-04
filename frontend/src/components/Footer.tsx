@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 const Footer = () => {
@@ -20,14 +19,14 @@ const Container = styled.div`
   justify-content: center; /* 수직 방향으로 중앙 정렬 */
   align-items: center; /* 가로 방향으로 중앙 정렬 */
   width: 100%;
-  height: 191px;
+  height: 15vh;
   background-color: black;
   margin: 0;
 `
 
 const Logo = styled.img`
   width: 180px;
-  margin-bottom: 25px;
+  margin-bottom: 5px;
 `
 
 const StyledText = styled.div`

@@ -1,3 +1,8 @@
+export interface UserInfo {
+  user: User
+  token: string
+}
+
 export interface Post {
   category: string
   title: string
@@ -43,5 +48,5 @@ export interface PostForm {
 export interface UserForm {
   nickname: string
   bio?: string
-  profileImageUrl?: string
+  profileImageUrl?: string | File
 }

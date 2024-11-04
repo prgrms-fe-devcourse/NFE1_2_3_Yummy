@@ -8,6 +8,8 @@ import PostPage from './pages/PostPage'
 import MainPage from './pages/MainPage'
 import SearchPage from './pages/SearchPage'
 import UserEditModal from './components/UserEditModal'
+import ErrorPage from './pages/ErrorPage'
+
 function App() {
   return (
     <BrowserRouter>
@@ -58,6 +60,10 @@ function App() {
           <Route
             path='/'
             element={<MainPage />}
+          />
+          <Route
+            path='*'
+            element={<ErrorPage />}
           />
         </Route>
       </Routes>

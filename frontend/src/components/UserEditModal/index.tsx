@@ -24,11 +24,8 @@ import {
 import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { User, UserForm } from '@/typings/db'
-import { useMutation } from '@tanstack/react-query'
-import userApi from '@/apis/userService'
 import { useOutletContext } from 'react-router-dom'
-import uploadImage from '@/apis/cloudianry'
-import { queryClient } from '@/apis/api'
+import { useUpdateUserInfoQuery } from '@/hooks/useUserInfoQuery'
 
 const UserEditModal = () => {
   const userData = useOutletContext<User>()
@@ -38,18 +35,21 @@ const UserEditModal = () => {
 
   useEffect(() => {
     if (userData.profileImageUrl) {
-      setUserImage(userData.profileImageUrl)
+      const imageUrl = userData.profileImageUrl
+      setUserImage(imageUrl)
     }
   }, [userData.profileImageUrl])
 
-  // 추후 에러처리 진행 및 옵티미스틱 업데이트 진행 예정
-  const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: (userForm: UserForm) => userApi.updateUserData(userForm),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userData', userData._id] })
-      handleNavigateTo('../')
-    },
-  })
+  const handleNavigateToProfile = () => {
+    handleNavigateTo('../')
+  }
+
+  const {
+    updateUserInfo,
+    isUpdatingUserInfo,
+    isUpdatingUserInfoError,
+    updatingUserInfoError,
+  } = useUpdateUserInfoQuery(userData._id, handleNavigateToProfile)
 
   // 선택한 파일 출력을 위한 핸들러
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -70,32 +70,38 @@ const UserEditModal = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const formData = new FormData(e.target as HTMLFormElement)
-    const requestBody = Object.fromEntries(formData)
+    let formData
 
-    // 최초의 유저 이미지와 선택한 이미지가 다르면 이미지 업로드
-    if (userData.profileImageUrl !== userImage) {
-      const imageUrl = await uploadImage(userImage as File)
-      requestBody.profileImageUrl = imageUrl.secure_url
+    if (e.target instanceof HTMLFormElement) {
+      formData = new FormData(e.target)
     }
 
-    // 유저 데이터가 변경되었으면 업데이트
-    if (
+    let requestBody = formData ? Object.fromEntries(formData) : userData
+
+    const isImageUnChanged =
+      requestBody.profileImageUrl instanceof File &&
+      requestBody.profileImageUrl.name === ''
+
+    // 이미지가 변경되지 않았으면 호출 시 profileImageUrl 항목 제거
+
+    if (isImageUnChanged) {
+      const { profileImageUrl, ...restRequestBody } = requestBody
+      requestBody = restRequestBody
+    }
+
+    const isUserDataChanged =
       userData.bio !== requestBody.bio ||
       userData.nickname !== requestBody.nickname ||
-      userData.profileImageUrl !== requestBody.profileImageUrl
-    ) {
-      mutate(requestBody as unknown as UserForm)
+      userData.profileImageUrl
 
-      return
+    // 유저 데이터가 변경되었으면 업데이트
+    if (isUserDataChanged) {
+      const userForm = requestBody as UserForm
+
+      updateUserInfo(userForm)
     }
 
-    handleNavigateTo('../')
-  }
-
-  // 취소 버튼 클릭 핸들러
-  const handleClickCancel = () => {
-    handleNavigateTo('../')
+    handleNavigateToProfile()
   }
 
   // 유저 데이터
@@ -125,6 +131,7 @@ const UserEditModal = () => {
               accept='.jpg, .png, .gif'
               style={{ display: 'none' }}
               onChange={handleImageChange}
+              name='profileImageUrl'
             />
           </ImageContainer>
 
@@ -151,12 +158,12 @@ const UserEditModal = () => {
             </InputGroup>
           </InputSection>
           <ButtonGroup>
-            <CancelButton onClick={handleClickCancel}>취소</CancelButton>
+            <CancelButton onClick={handleNavigateToProfile}>취소</CancelButton>
             <ConfirmButton
               type='submit'
-              disabled={isPending}
+              disabled={isUpdatingUserInfo}
             >
-              {isPending ? <LoadingOutlined /> : '확인'}
+              {isUpdatingUserInfo ? <LoadingOutlined /> : '확인'}
             </ConfirmButton>
           </ButtonGroup>
         </ProfileSection>
