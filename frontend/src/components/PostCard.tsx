@@ -71,12 +71,12 @@ function PostCard({
   }
 
   return (
-    <Card>
+    <Card onClick={handleOpenPost}>
       <PostImage
         src={image_url}
         alt='Post Thumbnail'
       />
-      <PostContent onClick={handleOpenPost}>
+      <PostContent>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
         <PostAuthor>

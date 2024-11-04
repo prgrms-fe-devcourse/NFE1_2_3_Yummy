@@ -27,7 +27,6 @@ const Button = styled.button<{ $isSelected: boolean }>`
   }
   padding: 0;
   margin-right: -1px;
-  //겹치는 보더라인 제거
   &:not(:last-child) {
     margin-bottom: -1px;
   }
@@ -52,23 +51,6 @@ const PostsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-const PageNav = styled(Pagination)`
-  color: #1c1c1c !important;
-
-  &.ant-pagination .ant-pagination-item-active,
-  :where(.css-dev-only-do-not-override-1hpnbz2).ant-pagination
-    .ant-pagination-item-active {
-    background-color: white !important;
-    border-color: #1c1c1c !important;
-    border-width: 2px !important;
-  }
-
-  :where(.css-dev-only-do-not-override-1hpnbz2).ant-pagination
-    .ant-pagination-item-active:hover
-    a {
-    color: #1c1c1c !important;
-  }
 `
 
 const CategoryButton: React.FC<CategoryButtonProps> = ({
@@ -98,7 +80,7 @@ const categories = [
   '채식 요리',
   '해산물 요리',
   '바베큐 요리',
-  '디저트',
+  '디저트 요리',
 ]
 
 const CategoryButtons: React.FC = () => {
@@ -116,12 +98,10 @@ const CategoryButtons: React.FC = () => {
   })
 
   const handleClick = (category: string) => {
-    setSelectedCategory(category)
+    setSelectedCategory((prevCategory) =>
+      prevCategory === category ? null : category
+    )
     setPageNumber(1)
-  }
-
-  const handlePageChange = (page: number) => {
-    setPageNumber(page)
   }
 
   const filteredPosts = posts.posts.filter((post: Post) =>
@@ -153,13 +133,29 @@ const CategoryButtons: React.FC = () => {
         ))}
       </PostsContainer>
 
-      <PageNav
-        current={pageNumber}
-        pageSize={pageSize}
+      <PaginationControl
+        currentPage={pageNumber}
         total={posts.totalCount}
-        onChange={handlePageChange}
+        onPageChange={setPageNumber}
       />
     </CenteredContainer>
+  )
+}
+
+// 페이지네이션 컴포넌트 분리
+const PaginationControl: React.FC<{
+  currentPage: number
+  total: number
+  onPageChange: (page: number) => void
+}> = ({ currentPage, total, onPageChange }) => {
+  return (
+    <Pagination
+      current={currentPage}
+      pageSize={10}
+      total={total}
+      onChange={onPageChange}
+      style={{ marginTop: '20px' }}
+    />
   )
 }
 
