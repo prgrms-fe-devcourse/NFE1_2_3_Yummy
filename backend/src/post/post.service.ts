@@ -10,7 +10,6 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserDocument } from 'src/users/schemas/user.schema';
 import { User } from 'src/users/schemas/user.schema';
-import { PaginatedPostsDto } from './dto/paginated-post.dto';
 import { Comment } from 'src/comment/entities/comment.schema';
 
 @Injectable()
@@ -38,21 +37,12 @@ export class PostService {
     return await createdPost.populate('user');
   }
 
-  async findAll(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<PaginatedPostsDto> {
-    const skip = (page - 1) * limit;
+  async findAll(): Promise<Post[]> {
     const totalCount = await this.postModel.countDocuments();
 
-    const posts = await this.postModel
-      .find()
-      .skip(skip)
-      .limit(limit)
-      .populate('user')
-      .exec();
+    const posts = await this.postModel.find().populate('user').exec();
 
-    return { totalCount, posts };
+    return posts;
   }
 
   async findOne(id: string): Promise<Post> {

@@ -24,7 +24,6 @@ import {
   ApiResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-import { PaginatedPostsDto } from './dto/paginated-post.dto';
 import { UserDocument } from 'src/users/schemas/user.schema';
 
 @ApiTags('post')
@@ -63,24 +62,10 @@ export class PostController {
   @ApiResponse({
     status: 200,
     description: '성공적으로 게시글을 반환합니다.',
-    type: PaginatedPostsDto,
   })
-  @ApiQuery({
-    name: 'page',
-    description: '페이지 번호',
-    required: false,
-    example: 1,
-  })
-  @ApiQuery({
-    name: 'limit',
-    description: '페이지당 게시글 수',
-    required: false,
-    example: 10,
-  })
-  findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-    return this.postService.findAll(+page, +limit);
+  findAll() {
+    return this.postService.findAll();
   }
-
   @Get(':id')
   @ApiOperation({ summary: '특정 게시글 조회' })
   findOne(@Param('id') id: string) {
@@ -105,7 +90,6 @@ export class PostController {
   @ApiResponse({
     status: 200,
     description: '성공적으로 검색된 게시글 목록을 반환합니다.',
-    type: PaginatedPostsDto,
   })
   searchByTitle(
     @Query('keyword') keyword: string,
@@ -133,7 +117,6 @@ export class PostController {
   @ApiResponse({
     status: 200,
     description: '성공적으로 검색된 게시글 목록을 반환합니다.',
-    type: PaginatedPostsDto,
   })
   searchByContent(
     @Query('keyword') keyword: string,
@@ -161,7 +144,6 @@ export class PostController {
   @ApiResponse({
     status: 200,
     description: '성공적으로 검색된 게시글 목록을 반환합니다.',
-    type: PaginatedPostsDto,
   })
   searchByNickname(
     @Query('nickname') nickname: string,
