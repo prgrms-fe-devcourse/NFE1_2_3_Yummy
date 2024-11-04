@@ -10,7 +10,8 @@ const NavigationBar: React.FC = () => {
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const { profileImageQuery } = useProfileImage()
+  const { profileImageUrl, isLoading } = useProfileImage()
+
   // 로그인 여부 확인
   const loggedIn = Boolean(localStorage.getItem('token'))
 
@@ -107,8 +108,9 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src={
-                  profileImageQuery.data ||
-                  'https://example.com/default-avatar.jpg'
+                  isLoading
+                    ? 'https://example.com/loading-avatar.jpg'
+                    : profileImageUrl
                 }
               />
 
