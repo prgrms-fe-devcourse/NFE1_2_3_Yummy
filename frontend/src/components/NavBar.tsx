@@ -10,7 +10,8 @@ const NavigationBar: React.FC = () => {
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const { profileImageQuery } = useProfileImage()
+  const { profileImageUrl, isLoading } = useProfileImage()
+
   // 로그인 여부 확인
   const loggedIn = Boolean(localStorage.getItem('token'))
 
@@ -40,6 +41,10 @@ const NavigationBar: React.FC = () => {
   const handleProfile = () => {
     const userId = localStorage.getItem('userId')
     navigate(`/profile/${userId}`)
+  }
+
+  const handleCategory = (category: string) => {
+    navigate(`/category/${category}`)
   }
 
   // 카테고리 배열
@@ -76,7 +81,12 @@ const NavigationBar: React.FC = () => {
             {isCategoryVisible && (
               <CategoryModal>
                 {categories.map((category, index) => (
-                  <CategoryItem key={index}>{category}</CategoryItem>
+                  <CategoryItem
+                    onClick={() => handleCategory(category)}
+                    key={index}
+                  >
+                    {category}
+                  </CategoryItem>
                 ))}
               </CategoryModal>
             )}
@@ -98,8 +108,9 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src={
-                  profileImageQuery.data ||
-                  'https://example.com/default-avatar.jpg'
+                  isLoading
+                    ? 'https://example.com/loading-avatar.jpg'
+                    : profileImageUrl
                 }
               />
 

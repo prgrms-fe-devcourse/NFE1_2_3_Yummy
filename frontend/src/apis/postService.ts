@@ -99,6 +99,11 @@ const postApi = {
       totalCount: sortedPosts.length,
     }
   },
+
+  getCategoryPosts: async (category: string) => {
+    const response = await api.get<Post[]>(`post/category/${category}`).json()
+    return response
+  },
 }
 
 export default postApi

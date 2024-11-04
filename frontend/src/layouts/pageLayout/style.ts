@@ -5,4 +5,5 @@ export const MainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   min-height: 75vh;
+  font-family: 'Noto Sans KR', sans-serif;
 `
