@@ -9,6 +9,8 @@ import { useParams } from 'react-router-dom'
 import { CommentForm, CommentUpdateForm } from '@/utils/Model/commentModel'
 import { LoadingOutlined } from '@ant-design/icons'
 import { useCreateComment, useUpdateComment } from '@/hooks/useUpdateComment'
+import ErrorPage from '@/pages/ErrorPage'
+import { message } from 'antd'
 
 interface CommentInputProps {
   $isEdit?: boolean
@@ -25,7 +27,13 @@ const CommentInput = ({
 }: CommentInputProps) => {
   const { id: postId } = useParams()
 
-  if (!postId) return <div>포스트 아이디가 없습니다.</div>
+  if (!postId)
+    return (
+      <ErrorPage
+        title='포스트 아이디가 없습니다.'
+        message='다시 시도해주세요.'
+      />
+    )
 
   const [comment, setComment] = useState('')
 
@@ -43,19 +51,19 @@ const CommentInput = ({
     setComment('')
   }
 
-  const { createComment, isCreatePending, isCreateError, createError } =
-    useCreateComment({ postId, handleCommentState })
+  const { createComment, isCreatePending, isCreateError } = useCreateComment({
+    postId,
+    handleCommentState,
+  })
 
-  const { updateComment, isUpdatePending, isUpdateError, updateError } =
-    useUpdateComment(postId, handleCancel)
+  const { updateComment, isUpdatePending, isUpdateError } = useUpdateComment(
+    postId,
+    handleCancel,
+  )
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value)
   }
-
-  const isPending = isCreatePending || isUpdatePending
-  const isCommentEmpty = comment.trim() === ''
-  const isUnchanged = commentContent === comment
 
   const handleSubmit = () => {
     if (!postId || isCommentEmpty) return
@@ -72,6 +80,20 @@ const CommentInput = ({
       createComment(commentCreateData)
     }
   }
+
+  if (isCreateError || isUpdateError) {
+    message.error('댓글 작성 중 오류 발생')
+  }
+
+  const isPending = isCreatePending || isUpdatePending
+  const isCommentEmpty = comment.trim() === ''
+  const isUnchanged = commentContent === comment
+
+  const buttonText = isPending ? (
+    <LoadingOutlined />
+  ) : (
+    <p>{$isEdit ? '수정' : '댓글 작성'}</p>
+  )
 
   return (
     <CommentInputContainer $isEdit={$isEdit ?? false}>
@@ -94,11 +116,7 @@ const CommentInput = ({
           disabled={isCommentEmpty || isPending || isUnchanged}
           onClick={handleSubmit}
         >
-          {isUpdatePending || isCreatePending ? (
-            <LoadingOutlined />
-          ) : (
-            <p>{$isEdit ? '수정' : '댓글 작성'}</p>
-          )}
+          {buttonText}
         </CommentButton>
       </CommentButtonContainer>
     </CommentInputContainer>

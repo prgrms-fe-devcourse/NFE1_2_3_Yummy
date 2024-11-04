@@ -6,9 +6,10 @@ import { useSearchParams } from 'react-router-dom'
 import { useSearchQuery } from '@/hooks/useSearchQuery'
 import { Post } from '@/typings/db'
 import { ChangeEvent, useState } from 'react'
-import { RadioChangeEvent } from 'antd'
+import { message, RadioChangeEvent } from 'antd'
 import { useDebounce } from '@/hooks/useDebounce'
 import SearchResult from '@/components/SearchResultContainer'
+import { PostLoading } from '../PostPage/style'
 
 export interface SearchParam {
   type: 'title' | 'content' | 'nickname'
@@ -27,8 +28,11 @@ const SearchPage = () => {
   const DEBOUNCE_DELAY = 300
   const keyword = useDebounce(searchParam.keyword, DEBOUNCE_DELAY)
 
-  const { searchData, isSearchLoading, isSearchError, searchError } =
-    useSearchQuery(keyword, searchParam, pageNumber)
+  const { searchData, isSearchLoading, isSearchError } = useSearchQuery(
+    keyword,
+    searchParam,
+    pageNumber,
+  )
 
   // API 호출 시 사용할 검색 타입
   const handleSearchParam = (e: RadioChangeEvent) => {
@@ -52,11 +56,11 @@ const SearchPage = () => {
   let content
 
   if (isSearchLoading) {
-    content = <div>Loading...</div>
+    content = <PostLoading />
   }
 
   if (isSearchError) {
-    content = <div>{searchError?.message}</div>
+    message.error('검색 중 오류 발생')
   }
 
   if (searchData) {

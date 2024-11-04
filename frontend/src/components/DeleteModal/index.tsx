@@ -5,6 +5,7 @@ import usePostModal from '@/store/usePostModal'
 import { useEffect } from 'react'
 import { useDeleteComment } from '@/hooks/useUpdateComment'
 import { useDeletePostQuery } from '@/hooks/usePostQuery'
+import ErrorPage from '@/pages/ErrorPage'
 
 interface DeleteModalProps {
   comment_id?: string
@@ -13,7 +14,13 @@ interface DeleteModalProps {
 const DeleteModal = ({ comment_id }: DeleteModalProps) => {
   const { id: postId } = useParams()
 
-  if (!postId) return <div>포스트 아이디가 없습니다.</div>
+  if (!postId)
+    return (
+      <ErrorPage
+        title='포스트 아이디가 없습니다.'
+        message='다시 시도해주세요.'
+      />
+    )
 
   const navigate = useNavigate()
   const { isModalOpen, closeModal } = usePostModal()

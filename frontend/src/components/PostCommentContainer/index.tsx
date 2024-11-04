@@ -4,11 +4,18 @@ import CommentInput from '../CommentInput'
 import { Comment } from '@/typings/db'
 import { useParams } from 'react-router-dom'
 import { useCommentQuery } from '@/hooks/userCommentQuery'
+import ErrorPage from '@/pages/ErrorPage'
 
 const PostCommentContainer = () => {
   const { id: postId } = useParams()
 
-  if (!postId) return <div>포스트 아이디가 없습니다.</div>
+  if (!postId)
+    return (
+      <ErrorPage
+        title='포스트 아이디가 없습니다.'
+        message='다시 시도해주세요.'
+      />
+    )
 
   const { commentData, isCommentLoading, isCommentError, commentError } =
     useCommentQuery(postId)
@@ -20,7 +27,11 @@ const PostCommentContainer = () => {
   }
 
   if (isCommentError) {
-    content = <div>Error: {commentError?.message}</div>
+    content = (
+      <div style={{ marginInline: 'auto', marginTop: '1rem' }}>
+        댓글 호출 시 오류 발생. {commentError?.message}
+      </div>
+    )
   }
 
   if (commentData) {
@@ -30,6 +41,14 @@ const PostCommentContainer = () => {
         {...comment}
       />
     ))
+  }
+
+  if (commentData?.length === 0) {
+    content = (
+      <div style={{ marginInline: 'auto', marginTop: '1rem' }}>
+        댓글이 없습니다.
+      </div>
+    )
   }
 
   return (
