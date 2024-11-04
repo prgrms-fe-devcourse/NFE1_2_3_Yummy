@@ -16,6 +16,7 @@ export const CategoryTopRateItem = styled.li`
   padding-inline: 1rem;
   font-size: 0.8rem;
   color: #1c1c1c;
+  cursor: pointer;
 `
 
 export const TopRateBedge = styled.div`

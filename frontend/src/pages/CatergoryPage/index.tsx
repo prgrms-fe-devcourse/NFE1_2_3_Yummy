@@ -5,32 +5,40 @@ import {
   ItemCardContainer,
 } from './style'
 import CategoryItemCard from '@/components/CategoryItemCard'
+import useCategoryPost from '@/hooks/useCategoryPost'
 
 const CategoryPage = () => {
+  const { categoryPosts, isCategoryPostsLoading, isCategoryPostsError } =
+    useCategoryPost('한식')
+
+  let content
+
+  if (isCategoryPostsLoading) content = <div>Loading...</div>
+  if (isCategoryPostsError) content = <div>Error...</div>
+
+  if (categoryPosts) {
+    content = (
+      <>
+        <CategoryTopRate posts={categoryPosts} />
+        <ItemCardContainer>
+          {categoryPosts.map((post) => (
+            <CategoryItemCard
+              key={post._id}
+              post={post}
+            />
+          ))}
+        </ItemCardContainer>
+      </>
+    )
+  }
+
   return (
     <CategoryPageContainer>
       <CategoryTitle>
         <h3>{'title'}</h3>
         <hr />
       </CategoryTitle>
-      <CategoryTopRate />
-      <ItemCardContainer>
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-        <CategoryItemCard />
-      </ItemCardContainer>
+      {content}
     </CategoryPageContainer>
   )
 }

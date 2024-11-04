@@ -1,32 +1,46 @@
 import { HeartFilled } from '@ant-design/icons'
 import { CardAuthor, CardContent, CardInfo, Content, ItemCard } from './style'
-import mockImg from '@assets/defaultImg.png'
-import { Dot } from '../PostPagePostCard/style'
+import { Post } from '@/typings/db'
+import { formatDate } from '@/utils/formatDate'
+import { useNavigate } from 'react-router-dom'
+import DOMPurify from 'dompurify'
 
-const CategoryItemCard = () => {
+const CategoryItemCard = ({ post }: { post: Post }) => {
+  const navigate = useNavigate()
+
+  const handleNavigate = () => {
+    navigate(`/post/${post._id}`)
+  }
+
+  const { content } = post
+  const sanitizedData = DOMPurify.sanitize(content)
+  console.log(sanitizedData)
+
   return (
     <ItemCard>
       <img
-        src={mockImg}
-        alt=''
+        src={post.image_url}
+        alt='postImage'
       />
-      <CardContent>
+      <CardContent onClick={handleNavigate}>
         <Content>
-          <h3>title</h3>
-          <p>
-            asdfsadfasdfasdfasdfsadfasdfasdfasdfsadfasdfasdfsadfasdfasfsadfasdfasfasdfasdfsadfasdfasdfasdfsadfasdfasdf
-          </p>
+          <h3>{post.title}</h3>
+          <p dangerouslySetInnerHTML={{ __html: sanitizedData }} />
           <CardInfo>
-            <p>Nov 1, 2024</p>
-            <Dot>·</Dot>
-            <p>0개의 댓글</p>
+            <p>{formatDate(post.createdAt)}</p>
           </CardInfo>
         </Content>
         <CardAuthor>
-          <p>author</p>
+          <p>
+            <img
+              src={post.user.profileImageUrl}
+              alt='user profile'
+            />
+            {post.user.nickname}
+          </p>
           <p>
             <HeartFilled style={{ color: '#EE3441' }} />
-            <span>10</span>
+            <span>{post.hearts.length}</span>
           </p>
         </CardAuthor>
       </CardContent>
