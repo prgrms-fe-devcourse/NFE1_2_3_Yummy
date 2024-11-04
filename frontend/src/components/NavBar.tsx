@@ -124,13 +124,13 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src={userData?.profileImageUrl || ''}
-<!--                 src={
-                  isLoading
-                    ? 'https://example.com/loading-avatar.jpg'
-                    : profileImageUrl
-                } -->
+                //   src={
+                //     isLoading
+                //       ? 'https://example.com/loading-avatar.jpg'
+                //       : profileImageUrl
+                //   }
+                // />
               />
-
               {/* 아바타 모달창 */}
               {isModalVisible && (
                 <AvatorModal>
