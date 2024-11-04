@@ -15,8 +15,12 @@ const CategoryPage = () => {
   const { category } = useParams()
   const [currentPage, setCurrentPage] = useState(1)
 
-  const { categoryPosts, isCategoryPostsLoading, isCategoryPostsError } =
-    useCategoryPost(category || '')
+  const {
+    categoryPosts,
+    isCategoryPostsLoading,
+    isCategoryPostsError,
+    categoryPostsError,
+  } = useCategoryPost(category || '')
 
   // 카테고리가 변경될 때 페이지 번호 초기화
   useEffect(() => {
@@ -28,8 +32,12 @@ const CategoryPage = () => {
 
   let content
 
-  if (isCategoryPostsLoading) content = <div>Loading...</div>
-  if (isCategoryPostsError) content = <div>Error...</div>
+  if (isCategoryPostsLoading) {
+    content = <div>Loading...</div>
+  }
+  if (isCategoryPostsError) {
+    content = <div>{categoryPostsError?.message}</div>
+  }
 
   if (categoryPosts) {
     const startIndex = (currentPage - 1) * PAGE_SIZE
