@@ -38,13 +38,7 @@ const ButtonGrid = styled.div`
   margin-top: 0.5rem;
   padding: 16px;
 `
-const CenteredContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 16px 0;
-`
+
 const PostsContainer = styled.div`
   margin-top: 20px;
   width: 55%;
@@ -99,7 +93,7 @@ const CategoryButtons: React.FC = () => {
 
   const handleClick = (category: string) => {
     setSelectedCategory((prevCategory) =>
-      prevCategory === category ? null : category
+      prevCategory === category ? null : category,
     )
     setPageNumber(1)
   }
@@ -112,7 +106,7 @@ const CategoryButtons: React.FC = () => {
   if (error) return <div>Something went wrong!</div>
 
   return (
-    <CenteredContainer>
+    <>
       <ButtonGrid>
         {categories.map((category) => (
           <CategoryButton
@@ -138,7 +132,7 @@ const CategoryButtons: React.FC = () => {
         total={posts.totalCount}
         onPageChange={setPageNumber}
       />
-    </CenteredContainer>
+    </>
   )
 }
 
