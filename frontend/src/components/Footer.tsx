@@ -21,7 +21,6 @@ const Container = styled.div`
   width: 100%;
   height: 15vh;
   background-color: black;
-  margin-top: 20px;
 `
 
 const Logo = styled.img`

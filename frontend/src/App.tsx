@@ -10,6 +10,7 @@ import SearchPage from './pages/SearchPage'
 import UserEditModal from './components/UserEditModal'
 import ErrorPage from './pages/ErrorPage'
 import CategoryPage from './pages/CatergoryPage'
+import SignupComplete from './pages/SiginupComplete'
 
 function App() {
   return (
@@ -19,6 +20,10 @@ function App() {
           <Route
             path='/category/:category'
             element={<CategoryPage />}
+          />
+          <Route
+            path='/signup/complete'
+            element={<SignupComplete />}
           />
           <Route
             path='/write'
