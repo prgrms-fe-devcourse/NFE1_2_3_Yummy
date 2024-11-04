@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useQuery } from '@tanstack/react-query'
 import PostCard from '@/components/PostCard'
-import { Post, Posts } from '@/typings/db'
-import { Pagination } from 'antd'
-import axios from 'axios'
+import { Post } from '@/typings/db'
+import postApi from '@/apis/postService'
+import { SearchPageNav } from './SearchResultContainer/style'
 
 interface CategoryButtonProps {
   label: string
@@ -78,12 +78,10 @@ const categories = [
 ]
 
 const CategoryButtons: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체')
   const [pageNumber, setPageNumber] = useState(1)
 
-  const [displayedPosts, setDisplayedPosts] = useState<Post[]>([])
-
-  const pageSize = 5
+  const PAGE_SIZE = 5
 
   const {
     data: filterPosts = [],
@@ -91,21 +89,9 @@ const CategoryButtons: React.FC = () => {
     error,
   } = useQuery<Post[]>({
     queryKey: ['categoryPosts', selectedCategory],
-    queryFn: async () => {
-      if (!selectedCategory) return []
-      const response = await axios.get(
-        `http://localhost:3000/post/category/${selectedCategory}`,
-      )
-      return response.data
-    },
+    queryFn: async () => postApi.getCategoryPosts(selectedCategory),
     enabled: !!selectedCategory,
   })
-
-  useEffect(() => {
-    const startIndex = (pageNumber - 1) * pageSize
-    const endIndex = startIndex + pageSize
-    setDisplayedPosts(filterPosts.slice(startIndex, endIndex))
-  }, [filterPosts, pageNumber])
 
   const handleClick = (category: string) => {
     setSelectedCategory((prevCategory) =>
@@ -114,8 +100,27 @@ const CategoryButtons: React.FC = () => {
     setPageNumber(1)
   }
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Something went wrong!</div>
+  let content
+
+  if (isLoading) content = <div>Loading...</div>
+
+  if (error) content = <div>Something went wrong!</div>
+
+  if (filterPosts) {
+    const startIndex = (pageNumber - 1) * PAGE_SIZE
+    const endIndex = startIndex + PAGE_SIZE
+
+    content = filterPosts.slice(startIndex, endIndex).map((post: Post) => (
+      <PostCard
+        key={post._id}
+        {...post}
+      />
+    ))
+  }
+
+  if (filterPosts.length === 0) {
+    content = <div>게시물이 없습니다.</div>
+  }
 
   return (
     <>
@@ -130,18 +135,11 @@ const CategoryButtons: React.FC = () => {
         ))}
       </ButtonGrid>
 
-      <PostsContainer>
-        {displayedPosts.map((post: Post) => (
-          <PostCard
-            key={post._id}
-            {...post}
-          />
-        ))}
-      </PostsContainer>
+      <PostsContainer>{content}</PostsContainer>
 
       <PaginationControl
         currentPage={pageNumber}
-        pageSize={pageSize}
+        pageSize={PAGE_SIZE}
         total={filterPosts.length}
         onPageChange={setPageNumber}
       />
@@ -157,7 +155,7 @@ const PaginationControl: React.FC<{
   onPageChange: (page: number) => void
 }> = ({ currentPage, total, onPageChange }) => {
   return (
-    <Pagination
+    <SearchPageNav
       current={currentPage}
       pageSize={5}
       total={total}
