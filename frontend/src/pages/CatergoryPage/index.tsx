@@ -10,6 +10,7 @@ import useCategoryPost from '@/hooks/useCategoryPost'
 import { useParams } from 'react-router-dom'
 import { SearchPageNav } from '@/components/SearchResultContainer/style'
 import { useState } from 'react'
+import { Post } from '@/typings/db'
 
 const CategoryPage = () => {
   const { category } = useParams()
@@ -30,11 +31,15 @@ const CategoryPage = () => {
     const startIndex = (currentPage - 1) * PAGE_SIZE
     const endIndex = startIndex + PAGE_SIZE
 
+    const recentPredicate = (a: Post, b: Post) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    const sortedPosts = categoryPosts.sort(recentPredicate)
+
     content = (
       <>
-        <CategoryTopRate posts={categoryPosts} />
+        <CategoryTopRate posts={sortedPosts} />
         <ItemCardContainer>
-          {categoryPosts
+          {sortedPosts
             .map((post) => (
               <CategoryItemCard
                 key={post._id}
