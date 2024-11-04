@@ -6,10 +6,12 @@ import {
 } from './style'
 import CategoryItemCard from '@/components/CategoryItemCard'
 import useCategoryPost from '@/hooks/useCategoryPost'
+import { useParams } from 'react-router-dom'
 
 const CategoryPage = () => {
+  const { category } = useParams()
   const { categoryPosts, isCategoryPostsLoading, isCategoryPostsError } =
-    useCategoryPost('한식')
+    useCategoryPost(category || '')
 
   let content
 

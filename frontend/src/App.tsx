@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route element={<PageLayout />}>
           <Route
-            path='/category'
+            path='/category/:category'
             element={<CategoryPage />}
           />
           <Route

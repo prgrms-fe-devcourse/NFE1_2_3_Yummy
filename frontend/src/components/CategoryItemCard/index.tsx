@@ -14,7 +14,6 @@ const CategoryItemCard = ({ post }: { post: Post }) => {
 
   const { content } = post
   const sanitizedData = DOMPurify.sanitize(content)
-  console.log(sanitizedData)
 
   return (
     <ItemCard>
