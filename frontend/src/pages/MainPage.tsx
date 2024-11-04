@@ -56,17 +56,17 @@ const MainPage = () => {
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>오류 발생: {error.message}</p>
 
-  if (postsData && postsData.posts.length > 0) {
-    // content를 정화
-    const sanitizedPosts = postsData.posts.map((post) => ({
-      ...post,
-      content: DOMPurify.sanitize(post.content),
-    }))
+  if (!postsData || postsData.posts.length === 0) return null
+
+  const sanitizedPosts = postsData.posts.map((post) => ({
+    ...post,
+    content: DOMPurify.sanitize(post.content),
+  }))
 
     const topPost = sanitizedPosts[0]
     const sortedPosts = sanitizedPosts
       .sort((a, b) => b.hearts.length - a.hearts.length)
-      .slice(0, 3)
+      .slice(1, 4)
 
     return (
       <MainContainer>
@@ -98,8 +98,4 @@ const MainPage = () => {
       </MainContainer>
     )
   }
-
-  return null
-}
-
 export default MainPage
