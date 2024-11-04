@@ -2,34 +2,29 @@ import { CommentContainer } from '@/pages/PostPage/style'
 import CommentCard from '../CommentCard'
 import CommentInput from '../CommentInput'
 import { Comment } from '@/typings/db'
-import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import postApi from '@/apis/postService'
+import { useCommentQuery } from '@/hooks/userCommentQuery'
 
 const PostCommentContainer = () => {
   const { id: postId } = useParams()
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['comment', postId],
-    queryFn: async () => {
-      if (postId) {
-        return postApi.getComment(postId)
-      }
-    },
-    enabled: !!postId,
-  })
+
+  if (!postId) return <div>포스트 아이디가 없습니다.</div>
+
+  const { commentData, isCommentLoading, isCommentError, commentError } =
+    useCommentQuery(postId)
 
   let content
 
-  if (isLoading) {
+  if (isCommentLoading) {
     content = <div>Loading...</div>
   }
 
-  if (isError) {
-    content = <div>Error: {error.message}</div>
+  if (isCommentError) {
+    content = <div>Error: {commentError?.message}</div>
   }
 
-  if (data) {
-    content = data.map((comment: Comment) => (
+  if (commentData) {
+    content = commentData.map((comment: Comment) => (
       <CommentCard
         key={comment._id}
         {...comment}
@@ -39,7 +34,7 @@ const PostCommentContainer = () => {
 
   return (
     <CommentContainer>
-      <h3>{data?.length}개의 댓글</h3>
+      <h3>{commentData?.length}개의 댓글</h3>
       <CommentInput />
       {content}
     </CommentContainer>

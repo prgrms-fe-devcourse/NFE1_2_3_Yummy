@@ -3,42 +3,34 @@ import PostContainer from '@/components/PostContainer'
 import PostCommentContainer from '@/components/PostCommentContainer'
 import PostSideButton from '@/components/PostSideButton'
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import postApi from '@/apis/postService'
 import { useEffect } from 'react'
+import { usePostQuery } from '@/hooks/usePostQuery'
 
 const PostPage = () => {
   const { id: postId } = useParams()
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['post', postId],
-    queryFn: () => {
-      if (postId) {
-        return postApi.getPostById(postId)
-      }
-    },
-    enabled: !!postId,
-  })
+  // 추후 핸들링 예정
+  if (!postId) return <div>게시글 아이디가 없습니다.</div>
 
+  // 스크롤 위치 초기화
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
+  const { postData, isPostLoading, isPostError, postError } =
+    usePostQuery(postId)
+
   let content
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
+  if (isPostLoading) return <div>Loading...</div>
 
-  if (isError) {
-    return <div>Error: {error.message}</div>
-  }
+  if (isPostError) return <div>Error: {postError?.message}</div>
 
-  if (data) {
+  if (postData) {
     content = (
       <>
-        <PostContainer post={data} />
-        <PostSideButton post={data} />
+        <PostContainer post={postData} />
+        <PostSideButton post={postData} />
       </>
     )
   }

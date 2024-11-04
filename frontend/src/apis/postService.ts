@@ -16,7 +16,7 @@ import { Post, Comment, PostForm, Posts } from '@/typings/db'
 import { CommentForm, CommentUpdateForm } from '@/utils/Model/commentModel'
 import api from './ky'
 
-interface SearchEvent {
+export interface SearchEvent {
   type: 'title' | 'content' | 'nickname'
   keyword: string
   length: number

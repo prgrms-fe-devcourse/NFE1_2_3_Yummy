@@ -12,6 +12,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
 import { queryClient } from '@/apis/api'
 import htmlToDraft from 'html-to-draftjs'
+import MokImage from '@/assets/defaultImg.png'
 
 const WritingPage: React.FC = () => {
   const navigate = useNavigate()
@@ -52,7 +53,7 @@ const WritingPage: React.FC = () => {
           title,
           content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
           category,
-          image_url: imageUrl || 'http://example.com/image.jpg',
+          image_url: imageUrl || MokImage,
         })
       }
     },
@@ -105,7 +106,7 @@ const WritingPage: React.FC = () => {
           title,
           content: htmlContent,
           category,
-          image_url: imageUrl || 'http://example.com/image.jpg',
+          image_url: imageUrl || MokImage,
         },
         {
           headers: { Authorization: `Bearer ${token}` },

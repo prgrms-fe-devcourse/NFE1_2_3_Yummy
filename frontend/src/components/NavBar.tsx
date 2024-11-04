@@ -11,7 +11,6 @@ const NavigationBar: React.FC = () => {
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const { profileImageQuery } = useProfileImage()
-
   // 로그인 여부 확인
   const loggedIn = Boolean(localStorage.getItem('token'))
 
@@ -136,6 +135,7 @@ const NavContainer = styled.nav`
   padding: 10px 20px;
   background-color: white;
   border-bottom: 1px solid #e5e5e5;
+  height: 10vh;
 `
 
 const LogoSection = styled.div`

@@ -1,11 +1,10 @@
-import { useMutation } from '@tanstack/react-query'
 import { DeleteModalContainer } from './style'
-import postApi from '@/apis/postService'
 import { useNavigate, useParams } from 'react-router-dom'
 import { LoadingOutlined } from '@ant-design/icons'
-import { queryClient } from '@/apis/api'
 import usePostModal from '@/store/usePostModal'
 import { useEffect } from 'react'
+import { useDeleteComment } from '@/hooks/useUpdateComment'
+import { useDeletePostQuery } from '@/hooks/usePostQuery'
 
 interface DeleteModalProps {
   comment_id?: string
@@ -13,43 +12,35 @@ interface DeleteModalProps {
 
 const DeleteModal = ({ comment_id }: DeleteModalProps) => {
   const { id: postId } = useParams()
-  const navigate = useNavigate()
 
+  if (!postId) return <div>포스트 아이디가 없습니다.</div>
+
+  console.log('postId', postId)
+
+  const navigate = useNavigate()
   const { isModalOpen, closeModal } = usePostModal()
   const { type: modalType } = isModalOpen
 
-  const {
-    mutate: deletePost,
-    isPending: isDeletingPost,
-    isError: isDeletingPostError,
-    error: deletingPostError,
-    reset: deletePostReset,
-  } = useMutation({
-    mutationFn: async () => {
-      if (postId) await postApi.deletePost(postId)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] })
-      navigate('/')
-      closeModal()
-    },
-  })
+  const onMutateAction = () => {
+    closeModal()
+    if (modalType === 'post') navigate('/')
+  }
 
   const {
-    mutate: deleteComment,
-    isPending: isDeletingComment,
-    isError: isDeletingCommentError,
-    error: deletingCommentError,
-    reset: deleteCommentReset,
-  } = useMutation({
-    mutationFn: async () => {
-      if (postId && comment_id) await postApi.deleteComment(postId, comment_id)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comment', postId] })
-      closeModal()
-    },
-  })
+    deletePost,
+    isDeletingPost,
+    isDeletingPostError,
+    deletingPostError,
+    deletePostReset,
+  } = useDeletePostQuery(postId, onMutateAction)
+
+  const {
+    deleteComment,
+    isDeletePending,
+    isDeleteError,
+    deleteError,
+    deleteCommentReset,
+  } = useDeleteComment(postId, onMutateAction)
 
   /**
    * 모달이 열리면 mutation 상태 초기화
@@ -60,7 +51,7 @@ const DeleteModal = ({ comment_id }: DeleteModalProps) => {
   useEffect(() => {
     if (isModalOpen.open) {
       deletePostReset()
-      deleteCommentReset()
+      // deleteCommentReset()
     }
   }, [isModalOpen.open, deletePostReset, deleteCommentReset])
 
@@ -74,25 +65,24 @@ const DeleteModal = ({ comment_id }: DeleteModalProps) => {
     </>
   )
 
-  if (isDeletingPostError || isDeletingCommentError) {
+  if (isDeletingPostError || isDeleteError) {
     content = (
       <>
         <h3>삭제 실패</h3>
-        <p>{deletingPostError?.message || deletingCommentError?.message}</p>
+        <p>{deletingPostError?.message || deleteError?.message}</p>
       </>
     )
   }
 
-  const handleDelete = () => (comment_id ? deleteComment() : deletePost())
+  const handleDelete = () =>
+    comment_id ? deleteComment(comment_id) : deletePost()
 
   return (
     <DeleteModalContainer
       open={isModalOpen.open}
       onCancel={closeModal}
       onOk={handleDelete}
-      okText={
-        isDeletingPost || isDeletingComment ? <LoadingOutlined /> : '삭제'
-      }
+      okText={isDeletingPost || isDeletePending ? <LoadingOutlined /> : '삭제'}
       cancelText='취소'
       centered
     >

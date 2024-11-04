@@ -2,36 +2,26 @@ import UserProfileCard from '@/components/UserProfileCard'
 import { Container, MyPostTitle } from './style'
 import PostCard from '@/components/PostCard'
 import { Outlet, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import userApi from '@/apis/userService'
 import { checkAuthor } from '@/utils/user'
+import { useUserInfoQuery } from '@/hooks/useUserInfoQuery'
 
 const MyPage = () => {
   const { id: userId } = useParams()
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['userData', userId],
-    queryFn: () => {
-      if (userId) {
-        return userApi.getUserData(userId)
-      }
-    },
-    enabled: !!userId,
-  })
+  // 추후 핸들링 예정
+  if (!userId) return <div>유저 아이디가 없습니다.</div>
+
+  const { userData, isUserDataLoading, isUserDataError, userDataError } =
+    useUserInfoQuery(userId)
 
   // 추후 스켈레톤을 위해 랜더링 분리
-
   const renderUserContent = () => {
-    if (isLoading) {
-      return <div>Loading ...</div>
-    }
+    if (isUserDataLoading) return <div>Loading ...</div>
 
-    if (isError) {
-      return <div>{error.message}</div>
-    }
+    if (isUserDataError) return <div>{userDataError?.message}</div>
 
-    if (data) {
-      const { posts, ...rest } = data
+    if (userData) {
+      const { posts, ...rest } = userData
       return (
         <UserProfileCard
           {...rest}
@@ -40,18 +30,14 @@ const MyPage = () => {
       )
     }
   }
-
   const renderPostContent = () => {
-    if (isLoading) {
-      return <div>Loading ...</div>
-    }
+    if (isUserDataLoading) return <div>Loading ...</div>
 
-    if (isError) {
-      return <div>{error.message}</div>
-    }
+    if (isUserDataError) return <div>{userDataError?.message}</div>
 
-    if (data) {
-      const { posts } = data
+    if (userData) {
+      const { posts } = userData
+
       return posts?.map((post) => (
         <PostCard
           key={post._id}
@@ -61,11 +47,13 @@ const MyPage = () => {
     }
   }
 
+  // Author 여부 체크
   const isAuthor = userId && checkAuthor(userId)
   const title = isAuthor ? 'My Post' : 'User Post'
+
   return (
     <Container>
-      <Outlet context={data} />
+      <Outlet context={userData} />
       {renderUserContent()}
       <MyPostTitle>
         <h3>{title}</h3>
