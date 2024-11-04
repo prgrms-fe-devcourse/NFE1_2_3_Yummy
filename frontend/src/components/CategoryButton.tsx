@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useQuery } from '@tanstack/react-query'
 import PostCard from '@/components/PostCard'
 import { Post, Posts } from '@/typings/db'
-import postApi from '@/apis/postService'
 import { Pagination } from 'antd'
+import axios from 'axios'
 
 interface CategoryButtonProps {
   label: string
@@ -38,13 +38,7 @@ const ButtonGrid = styled.div`
   margin-top: 0.5rem;
   padding: 16px;
 `
-const CenteredContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 16px 0;
-`
+
 const PostsContainer = styled.div`
   margin-top: 20px;
   width: 55%;
@@ -86,33 +80,45 @@ const categories = [
 const CategoryButtons: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
-  const pageSize = 10
+
+  const [displayedPosts, setDisplayedPosts] = useState<Post[]>([])
+
+  const pageSize = 5
 
   const {
-    data: posts = { posts: [], totalCount: 0 },
+    data: filterPosts = [],
     isLoading,
     error,
-  } = useQuery<Posts>({
-    queryKey: ['posts', selectedCategory, pageNumber],
-    queryFn: () => postApi.getPost(pageSize, pageNumber),
+  } = useQuery<Post[]>({
+    queryKey: ['categoryPosts', selectedCategory],
+    queryFn: async () => {
+      if (!selectedCategory) return []
+      const response = await axios.get(
+        `http://localhost:3000/post/category/${selectedCategory}`,
+      )
+      return response.data
+    },
+    enabled: !!selectedCategory,
   })
+
+  useEffect(() => {
+    const startIndex = (pageNumber - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    setDisplayedPosts(filterPosts.slice(startIndex, endIndex))
+  }, [filterPosts, pageNumber])
 
   const handleClick = (category: string) => {
     setSelectedCategory((prevCategory) =>
-      prevCategory === category ? null : category
+      prevCategory === category ? '전체' : category,
     )
     setPageNumber(1)
   }
-
-  const filteredPosts = posts.posts.filter((post: Post) =>
-    selectedCategory ? post.category === selectedCategory : true,
-  )
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Something went wrong!</div>
 
   return (
-    <CenteredContainer>
+    <>
       <ButtonGrid>
         {categories.map((category) => (
           <CategoryButton
@@ -125,7 +131,7 @@ const CategoryButtons: React.FC = () => {
       </ButtonGrid>
 
       <PostsContainer>
-        {filteredPosts.map((post: Post) => (
+        {displayedPosts.map((post: Post) => (
           <PostCard
             key={post._id}
             {...post}
@@ -135,23 +141,25 @@ const CategoryButtons: React.FC = () => {
 
       <PaginationControl
         currentPage={pageNumber}
-        total={posts.totalCount}
+        pageSize={pageSize}
+        total={filterPosts.length}
         onPageChange={setPageNumber}
       />
-    </CenteredContainer>
+    </>
   )
 }
 
 // 페이지네이션 컴포넌트 분리
 const PaginationControl: React.FC<{
   currentPage: number
+  pageSize: number
   total: number
   onPageChange: (page: number) => void
 }> = ({ currentPage, total, onPageChange }) => {
   return (
     <Pagination
       current={currentPage}
-      pageSize={10}
+      pageSize={5}
       total={total}
       onChange={onPageChange}
       style={{ marginTop: '20px' }}
