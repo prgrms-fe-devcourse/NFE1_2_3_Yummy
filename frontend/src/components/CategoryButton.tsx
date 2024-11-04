@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import PostCard from '@/components/PostCard'
 import { Post, Posts } from '@/typings/db'
 import postApi from '@/apis/postService'
-import { Pagination } from "antd";
+import { Pagination } from 'antd'
 
 interface CategoryButtonProps {
   label: string
@@ -107,7 +107,7 @@ const CategoryButtons: React.FC = () => {
   const pageSize = 10
 
   const {
-    data: posts = { posts: [], totalCount: 0 },
+    data: posts = [],
     isLoading,
     error,
   } = useQuery<Posts>({
@@ -124,8 +124,7 @@ const CategoryButtons: React.FC = () => {
     setPageNumber(page)
   }
 
-
-  const filteredPosts = posts.posts.filter((post: Post) =>
+  const filteredPosts = posts.filter((post: Post) =>
     selectedCategory ? post.category === selectedCategory : true,
   )
 
