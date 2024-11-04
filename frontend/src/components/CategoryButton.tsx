@@ -80,7 +80,7 @@ const categories = [
 const CategoryButtons: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
-  const pageSize = 10
+  const pageSize = 5
 
   const {
     data: posts = { posts: [], totalCount: 0 },
@@ -127,11 +127,13 @@ const CategoryButtons: React.FC = () => {
         ))}
       </PostsContainer>
 
-      <PaginationControl
-        currentPage={pageNumber}
-        total={posts.totalCount}
-        onPageChange={setPageNumber}
-      />
+      {selectedCategory === null && (
+        <PaginationControl
+          currentPage={pageNumber}
+          total={posts.totalCount}
+          onPageChange={setPageNumber}
+        />
+      )}
     </>
   )
 }
@@ -145,7 +147,7 @@ const PaginationControl: React.FC<{
   return (
     <Pagination
       current={currentPage}
-      pageSize={10}
+      pageSize={5}
       total={total}
       onChange={onPageChange}
       style={{ marginTop: '20px' }}
