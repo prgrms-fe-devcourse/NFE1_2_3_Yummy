@@ -7,6 +7,8 @@ import styled from 'styled-components'
 import DOMPurify from 'dompurify'
 import postApi from '@/apis/postService'
 import { FloatButton } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -41,6 +43,7 @@ const PostsContainer = styled.div`
 `
 
 const MainPage = () => {
+  const navigate = useNavigate()
   const {
     data: postsData,
     isLoading,
@@ -83,7 +86,13 @@ const MainPage = () => {
           <Hr />
           <CategoryButtons />
         </Main>
-        <FloatButton.BackTop />
+        <FloatButton
+          icon={<PlusOutlined />}
+          tooltip='게시물 작성'
+          onClick={() => navigate('/write')}
+          style={{ right: 24, bottom: 80 }}
+        />
+        <FloatButton.BackTop style={{ right: 24, bottom: 24 }} />
       </MainContainer>
     )
   }
