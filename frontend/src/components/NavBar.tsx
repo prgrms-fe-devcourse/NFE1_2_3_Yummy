@@ -1,16 +1,32 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { Avatar, message } from 'antd'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { useProfileImage } from '@/hooks/useProfileImage'
+import { useUserInfoQuery } from '@/hooks/useUserInfoQuery'
+import { USER_ID } from '@/utils/user'
+import useUserInfo from '@/store/useUserInfo'
 
 const NavigationBar: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isCategoryVisible, setIsCategoryVisible] = useState(false)
   const navigate = useNavigate()
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const { profileImageUrl, isLoading } = useProfileImage()
+
+  /**
+   * nav에서 유저 정보 업데이트 시
+   * Zustand UserInfo 업데이트
+   */
+  const userId = USER_ID()
+  const { userData } = useUserInfoQuery(userId as string)
+  const { setUserInfo } = useUserInfo()
+
+  useEffect(() => {
+    if (userData) {
+      setUserInfo(userData)
+    }
+  }, [userData])
+  //
 
   // 로그인 여부 확인
   const loggedIn = Boolean(localStorage.getItem('token'))
@@ -107,11 +123,12 @@ const NavigationBar: React.FC = () => {
               <StyledAvatar
                 size={64}
                 icon={<UserOutlined />}
-                src={
+                src={userData?.profileImageUrl || ''}
+<!--                 src={
                   isLoading
                     ? 'https://example.com/loading-avatar.jpg'
                     : profileImageUrl
-                }
+                } -->
               />
 
               {/* 아바타 모달창 */}

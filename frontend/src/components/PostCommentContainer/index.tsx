@@ -24,9 +24,9 @@ const PostCommentContainer = () => {
   }
 
   if (commentData) {
-    content = commentData.map((comment: Comment) => (
+    content = commentData.map((comment: Comment, index: number) => (
       <CommentCard
-        key={comment._id}
+        key={`comment-${index}`}
         {...comment}
       />
     ))

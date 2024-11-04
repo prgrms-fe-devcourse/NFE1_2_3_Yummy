@@ -15,8 +15,6 @@ const DeleteModal = ({ comment_id }: DeleteModalProps) => {
 
   if (!postId) return <div>포스트 아이디가 없습니다.</div>
 
-  console.log('postId', postId)
-
   const navigate = useNavigate()
   const { isModalOpen, closeModal } = usePostModal()
   const { type: modalType } = isModalOpen
