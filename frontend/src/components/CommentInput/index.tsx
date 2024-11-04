@@ -5,13 +5,10 @@ import {
   CommentInputContainer,
   CommentTextArea,
 } from './style'
-import { useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import { queryClient } from '@/apis/api'
 import { CommentForm, CommentUpdateForm } from '@/utils/Model/commentModel'
-import postApi from '@/apis/postService'
 import { LoadingOutlined } from '@ant-design/icons'
-import { useUpdateComment } from '@/hooks/useUpdateComment'
+import { useCreateComment, useUpdateComment } from '@/hooks/useUpdateComment'
 
 interface CommentInputProps {
   $isEdit?: boolean
@@ -38,26 +35,16 @@ const CommentInput = ({
     }
   }, [commentContent])
 
-  const {
-    mutate: createComment,
-    isPending: isCreatePending,
-    isError: isCreateError,
-    error: createError,
-  } = useMutation({
-    mutationFn: async (commentData: CommentForm) => {
-      if (postId) {
-        await postApi.createComment(postId, commentData)
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comment', postId] })
-      setComment('')
-    },
-  })
-
   const handleCancel = () => {
     inputState && inputState(false)
   }
+
+  const handleCommentState = () => {
+    setComment('')
+  }
+
+  const { createComment, isCreatePending, isCreateError, createError } =
+    useCreateComment({ postId, handleCommentState })
 
   const { updateComment, isUpdatePending, isUpdateError, updateError } =
     useUpdateComment(postId, handleCancel)

@@ -1,22 +1,25 @@
 import { useMutation } from '@tanstack/react-query'
 import postApi from '@/apis/postService'
-import { CommentForm, CommentUpdateForm } from '@/utils/Model/commentModel'
+import {
+  CommentCreateForm,
+  CommentForm,
+  CommentUpdateForm,
+} from '@/utils/Model/commentModel'
 import { queryClient } from '@/apis/api'
 import { COMMENT_QUERY } from '@/hooks/userCommentQuery'
 import { Comment } from '@/typings/db'
+import useUserInfo from '@/store/useUserInfo'
 interface UseCreateCommentProps {
   postId: string
-  onSettledCreateAction: () => void
+  handleCommentState: () => void
 }
 
-/**
- * Optimistic Update를 위해 User 데이터 필요한 상황
- * 추후 논의 필요해보임
- */
 export const useCreateComment = ({
   postId,
-  onSettledCreateAction,
+  handleCommentState,
 }: UseCreateCommentProps) => {
+  const { userInfo } = useUserInfo()
+
   const {
     mutate: createComment,
     isPending: isCreatePending,
@@ -30,11 +33,22 @@ export const useCreateComment = ({
       const previousComment = queryClient.getQueryData<Comment[]>(
         COMMENT_QUERY(postId),
       )
+
+      if (!userInfo) return
+
+      const commentCreateData = new CommentCreateForm(
+        commentData.content,
+        commentData.postId,
+        userInfo,
+      )
+
       queryClient.cancelQueries({ queryKey: COMMENT_QUERY(postId) })
       queryClient.setQueryData(COMMENT_QUERY(postId), (prev: Comment[]) => [
         ...prev,
-        commentData,
+        commentCreateData,
       ])
+
+      handleCommentState()
 
       return { previousComment }
     },
@@ -45,7 +59,6 @@ export const useCreateComment = ({
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: COMMENT_QUERY(postId) })
-      onSettledCreateAction()
     },
   })
 

@@ -5,7 +5,6 @@ import { Post } from '@/typings/db'
 import DeleteModal from '../DeleteModal'
 
 const PostContainer = ({ post }: { post: Post }) => {
-  console.log(post.image_url)
   return (
     <>
       <PostImage src={post.image_url} />
