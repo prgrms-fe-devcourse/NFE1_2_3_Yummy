@@ -55,6 +55,10 @@ export class PostService {
     return { totalCount, posts };
   }
 
+  async findAllPosts() {
+    return this.postModel.find();
+  }
+
   async findByCategory(category: string) {
     return this.postModel.find({ category });
   }

@@ -88,6 +88,9 @@ export class PostController {
     description: '성공적으로 카테고리별 게시글을 반환합니다.',
   })
   findByCategory(@Param('category') category: string) {
+    if (category === '전체') {
+      return this.postService.findAllPosts();
+    }
     return this.postService.findByCategory(category);
   }
 
