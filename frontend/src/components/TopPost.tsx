@@ -77,7 +77,7 @@ const TopPost: React.FC<Post> = ({
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
         <PostAuthor>
-          {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
+          {user ?.nickname || 'Anonymous'} | {formatDate(createdAt)}
         </PostAuthor>
         <PostText dangerouslySetInnerHTML={{ __html: content }}/>
       </ContentContainer>
