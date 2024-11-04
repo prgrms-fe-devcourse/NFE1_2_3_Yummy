@@ -9,12 +9,17 @@ import MainPage from './pages/MainPage'
 import SearchPage from './pages/SearchPage'
 import UserEditModal from './components/UserEditModal'
 import ErrorPage from './pages/ErrorPage'
+import CategoryPage from './pages/CatergoryPage'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<PageLayout />}>
+          <Route
+            path='/category'
+            element={<CategoryPage />}
+          />
           <Route
             path='/write'
             element={<WritingPage />}
