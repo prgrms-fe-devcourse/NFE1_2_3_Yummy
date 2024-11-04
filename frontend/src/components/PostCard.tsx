@@ -5,20 +5,19 @@ import styled from 'styled-components'
 
 const Card = styled.div`
   display: flex;
-  padding: 16px;
-  margin: 0 50px;
   margin-bottom: 16px;
-  width: 900px;
+  width: 100%;
   height: 200px;
   background-color: #fff;
   font-family: sans-serif;
   cursor: pointer;
+  align-items: center;
 `
 
 const PostImage = styled.img`
   width: 150px;
   height: 150px;
-  height: auto;
+  object-fit: cover;
   margin-right: 20px;
 `
 
@@ -70,18 +69,19 @@ function PostCard({
   const handleOpenPost = () => {
     handleNavigateTo(`/post/${_id}`)
   }
+
   return (
-    <Card>
+    <Card onClick={handleOpenPost}>
       <PostImage
         src={image_url}
         alt='Post Thumbnail'
       />
-      <PostContent onClick={handleOpenPost}>
+      <PostContent>
         <PostCategory>{category}</PostCategory>
         <PostTitle>{title}</PostTitle>
         <PostAuthor>
           {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
-          </PostAuthor>
+        </PostAuthor>
         <Content dangerouslySetInnerHTML={{ __html: content }} />
       </PostContent>
     </Card>

@@ -43,6 +43,10 @@ const NavigationBar: React.FC = () => {
     navigate(`/profile/${userId}`)
   }
 
+  const handleCategory = (category: string) => {
+    navigate(`/category/${category}`)
+  }
+
   // 카테고리 배열
   const categories = [
     '전체',
@@ -77,7 +81,12 @@ const NavigationBar: React.FC = () => {
             {isCategoryVisible && (
               <CategoryModal>
                 {categories.map((category, index) => (
-                  <CategoryItem key={index}>{category}</CategoryItem>
+                  <CategoryItem
+                    onClick={() => handleCategory(category)}
+                    key={index}
+                  >
+                    {category}
+                  </CategoryItem>
                 ))}
               </CategoryModal>
             )}
@@ -137,6 +146,7 @@ const NavContainer = styled.nav`
   padding: 10px 20px;
   background-color: white;
   border-bottom: 1px solid #e5e5e5;
+  height: 10vh;
 `
 
 const LogoSection = styled.div`

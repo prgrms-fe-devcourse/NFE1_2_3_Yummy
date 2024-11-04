@@ -16,7 +16,7 @@ import { Post, Comment, PostForm, Posts } from '@/typings/db'
 import { CommentForm, CommentUpdateForm } from '@/utils/Model/commentModel'
 import api from './ky'
 
-interface SearchEvent {
+export interface SearchEvent {
   type: 'title' | 'content' | 'nickname'
   keyword: string
   length: number
@@ -98,6 +98,11 @@ const postApi = {
       posts: sortedPosts.slice(0, 4),
       totalCount: sortedPosts.length,
     }
+  },
+
+  getCategoryPosts: async (category: string) => {
+    const response = await api.get<Post[]>(`post/category/${category}`).json()
+    return response
   },
 }
 
