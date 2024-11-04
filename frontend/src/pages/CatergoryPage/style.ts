@@ -22,3 +22,12 @@ export const ItemCardContainer = styled.div`
   width: 50%;
   gap: calc(6% / 3);
 `
+
+export const CategoryPageContent = styled.div`
+  width: 100%;
+  min-height: 116.2vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+`
