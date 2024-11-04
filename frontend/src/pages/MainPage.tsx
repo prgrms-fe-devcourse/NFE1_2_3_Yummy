@@ -61,7 +61,9 @@ const MainPage = () => {
     }))
 
     const topPost = sanitizedPosts[0]
-    const sortedPosts = sanitizedPosts.slice(1)
+    const sortedPosts = sanitizedPosts
+      .sort((a, b) => b.hearts.length - a.hearts.length)
+      .slice(0, 3)
 
     return (
       <MainContainer>

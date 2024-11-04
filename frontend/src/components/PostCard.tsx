@@ -2,6 +2,7 @@ import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { Post } from '@/typings/db'
 import { formatDate } from '@/utils/formatDate'
 import styled from 'styled-components'
+import NoPhoto from '../assets/NoPhoto.jpg'
 
 const Card = styled.div`
   display: flex;
