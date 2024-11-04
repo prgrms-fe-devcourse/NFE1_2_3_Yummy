@@ -56,11 +56,11 @@ export class PostService {
   }
 
   async findAllPosts() {
-    return this.postModel.find();
+    return this.postModel.find().populate('user');
   }
 
   async findByCategory(category: string) {
-    return this.postModel.find({ category });
+    return this.postModel.find({ category }).populate('user');
   }
 
   async findOne(id: string): Promise<Post> {
