@@ -30,6 +30,12 @@ export const Content = styled.div`
   justify-content: space-between;
   cursor: pointer;
 
+  & span {
+    color: #666;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+  }
+
   & p {
     text-align: left !important;
     margin: 0 !important;

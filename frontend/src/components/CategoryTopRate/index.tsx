@@ -40,6 +40,7 @@ const TopRateItem = ({ post }: { post: Post }) => {
 const CategoryTopRate = ({ posts }: { posts: Post[] }) => {
   const topFiveHeartPredicate = (a: Post, b: Post) =>
     b.hearts.length - a.hearts.length
+
   const topPosts = posts.sort(topFiveHeartPredicate).slice(0, 5)
 
   return (

@@ -23,7 +23,10 @@ const CategoryItemCard = ({ post }: { post: Post }) => {
       />
       <CardContent onClick={handleNavigate}>
         <Content>
-          <h3>{post.title}</h3>
+          <h3>
+            {post.title}
+            <span>{post.category}</span>
+          </h3>
           <p dangerouslySetInnerHTML={{ __html: sanitizedData }} />
           <CardInfo>
             <p>{formatDate(post.createdAt)}</p>

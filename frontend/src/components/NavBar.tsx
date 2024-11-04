@@ -26,7 +26,6 @@ const NavigationBar: React.FC = () => {
       setUserInfo(userData)
     }
   }, [userData])
-
   //
 
   // 로그인 여부 확인
@@ -125,6 +124,11 @@ const NavigationBar: React.FC = () => {
                 size={64}
                 icon={<UserOutlined />}
                 src={userData?.profileImageUrl || ''}
+<!--                 src={
+                  isLoading
+                    ? 'https://example.com/loading-avatar.jpg'
+                    : profileImageUrl
+                } -->
               />
 
               {/* 아바타 모달창 */}
