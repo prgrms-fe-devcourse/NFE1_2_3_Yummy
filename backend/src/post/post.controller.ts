@@ -81,6 +81,16 @@ export class PostController {
     return this.postService.findAll(+page, +limit);
   }
 
+  @Get('category/:category')
+  @ApiOperation({ summary: '카테고리별 게시글 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '성공적으로 카테고리별 게시글을 반환합니다.',
+  })
+  findByCategory(@Param('category') category: string) {
+    return this.postService.findByCategory(category);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: '특정 게시글 조회' })
   findOne(@Param('id') id: string) {

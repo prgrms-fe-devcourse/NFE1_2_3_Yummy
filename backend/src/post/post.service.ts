@@ -55,6 +55,10 @@ export class PostService {
     return { totalCount, posts };
   }
 
+  async findByCategory(category: string) {
+    return this.postModel.find({ category });
+  }
+
   async findOne(id: string): Promise<Post> {
     const post = await this.postModel.findById(id).populate('user').exec();
     if (!post) {
