@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import PostCard from '@/components/PostCard'
 import { Post, Posts } from '@/typings/db'
 import postApi from '@/apis/postService'
-import { Pagination } from "antd";
+import { Pagination } from 'antd'
 
 interface CategoryButtonProps {
   label: string
@@ -40,6 +40,7 @@ const ButtonGrid = styled.div`
   padding: 16px;
 `
 const CenteredContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,8 +48,7 @@ const CenteredContainer = styled.div`
 `
 const PostsContainer = styled.div`
   margin-top: 20px;
-  padding: 20px;
-  width: 100%;
+  width: 55%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -124,7 +124,6 @@ const CategoryButtons: React.FC = () => {
     setPageNumber(page)
   }
 
-
   const filteredPosts = posts.posts.filter((post: Post) =>
     selectedCategory ? post.category === selectedCategory : true,
   )
@@ -144,6 +143,7 @@ const CategoryButtons: React.FC = () => {
           />
         ))}
       </ButtonGrid>
+
       <PostsContainer>
         {filteredPosts.map((post: Post) => (
           <PostCard
@@ -152,6 +152,7 @@ const CategoryButtons: React.FC = () => {
           />
         ))}
       </PostsContainer>
+
       <PageNav
         current={pageNumber}
         pageSize={pageSize}

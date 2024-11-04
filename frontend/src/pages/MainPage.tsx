@@ -6,23 +6,27 @@ import { useQuery } from '@tanstack/react-query'
 import styled from 'styled-components'
 import DOMPurify from 'dompurify'
 import postApi from '@/apis/postService'
-import { FloatButton } from "antd";
+import { FloatButton } from 'antd'
+
+const MainContainer = styled.div`
+  width: 100%;
+`
 
 const Top = styled.div`
-  width: 100vw;
+  width: 100%;
 `
 const Main = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `
 const Header = styled.h1`
   font-family: 'Libre Baskerville';
   font-size: 42px;
   text-align: center;
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
 `
 const Hr = styled.hr`
-  margin: 16px auto 0;
   height: 0.25rem;
   width: 190px;
   border: none;
@@ -30,8 +34,7 @@ const Hr = styled.hr`
 `
 const PostsContainer = styled.div`
   margin-top: 20px;
-  padding: 20px;
-  width: 100%;
+  width: 55%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,7 +64,7 @@ const MainPage = () => {
     const sortedPosts = sanitizedPosts.slice(1)
 
     return (
-      <div>
+      <MainContainer>
         <Top>
           <TopPost {...topPost} />
         </Top>
@@ -80,8 +83,8 @@ const MainPage = () => {
           <Hr />
           <CategoryButtons />
         </Main>
-        <FloatButton.BackTop/>
-      </div>
+        <FloatButton.BackTop />
+      </MainContainer>
     )
   }
 

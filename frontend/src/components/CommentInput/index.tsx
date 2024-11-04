@@ -11,6 +11,7 @@ import { queryClient } from '@/apis/api'
 import { CommentForm, CommentUpdateForm } from '@/utils/Model/commentModel'
 import postApi from '@/apis/postService'
 import { LoadingOutlined } from '@ant-design/icons'
+import { useUpdateComment } from '@/hooks/useUpdateComment'
 
 interface CommentInputProps {
   $isEdit?: boolean
@@ -26,6 +27,8 @@ const CommentInput = ({
   inputState,
 }: CommentInputProps) => {
   const { id: postId } = useParams()
+
+  if (!postId) return <div>포스트 아이디가 없습니다.</div>
 
   const [comment, setComment] = useState('')
 
@@ -52,24 +55,12 @@ const CommentInput = ({
     },
   })
 
-  const {
-    mutate: updateComment,
-    isPending: isUpdatePending,
-    isError: isUpdateError,
-    error: updateError,
-  } = useMutation({
-    mutationFn: async (commentUpdateData: CommentUpdateForm) => {
-      if (postId) {
-        await postApi.updateComment(commentUpdateData)
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comment', postId] })
-      if (inputState) {
-        inputState(false)
-      }
-    },
-  })
+  const handleCancel = () => {
+    inputState && inputState(false)
+  }
+
+  const { updateComment, isUpdatePending, isUpdateError, updateError } =
+    useUpdateComment(postId, handleCancel)
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value)
@@ -83,15 +74,15 @@ const CommentInput = ({
     if (!postId || isCommentEmpty) return
 
     if ($isEdit && commentId) {
-      updateComment(new CommentUpdateForm(comment, postId, commentId))
+      const commentUpdateData = new CommentUpdateForm(
+        comment,
+        postId,
+        commentId,
+      )
+      updateComment(commentUpdateData)
     } else {
-      createComment(new CommentForm(comment, postId))
-    }
-  }
-
-  const handleCancel = () => {
-    if (inputState) {
-      inputState(false)
+      const commentCreateData = new CommentForm(comment, postId)
+      createComment(commentCreateData)
     }
   }
 
