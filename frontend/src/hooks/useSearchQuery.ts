@@ -15,7 +15,7 @@ const getSearchParams = (
   keyword: string,
   searchParam: SearchParam,
   pageNumber: number,
-  ITEMS_PER_PAGE = 10,
+  ITEMS_PER_PAGE = 5,
 ) => {
   if (typeof keyword === 'string' && keyword.trim() !== '') {
     const searchParams = {

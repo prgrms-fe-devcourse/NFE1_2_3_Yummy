@@ -7,11 +7,15 @@ import styled from 'styled-components'
 import DOMPurify from 'dompurify'
 import postApi from '@/apis/postService'
 import { FloatButton } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { FormOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import { CategoryTitle } from './CatergoryPage/style'
 
 const MainContainer = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 `
 
 const Top = styled.div`
@@ -22,24 +26,20 @@ const Main = styled.div`
   flex-direction: column;
   align-items: center;
 `
-const Header = styled.h1`
-  font-family: 'Libre Baskerville';
-  font-size: 42px;
-  text-align: center;
-  margin: 20px 0 10px 0;
-`
-const Hr = styled.hr`
-  height: 0.25rem;
-  width: 190px;
-  border: none;
-  background: black;
-`
 const PostsContainer = styled.div`
-  margin-top: 20px;
-  width: 55%;
+  width: 50%;
+  padding-block: 3.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 3rem;
+`
+
+const CategoryContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 `
 
 const MainPage = () => {
@@ -63,39 +63,45 @@ const MainPage = () => {
     content: DOMPurify.sanitize(post.content),
   }))
 
-    const topPost = sanitizedPosts[0]
-    const sortedPosts = sanitizedPosts
-      .sort((a, b) => b.hearts.length - a.hearts.length)
-      .slice(1, 4)
+  const topPost = sanitizedPosts[0]
+  const sortedPosts = sanitizedPosts
+    .sort((a, b) => b.hearts.length - a.hearts.length)
+    .slice(1, 5)
 
-    return (
-      <MainContainer>
-        <Top>
-          <TopPost {...topPost} />
-        </Top>
-        <Main>
-          <Header>Trending Now</Header>
-          <Hr />
-          <PostsContainer>
-            {sortedPosts.map((post) => (
-              <PostCard
-                key={post._id}
-                {...post}
-              />
-            ))}
-          </PostsContainer>
-          <Header>Category</Header>
-          <Hr />
-          <CategoryButtons />
-        </Main>
-        <FloatButton
-          icon={<PlusOutlined />}
-          tooltip='게시물 작성'
-          onClick={() => navigate('/write')}
-          style={{ right: 24, bottom: 80 }}
-        />
-        <FloatButton.BackTop style={{ right: 24, bottom: 24 }} />
-      </MainContainer>
-    )
-  }
+  return (
+    <MainContainer>
+      <Top>
+        <TopPost {...topPost} />
+      </Top>
+      <Main>
+        <CategoryTitle>
+          <h3>Trending Now</h3>
+          <hr />
+        </CategoryTitle>
+        <PostsContainer>
+          {sortedPosts.map((post) => (
+            <PostCard
+              key={post._id}
+              {...post}
+            />
+          ))}
+        </PostsContainer>
+      </Main>
+      <CategoryContainer>
+        <CategoryTitle>
+          <h3>Category</h3>
+          <hr />
+        </CategoryTitle>
+        <CategoryButtons />
+      </CategoryContainer>
+      <FloatButton.BackTop
+        icon={<FormOutlined />}
+        tooltip='게시물 작성'
+        onClick={() => navigate('/write')}
+        style={{ right: 24, bottom: 80 }}
+      />
+      <FloatButton.BackTop style={{ right: 24, bottom: 24 }} />
+    </MainContainer>
+  )
+}
 export default MainPage

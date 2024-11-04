@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70%;
+  width: 50%;
   padding-block: 3rem;
 `
 export const MyPostTitle = styled.div`
@@ -25,4 +25,12 @@ export const MyPostTitle = styled.div`
     border: none;
     background: black;
   }
+`
+
+export const PostsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
 `

@@ -1,5 +1,5 @@
 import UserProfileCard from '@/components/UserProfileCard'
-import { Container, MyPostTitle } from './style'
+import { Container, MyPostTitle, PostsContainer } from './style'
 import PostCard from '@/components/PostCard'
 import { Outlet, useParams } from 'react-router-dom'
 import { checkAuthor } from '@/utils/user'
@@ -59,7 +59,7 @@ const MyPage = () => {
         <h3>{title}</h3>
         <hr />
       </MyPostTitle>
-      {renderPostContent()}
+      <PostsContainer>{renderPostContent()}</PostsContainer>
     </Container>
   )
 }

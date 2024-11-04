@@ -34,17 +34,23 @@ const Button = styled.button<{ $isSelected: boolean }>`
 const ButtonGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 0;
-  margin-top: 0.5rem;
-  padding: 16px;
 `
 
 const PostsContainer = styled.div`
-  margin-top: 20px;
-  width: 55%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-block: 5rem 2rem;
+  gap: 3rem;
+`
+
+const CategoryContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  padding-block: 3rem;
 `
 
 const CategoryButton: React.FC<CategoryButtonProps> = ({
@@ -123,7 +129,7 @@ const CategoryButtons: React.FC = () => {
   }
 
   return (
-    <>
+    <CategoryContainer>
       <ButtonGrid>
         {categories.map((category) => (
           <CategoryButton
@@ -143,7 +149,7 @@ const CategoryButtons: React.FC = () => {
         total={filterPosts.length}
         onPageChange={setPageNumber}
       />
-    </>
+    </CategoryContainer>
   )
 }
 

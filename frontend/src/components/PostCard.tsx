@@ -2,11 +2,9 @@ import { useNavigateTo } from '@/hooks/useNavigateTo'
 import { Post } from '@/typings/db'
 import { formatDate } from '@/utils/formatDate'
 import styled from 'styled-components'
-import NoPhoto from '../assets/NoPhoto.jpg'
 
 const Card = styled.div`
   display: flex;
-  margin-bottom: 16px;
   width: 100%;
   height: 200px;
   background-color: #fff;
@@ -15,45 +13,57 @@ const Card = styled.div`
   align-items: center;
 `
 
+const PostInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+`
+
 const PostImage = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 260px !important;
+  height: 200px;
   object-fit: cover;
-  margin-right: 20px;
+  margin-right: 1rem;
 `
 
 const PostContent = styled.div`
+  width: calc(100% - 276px);
   display: flex;
   flex-direction: column;
+  height: 100%;
+  gap: 1.5rem;
 `
 
 const PostCategory = styled.p`
-  font-size: 20px;
+  font-size: 1rem;
   color: #7d7d7d;
-  margin: 0;
   font-weight: bold;
 `
 
 const PostTitle = styled.h2`
-  font-size: 33px;
-  margin: 8px 0;
+  font-size: 1.5rem;
 `
 
 const PostAuthor = styled.p`
-  font-size: 16px;
+  font-size: 1rem;
   color: #7d7d7d;
-  margin: 0;
 `
 
 const Content = styled.p`
   font-size: 1rem;
   color: #1c1c1c;
-  margin-top: 8px;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
   text-overflow: ellipsis;
+
+  & * {
+    line-height: 1.5;
+    text-align: left !important;
+    font-size: 1rem !important;
+    word-break: break-all;
+  }
 `
 
 function PostCard({
@@ -78,11 +88,13 @@ function PostCard({
         alt='Post Thumbnail'
       />
       <PostContent>
-        <PostCategory>{category}</PostCategory>
-        <PostTitle>{title}</PostTitle>
-        <PostAuthor>
-          {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
-        </PostAuthor>
+        <PostInfo>
+          <PostCategory>{category}</PostCategory>
+          <PostTitle>{title}</PostTitle>
+          <PostAuthor>
+            {user ? user.nickname : 'Anonymous'} | {formatDate(createdAt)}
+          </PostAuthor>
+        </PostInfo>
         <Content dangerouslySetInnerHTML={{ __html: content }} />
       </PostContent>
     </Card>
