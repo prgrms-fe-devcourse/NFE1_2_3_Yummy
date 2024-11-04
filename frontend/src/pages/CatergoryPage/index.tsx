@@ -9,7 +9,7 @@ import CategoryItemCard from '@/components/CategoryItemCard'
 import useCategoryPost from '@/hooks/useCategoryPost'
 import { useParams } from 'react-router-dom'
 import { SearchPageNav } from '@/components/SearchResultContainer/style'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const CategoryPage = () => {
   const { category } = useParams()
@@ -17,6 +17,11 @@ const CategoryPage = () => {
 
   const { categoryPosts, isCategoryPostsLoading, isCategoryPostsError } =
     useCategoryPost(category || '')
+
+  // 카테고리가 변경될 때 페이지 번호 초기화
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [category])
 
   const PAGE_SIZE = 12
   const TOTAL_COUNT = categoryPosts?.length || 0

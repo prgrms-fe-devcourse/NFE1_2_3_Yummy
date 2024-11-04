@@ -16,6 +16,7 @@ export const useUserInfoQuery = (userId: string) => {
   } = useQuery<User>({
     queryKey: USER_INFO_QUERY(userId),
     queryFn: () => userApi.getUserData(userId),
+    enabled: !!userId,
   })
 
   return { userData, isUserDataLoading, isUserDataError, userDataError }
