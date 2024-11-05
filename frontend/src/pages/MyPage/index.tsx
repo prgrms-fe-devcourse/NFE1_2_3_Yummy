@@ -6,9 +6,13 @@ import { checkAuthor } from '@/utils/user'
 import { useUserInfoQuery } from '@/hooks/useUserInfoQuery'
 import { PostLoading } from '../PostPage/style'
 import ErrorPage from '../ErrorPage'
+import { SearchPageNav } from '@/components/SearchResultContainer/style'
+import { useEffect, useState } from 'react'
+import { Post } from '@/typings/db'
 
 const MyPage = () => {
   const { id: userId } = useParams()
+  const [currentPage, setCurrentPage] = useState(1)
 
   if (!userId)
     return (
@@ -18,8 +22,16 @@ const MyPage = () => {
       />
     )
 
+  // 스크롤 위치 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const { userData, isUserDataLoading, isUserDataError } =
     useUserInfoQuery(userId)
+
+  const PAGE_SIZE = 10
+  const TOTAL_COUNT = userData?.posts?.length || 0
 
   // 추후 스켈레톤을 위해 랜더링 분리
   const renderUserContent = () => {
@@ -41,7 +53,14 @@ const MyPage = () => {
     if (userData) {
       const { posts } = userData
 
-      return posts?.map((post) => (
+      const recentPredicate = (a: Post, b: Post) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      const sortedPosts = posts?.sort(recentPredicate)
+
+      const startIndex = (currentPage - 1) * PAGE_SIZE
+      const endIndex = startIndex + PAGE_SIZE
+
+      return sortedPosts?.slice(startIndex, endIndex).map((post) => (
         <PostCard
           key={post._id}
           {...post}
@@ -70,7 +89,15 @@ const MyPage = () => {
         <h3>{title}</h3>
         <hr />
       </MyPostTitle>
-      <PostsContainer>{renderPostContent()}</PostsContainer>
+      <PostsContainer>
+        {renderPostContent()}
+        <SearchPageNav
+          current={currentPage}
+          pageSize={PAGE_SIZE}
+          total={TOTAL_COUNT}
+          onChange={setCurrentPage}
+        />
+      </PostsContainer>
     </Container>
   )
 }

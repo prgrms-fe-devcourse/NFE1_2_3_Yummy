@@ -122,9 +122,12 @@ const NavigationBar: React.FC = () => {
               onMouseLeave={() => toggleVisibility(setIsModalVisible, false)}
             >
               <StyledAvatar
-                size={64}
+                size={50}
                 icon={<UserOutlined />}
-                src={userData?.profileImageUrl || ''}
+                src={
+                  userData?.profileImageUrl ||
+                  'https://example.com/loading-avatar.jpg'
+                }
                 //   src={
                 //     isLoading
                 //       ? 'https://example.com/loading-avatar.jpg'

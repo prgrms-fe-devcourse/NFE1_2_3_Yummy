@@ -8,7 +8,7 @@ import { PostSideButtonContainer, PostSideButtonItem } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import usePostModal from '@/store/usePostModal'
 import { Post } from '@/typings/db'
-import { checkAuthor, checkLogin, USER_ID } from '@/utils/user'
+import { checkAuthor, USER_ID } from '@/utils/user'
 import { useUpdateLike } from '@/hooks/useUpdateLike'
 import { message } from 'antd'
 
@@ -42,7 +42,7 @@ const PostSideButton = ({ post }: { post: Post }) => {
 
   const isAuthor = checkAuthor(post.user._id)
 
-  if (!checkLogin()) return
+  if (!USER_ID()) return
 
   return (
     <PostSideButtonContainer shape='square'>
