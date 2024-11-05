@@ -25,9 +25,16 @@ export const ItemCardContainer = styled.div`
 
 export const CategoryPageContent = styled.div`
   width: 100%;
-  min-height: 116.2vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+`
+
+export const NoPostMessage = styled.div`
+  border-top: 1px solid #eee;
+  width: 50%;
+  padding-top: 3rem;
+  text-align: center;
 `

@@ -26,6 +26,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { User, UserForm } from '@/typings/db'
 import { useOutletContext } from 'react-router-dom'
 import { useUpdateUserInfoQuery } from '@/hooks/useUserInfoQuery'
+import { message } from 'antd'
 
 const UserEditModal = () => {
   const userData = useOutletContext<User>()
@@ -44,12 +45,12 @@ const UserEditModal = () => {
     handleNavigateTo('../')
   }
 
-  const {
-    updateUserInfo,
-    isUpdatingUserInfo,
-    isUpdatingUserInfoError,
-    updatingUserInfoError,
-  } = useUpdateUserInfoQuery(userData._id, handleNavigateToProfile)
+  const { updateUserInfo, isUpdatingUserInfo, isUpdatingUserInfoError } =
+    useUpdateUserInfoQuery(userData._id, handleNavigateToProfile)
+
+  if (isUpdatingUserInfoError) {
+    message.error('유저 정보 수정 중 오류 발생')
+  }
 
   // 선택한 파일 출력을 위한 핸들러
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {

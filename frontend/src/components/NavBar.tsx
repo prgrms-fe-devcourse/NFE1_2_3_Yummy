@@ -48,6 +48,7 @@ const NavigationBar: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('userId')
+    localStorage.removeItem('isLoggedIn')
     setIsModalVisible(false)
     message.success('로그아웃이 완료되었습니다.')
     navigate('/')

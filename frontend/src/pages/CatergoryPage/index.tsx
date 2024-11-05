@@ -4,6 +4,7 @@ import {
   CategoryPageContent,
   CategoryTitle,
   ItemCardContainer,
+  NoPostMessage,
 } from './style'
 import CategoryItemCard from '@/components/CategoryItemCard'
 import useCategoryPost from '@/hooks/useCategoryPost'
@@ -63,6 +64,10 @@ const CategoryPage = () => {
         </ItemCardContainer>
       </>
     )
+  }
+
+  if (categoryPosts?.length === 0) {
+    content = <NoPostMessage>게시물이 없습니다.</NoPostMessage>
   }
 
   const handlePageChange = (pageNumber: number) => {

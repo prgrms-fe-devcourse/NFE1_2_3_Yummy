@@ -1,3 +1,4 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 
 export const PostPageContainer = styled.div`
@@ -20,4 +21,11 @@ export const CommentContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   margin-block: 6rem 3rem;
+`
+
+export const PostLoading = styled(LoadingOutlined)`
+  font-size: 3rem;
+  margin-top: 5rem;
+  color: #1c1c1c;
+  margin-inline: auto;
 `

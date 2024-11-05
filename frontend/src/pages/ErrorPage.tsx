@@ -1,6 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 
-const ErrorPage = () => {
+const ErrorPage = ({
+  title,
+  message,
+}: {
+  title?: string
+  message?: string
+}) => {
   const navigate = useNavigate()
 
   const goToHome = () => {
@@ -8,13 +14,23 @@ const ErrorPage = () => {
   }
 
   return (
-    <div style={{ textAlign: 'center', padding: '260px 20px' }}>
-      <h1 style={{ fontSize: '48px', fontWeight: 'bold' }}>404</h1>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBlock: 'auto',
+      }}
+    >
+      <h1 style={{ fontSize: '48px', fontWeight: 'bold' }}>
+        {title ? '' : '404'}
+      </h1>
       <p style={{ fontSize: '50px', margin: '10px 0' }}>
-        페이지를 찾을 수 없습니다.
+        {title || '페이지를 찾을 수 없습니다.'}
       </p>
       <p style={{ color: '#000', fontWeight: 'bold' }}>
-        죄송합니다. 더 이상 존재하지 않는 페이지입니다.
+        {message || '죄송합니다. 더 이상 존재하지 않는 페이지입니다.'}
       </p>
       <button
         onClick={goToHome}
@@ -27,7 +43,6 @@ const ErrorPage = () => {
           border: 'none',
           borderRadius: '5px',
           cursor: 'pointer',
-          //   marginBottom:'410px'
         }}
       >
         홈으로 이동

@@ -8,8 +8,9 @@ import { PostSideButtonContainer, PostSideButtonItem } from './style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import usePostModal from '@/store/usePostModal'
 import { Post } from '@/typings/db'
-import { checkAuthor, USER_ID } from '@/utils/user'
+import { checkAuthor, checkLogin, USER_ID } from '@/utils/user'
 import { useUpdateLike } from '@/hooks/useUpdateLike'
+import { message } from 'antd'
 
 const PostSideButton = ({ post }: { post: Post }) => {
   const { pathname } = useLocation()
@@ -21,12 +22,10 @@ const PostSideButton = ({ post }: { post: Post }) => {
   const userId = USER_ID() || ''
   const isLiked = userId && hearts.includes(userId)
 
-  const {
-    updateLike,
-    isUpdateLikePending,
-    isUpdateLikeError,
-    updateLikeError,
-  } = useUpdateLike(postId, userId)
+  const { updateLike, isUpdateLikePending, isUpdateLikeError } = useUpdateLike(
+    postId,
+    userId,
+  )
 
   const handleLike = () => {
     if (isUpdateLikePending) return
@@ -37,7 +36,13 @@ const PostSideButton = ({ post }: { post: Post }) => {
     navigate(`${pathname}/edit`)
   }
 
+  if (isUpdateLikeError) {
+    message.error('좋아요 업데이트 중 오류 발생')
+  }
+
   const isAuthor = checkAuthor(post.user._id)
+
+  if (!checkLogin()) return
 
   return (
     <PostSideButtonContainer shape='square'>
