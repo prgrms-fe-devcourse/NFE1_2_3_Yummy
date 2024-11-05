@@ -43,14 +43,12 @@ const DraftEditor: React.FC<DraftEditorProps> = ({
 const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: flex-end;  */
-  margin: 0 auto;
 `
 
 const EditorWrapper = styled.div`
   width: auto;
-  min-height: 300px;
-  margin-bottom: 20px;
+  min-height: 80vh;
+
   border: 1px solid #ddd;
 `
 

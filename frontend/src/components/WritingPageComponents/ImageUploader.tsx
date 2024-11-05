@@ -75,7 +75,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 const UploadContainer = styled.div`
   display: flex;
   justify-content: flex-end; /* 오른쪽 정렬 */
-  margin-top: 20px;
 `
 
 const StyledButton = styled(Button)`

@@ -5,16 +5,12 @@ import React from 'react'
 import styled from 'styled-components'
 
 const TopPostContainer = styled.div<{ $imgUrl: string }>`
-  position: relative;
   background-image: url(${(props) => props.$imgUrl});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 100vw;
+  width: 100%;
   height: 600px;
-  display: flex;
-  align-items: flex-start;
-  overflow: hidden;
 `
 
 const ContentContainer = styled.div`
@@ -22,39 +18,47 @@ const ContentContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
-  padding: 16px;
-  margin: 0 30px;
-  width: 500px;
-  height: 500px;
+  padding: 1rem;
+  margin-left: 3rem;
+  width: 450px;
+  height: 450px;
   cursor: pointer;
+  justify-content: space-evenly;
+`
+const PostInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 `
 
 const PostCategory = styled.p`
-  font-size: 20px;
+  font-size: 1.25rem;
   color: #7d7d7d;
-  margin: 0;
   font-weight: bold;
 `
 
 const PostTitle = styled.h2`
-  font-size: 33px;
-  margin: 8px 0;
+  font-size: 2rem;
 `
 
 const PostAuthor = styled.p`
-  font-size: 16px;
+  font-size: 1rem;
   color: #7d7d7d;
-  margin: 0;
 `
 const PostText = styled.p`
-  font-size: 16px;
+  font-size: 1rem;
   color: #1c1c1c;
-  margin-top: 8px;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 10;
   text-overflow: ellipsis;
+
+  & * {
+    line-height: 1.5;
+    text-align: left !important;
+    font-size: 1rem !important;
+  }
 `
 
 const TopPost: React.FC<Post> = ({
@@ -64,22 +68,24 @@ const TopPost: React.FC<Post> = ({
   user,
   createdAt,
   content,
-  _id
+  _id,
 }) => {
   const handleNavigateTo = useNavigateTo()
-  
+
   const handleOpenPost = () => {
     handleNavigateTo(`/post/${_id}`)
   }
   return (
     <TopPostContainer $imgUrl={image_url}>
       <ContentContainer onClick={handleOpenPost}>
-        <PostCategory>{category}</PostCategory>
-        <PostTitle>{title}</PostTitle>
-        <PostAuthor>
-          {user ?.nickname || 'Anonymous'} | {formatDate(createdAt)}
-        </PostAuthor>
-        <PostText dangerouslySetInnerHTML={{ __html: content }}/>
+        <PostInfo>
+          <PostCategory>{category}</PostCategory>
+          <PostTitle>{title}</PostTitle>
+          <PostAuthor>
+            {user?.nickname || 'Anonymous'} | {formatDate(createdAt)}
+          </PostAuthor>
+        </PostInfo>
+        <PostText dangerouslySetInnerHTML={{ __html: content }} />
       </ContentContainer>
     </TopPostContainer>
   )

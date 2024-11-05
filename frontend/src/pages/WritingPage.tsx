@@ -220,11 +220,8 @@ const WritingPage: React.FC = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 20px;
-  margin-top: 40px;
-  box-sizing: border-box;
-  max-width: 838px;
+  width: 40%;
+  padding-block: 2.5rem 1.5rem;
 `
 
 const CategorySelect = styled(Select)`
@@ -232,25 +229,26 @@ const CategorySelect = styled(Select)`
   .ant-select-selector {
     border: none !important;
     box-shadow: none !important;
-    font-size: 28px !important;
+    font-size: 1.1rem !important;
+    padding: 0 !important;
   }
-
   width: 220px;
-  margin-bottom: 20px;
   text-align: left;
+  margin-bottom: 0.5rem;
 `
 
 const TitleInput = styled(Input)`
   border: none !important;
   box-shadow: none !important;
+  padding: 0 !important;
+  margin-bottom: 1rem;
   &:focus,
   &:hover {
     border: none !important;
     box-shadow: none !important;
   }
-  font-size: 42px;
+  font-size: 1.4rem;
   width: 100%;
-  margin-bottom: 20px;
   text-align: left;
 `
 
@@ -258,15 +256,16 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 60px;
+  margin-top: 2rem;
 `
 
 const StyledButton = styled(Button)`
   background-color: black;
-  width: 150px;
-  height: 50px;
-  font-size: 18px;
+  width: 130px;
+  height: 45px;
+  font-size: 1rem;
   border-radius: 10px;
+
   &:hover {
     background-color: #333 !important;
     color: white !important;
@@ -277,7 +276,9 @@ const UploadedImage = styled.img`
   max-width: 300px;
   height: auto;
   margin-top: 20px;
-  padding: 11px;
+  width: 200px;
+  height: 160px;
+  object-fit: cover;
 `
 
 // 이미지 업로더 컴포넌트와 에디터 컴포넌트를 감싸는 부모 컨테이너
@@ -285,19 +286,13 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
   width: 100%;
-  margin: 0 auto;
-  max-width: 1200px;
 `
 
 // 에디터 컴포넌트 컨테이너
 const EditorContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  margin-bottom: 20px;
-  align-items: flex-end;
-  max-width: 838px;
 `
 
 // 이미지 업로더 컴포넌트 컨테이너
@@ -305,8 +300,6 @@ const UploadContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  margin-bottom: 20px;
-  max-width: 838px;
 `
 
 export default WritingPage

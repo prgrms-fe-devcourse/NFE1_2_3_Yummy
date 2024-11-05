@@ -36,5 +36,10 @@ export const SearchPageNav = styled(Pagination)`
 
 export const SearchPageResult = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+  padding-bottom: 2rem;
   min-height: 116.2vh;
 `

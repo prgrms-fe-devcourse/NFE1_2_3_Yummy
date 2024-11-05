@@ -12,9 +12,13 @@ import { useParams } from 'react-router-dom'
 import { SearchPageNav } from '@/components/SearchResultContainer/style'
 import { useEffect, useState } from 'react'
 import { Post } from '@/typings/db'
+import { FloatButton } from 'antd'
+import { FormOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 const CategoryPage = () => {
   const { category } = useParams()
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
 
   const {
@@ -87,6 +91,13 @@ const CategoryPage = () => {
         total={TOTAL_COUNT}
         onChange={handlePageChange}
       />
+      <FloatButton.BackTop
+        icon={<FormOutlined />}
+        tooltip='게시물 작성'
+        onClick={() => navigate('/write')}
+        style={{ right: 24, bottom: 80 }}
+      />
+      <FloatButton.BackTop style={{ right: 24, bottom: 24 }} />
     </CategoryPageContainer>
   )
 }
