@@ -7,7 +7,7 @@ import { useUserInfoQuery } from '@/hooks/useUserInfoQuery'
 import { PostLoading } from '../PostPage/style'
 import ErrorPage from '../ErrorPage'
 import { SearchPageNav } from '@/components/SearchResultContainer/style'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Post } from '@/typings/db'
 
 const MyPage = () => {
@@ -21,6 +21,11 @@ const MyPage = () => {
         message='다시 시도해주세요.'
       />
     )
+
+  // 스크롤 위치 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const { userData, isUserDataLoading, isUserDataError } =
     useUserInfoQuery(userId)

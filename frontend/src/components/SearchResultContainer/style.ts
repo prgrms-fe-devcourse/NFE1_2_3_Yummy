@@ -11,6 +11,22 @@ export const SearchResultContainer = styled.div`
 export const SearchPageNav = styled(Pagination)`
   color: #1c1c1c !important;
 
+  .ant-select-selector {
+    display: none !important;
+  }
+
+  .ant-pagination-options {
+    display: none !important;
+  }
+
+  .ant-pagination-item-ellipsis {
+    color: #1c1c1c !important;
+  }
+
+  .ant-pagination-item-link-icon {
+    color: #1c1c1c !important;
+  }
+
   &.ant-pagination .ant-pagination-item-active,
   :where(.css-dev-only-do-not-override-1hpnbz2).ant-pagination
     .ant-pagination-item-active {

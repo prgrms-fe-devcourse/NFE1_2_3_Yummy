@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const PostPagePostCardContainer = styled.div`
-  width: 60%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,10 +53,17 @@ export const Dot = styled.p`
 
 export const PostContent = styled.div`
   font-family: 'Noto Sans KR', sans-serif !important;
+  display: flex;
+  flex-direction: column;
   font-size: 1rem;
-  white-space: pre-wrap;
-  /* word-break: keep-all; */
-  word-wrap: break-word;
-  line-height: 1.5;
+  word-break: keep-all;
+  line-height: 2;
   margin-block: 3.5rem;
+  gap: 1rem;
+
+  * {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style-position: inside;
+  }
 `
