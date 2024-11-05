@@ -5,7 +5,7 @@ import PostCard from '@/components/PostCard'
 import { useSearchParams } from 'react-router-dom'
 import { useSearchQuery } from '@/hooks/useSearchQuery'
 import { Post } from '@/typings/db'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { message, RadioChangeEvent } from 'antd'
 import { useDebounce } from '@/hooks/useDebounce'
 import SearchResult from '@/components/SearchResultContainer'
@@ -23,10 +23,6 @@ const SearchPage = () => {
     keyword: '',
   })
   const [pageNumber, setPageNumber] = useState(1)
-
-  useEffect(() => {
-    console.log(searchParam)
-  }, [searchParam, pageNumber])
 
   // 디바운스 처리
   const DEBOUNCE_DELAY = 300
@@ -50,6 +46,7 @@ const SearchPage = () => {
       ...prevParam,
       keyword: e.target.value,
     }))
+    setPageNumber(1)
   }
 
   const handlePageChange = (pageNumber: number) => {
