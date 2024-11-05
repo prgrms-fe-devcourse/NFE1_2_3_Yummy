@@ -5,7 +5,7 @@ import PostCard from '@/components/PostCard'
 import { useSearchParams } from 'react-router-dom'
 import { useSearchQuery } from '@/hooks/useSearchQuery'
 import { Post } from '@/typings/db'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { message, RadioChangeEvent } from 'antd'
 import { useDebounce } from '@/hooks/useDebounce'
 import SearchResult from '@/components/SearchResultContainer'
@@ -24,6 +24,10 @@ const SearchPage = () => {
   })
   const [pageNumber, setPageNumber] = useState(1)
 
+  useEffect(() => {
+    console.log(searchParam)
+  }, [searchParam, pageNumber])
+
   // 디바운스 처리
   const DEBOUNCE_DELAY = 300
   const keyword = useDebounce(searchParam.keyword, DEBOUNCE_DELAY)
@@ -37,10 +41,7 @@ const SearchPage = () => {
   // API 호출 시 사용할 검색 타입
   const handleSearchParam = (e: RadioChangeEvent) => {
     const currentType: SearchParam['type'] = e.target.value
-
-    if (searchParam.keyword.trim() === '') {
-      setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
-    }
+    setSearchParam((prevParam) => ({ ...prevParam, type: currentType }))
   }
 
   // 검색어 입력 시 키워드 설정
@@ -49,7 +50,6 @@ const SearchPage = () => {
       ...prevParam,
       keyword: e.target.value,
     }))
-    setPageNumber(1)
   }
 
   const handlePageChange = (pageNumber: number) => {
