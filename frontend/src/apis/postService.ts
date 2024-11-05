@@ -80,7 +80,7 @@ const postApi = {
       type === 'nickname' ? `nickname=${keyword}` : `keyword=${keyword}`
 
     const END_POINT = `post/search/${type}?${queryParam}&limit=${length}&page=${page}`
-
+    console.log(END_POINT)
     const response = await api.get<Posts>(END_POINT).json()
     return response
   },

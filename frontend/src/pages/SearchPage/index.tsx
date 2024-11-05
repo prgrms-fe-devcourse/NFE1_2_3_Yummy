@@ -45,7 +45,10 @@ const SearchPage = () => {
 
   // 검색어 입력 시 키워드 설정
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchParam((prevParam) => ({ ...prevParam, keyword: e.target.value }))
+    setSearchParam((prevParam) => ({
+      ...prevParam,
+      keyword: e.target.value,
+    }))
     setPageNumber(1)
   }
 
@@ -67,9 +70,15 @@ const SearchPage = () => {
     const { posts } = searchData
     const category = searchParams.get('search') || '전체'
 
+    const recentPredicate = (a: Post, b: Post) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    const sortedPosts = posts.sort(recentPredicate)
+
     const filterPostsIndicate = (post: Post) => post.category === category
     const filteredPosts =
-      category === '전체' ? posts : posts.filter(filterPostsIndicate)
+      category === '전체'
+        ? sortedPosts
+        : sortedPosts.filter(filterPostsIndicate)
 
     content = filteredPosts.map((post) => (
       <PostCard
